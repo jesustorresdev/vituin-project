@@ -1,0 +1,60 @@
+version: '2'
+
+services:
+  elasticsearch:
+    build: elasticsearch/
+    command: elasticsearch -Des.network.host=0.0.0.0
+    ports:
+     - "9200:9200"
+     - "9300:9300"
+  #logstash:
+  #  build: logstash/
+  #  volumes:
+  #   - /home/sdiaz/docker_compose/logstash/files:/etc/logstash/conf.d
+  #  command: logstash -f /etc/logstash/conf.d/logstash.conf
+  #  ports:
+  #   - "5000:5000"
+  #  links:
+  #   - elasticsearch
+  kibana:
+    build: kibana/
+    ports:
+     -  "5601:5601"
+    links:
+     - elasticsearch
+    environment:
+     - ELASTICSEARCH_URL=http://elasticsearch:9200
+
+  postgres:
+     image: postgres:9.6
+     environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+
+  airflow:
+      build: airflow/
+      volumes:
+      - /home/sdiaz/docker_compose/airflow/scrapy:/usr/local/airflow/scrapy-hotels
+      - /home/sdiaz/docker_compose/airflow/dags:/usr/local/airflow/dags
+      restart: always
+      depends_on:
+          - postgres
+      environment:
+          - LOAD_EX=y
+      ports:
+          - "8080:8080"
+      command: webserver
+
+
+
+
+
+
+
+
+
+
+
+
+
