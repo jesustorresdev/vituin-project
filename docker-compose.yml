@@ -35,8 +35,8 @@ services:
   airflow:
       build: airflow/
       volumes:
-      - /home/sdiaz/docker_compose/airflow/scrapy:/usr/local/airflow/scrapy-hotels
-      - /home/sdiaz/docker_compose/airflow/dags:/usr/local/airflow/dags
+      - /home/sdiaz/vituin_project/airflow/scrapy:/usr/local/airflow/scrapy-hotels
+      - /home/sdiaz/vituin_project/airflow/dags:/usr/local/airflow/dags
       restart: always
       depends_on:
           - postgres
