@@ -44,6 +44,8 @@ services:
           - LOAD_EX=y
       ports:
           - "8080:8080"
+      links:
+          - elasticsearch
       command: webserver
 
 
