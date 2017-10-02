@@ -1,6 +1,7 @@
 import sys
 import unicodecsv as csv
 import json
+import datetime
 
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
@@ -19,13 +20,13 @@ filename =  sys.argv[1]
 
 cont_id = int(1)
 f = open(filename)
-reference = ["review_date",
-             "tittle",
-             "reviewer_location",
+reference = ["name",
+             "url",
+             "has_reviews",
+             "phone",
              "score",
-             "negative_content",
-             "positive_content",
-             "review_key"
+	     "address",
+             "hotel_key"
             ]
 
 es = Elasticsearch(['elasticsearch:9200'])
@@ -36,27 +37,20 @@ actions = []
 
 for row in csv.reader(f):
 
-    if(chunk_count!=0):
+    if(count!=0):
         item = {}
 
     	for i in range(len(reference)):
         	item[reference[i]] = row[i]
 
-        action = {
-        	"_index": "index_hotels",
-                "_type": "opinion_unit",
+        item['insert_time']=datetime.datetime.today()
+
+	action = {
+        	"_index": "index_listhotels_booking",
+                "_type": "hotels_unit",
             	"_id": cont_id,
            	"_source": item
             	}
-    	'''
-    	if item['review_date'] ==  now - 7:
-      		key = item['key']
-      		res = es.search(index="index_hotels_4", q="review_key:"+key)
-      	if !res
-        	actions.append(action)
-    	else:
-      		actions.append(action)
-    	'''
 
 	actions.append(action)
 

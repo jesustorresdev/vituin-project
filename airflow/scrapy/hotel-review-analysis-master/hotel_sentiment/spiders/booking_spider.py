@@ -32,7 +32,25 @@ class BookingSpider(scrapy.Spider):
     #get its reviews page
     def parse_hotel(self, response):
         reviewsurl = response.xpath('//a[@class="show_all_reviews_btn"]/@href')
-        url = response.urljoin(reviewsurl[0].extract())
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print(response)
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+        print('eeeeeeeeeeee')
+	url = response.urljoin(reviewsurl[0].extract())
+        print (reviewsurl[0])
         self.pageNumber = 1
         return scrapy.Request(url, callback=self.parse_reviews)
 

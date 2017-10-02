@@ -28,3 +28,4 @@ for i in range(1,len(samples)):
 with open('opinion_units_keys_' + filename, 'wb') as csvfile:
         writer = csv.writer(csvfile, dialect='excel')
         writer.writerows(opinion_units)
+
