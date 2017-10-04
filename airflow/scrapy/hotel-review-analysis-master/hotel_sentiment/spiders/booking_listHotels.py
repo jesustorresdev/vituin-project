@@ -28,7 +28,7 @@ class BookingSpider(scrapy.Spider):
             url = response.urljoin(hotelurl.extract())
             request = scrapy.Request(url, callback=self.parse_hotel)
             
-	    res = es.search(index="index_list_booking", doc_type="hotels_unit",body={
+	    res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
                 "query": {
                         "match_phrase": {
                                 "url": url
@@ -45,9 +45,9 @@ class BookingSpider(scrapy.Spider):
             parse_is_ok = 1
 
         next_page = response.xpath('//a[starts-with(@class,"paging-next")]/@href')
-        #if next_page:
-        #    url = response.urljoin(next_page[0].extract())
-        #    yield scrapy.Request(url, self.parse)
+        if next_page:
+            url = response.urljoin(next_page[0].extract())
+            yield scrapy.Request(url, self.parse)
 
         if parse_is_ok != 1:
 
@@ -65,23 +65,26 @@ class BookingSpider(scrapy.Spider):
 
 
         url = response.urljoin(reviewsurl[0].extract())
-        if url:
-	  item['url']=url
+        item['url']=url
 
         name = response.xpath('//div[@class="hp__hotel-title"]/h2/text()')
 	if name:
           item['name']=name.extract()[0]
-        print(item['name'])
+        else:
+           listErrors=listErrors + ['name']
+
 
         address = response.xpath('//span[@class="hp_address_subtitle jq_tooltip"]/text()')
         if address:
           item['address']=address.extract()[0]
-        print(item['address'])
+        else:
+           listErrors=listErrors + ['address']
 
 	score = response.xpath('//span[@class="review-score-badge"]/text()')
         if score:
           item['score']=score.extract()[0]
-        print(item['score'])
+        else:
+           listErrors=listErrors + ['score']
 
         if reviewsurl:
           item['has_reviews'] = 1
@@ -93,9 +96,10 @@ class BookingSpider(scrapy.Spider):
         if len(listErrors)>0:
 
           #self.send_email(listErrors)
-          raise CloseSpider('Error spider')
+          raise CloseSpider('Error spider Parse Hotel')
 
         return item
+
 
     def send_email(self, listErrors):
 

@@ -23,7 +23,6 @@ class TripadvisorSpider(scrapy.Spider):
 
 
     def parse(self, response):
-	#parse_is_ok = 0
         listErrors=[]
         es = Elasticsearch(['elasticsearch:9200'])
 
@@ -35,7 +34,7 @@ class TripadvisorSpider(scrapy.Spider):
             #se forma el request 
             request = scrapy.Request(url, callback=self.parse_review)
 
-            #la consulta a Elasticsearch se hace por medio de la url
+            #la consulta a Elasticsearch ciertos campos por medio de la url
 	    res = es.search(index="index_listhotels_tripadvisor", doc_type="hotels_unit",body={
         	"query": {
                 	"match_phrase": {
@@ -63,7 +62,7 @@ class TripadvisorSpider(scrapy.Spider):
 	       	    score = hit["_source"]["score"]
 
 	   
-            #se almacenan una serie de campos que se van a enviar
+            #se almacenan los campos que se van a unir
             request.meta['hotel_name']=hotel
             request.meta['has_review']=has_review
 
@@ -75,9 +74,6 @@ class TripadvisorSpider(scrapy.Spider):
 
 
             yield request
-
-            #parse_is_ok = 1
-
 
         next_page = response.xpath('//div[@class="unified pagination "]/child::*[2][self::a]/@href')
         if next_page:
@@ -124,8 +120,8 @@ class TripadvisorSpider(scrapy.Spider):
             t = response.xpath('//div[@class="quote isNew"]/a/span/text()') 
             if t: 
                 item['title'] = t.extract()[0][1:-1] #strip the quotes (first and last char)
-            #else:
-                #listErrors=listErrors + ['title']    
+            else:
+                listErrors=listErrors + ['title']    
 
             c = response.xpath('//div[@class="entry"]/p/text()')
             if c:
@@ -137,8 +133,8 @@ class TripadvisorSpider(scrapy.Spider):
             if r_l: 
                 item['reviewer_location']  = r_l.extract()[0]
         
-            #else:
-                #listErrors=listErrors + ['reviewer_location']  
+            else:
+                listErrors=listErrors + ['reviewer_location']  
 
             #si ejecutas como la comentada ves toda la seccion de span y te ayuda a ver los atributos. content tiene la fecha en numerico
             #item['review_date'] = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "relativeDate", " " ))]').extract()[0]

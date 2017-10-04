@@ -32,27 +32,26 @@ class BookingSpider(scrapy.Spider):
     #get its reviews page
     def parse_hotel(self, response):
         reviewsurl = response.xpath('//a[@class="show_all_reviews_btn"]/@href')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print(response)
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
-        print('eeeeeeeeeeee')
 	url = response.urljoin(reviewsurl[0].extract())
-        print (reviewsurl[0])
+
+        request = scrapy.Request(response.url, callback=self.parse_review)
+        #se almacenan una serie de campos que se van a enviar
+
+        name = response.xpath('//div[@class="hp__hotel-title"]/h2/text()')
+        request.meta['hotel_name']=hotel
+
+        #Estos campos son opcionales. Pueden estar vacios
+        address = response.xpath('//span[@class="hp_address_subtitle jq_tooltip"]/text()')
+        request.meta['hotel_address']=address
+
+        score = response.xpath('//span[@class="review-score-badge"]/text()')
+        request.meta['hotel_score']=score
+
         self.pageNumber = 1
-        return scrapy.Request(url, callback=self.parse_reviews)
+
+        #si hay comentario
+        if has_review:
+	        yield request
 
     #and parse the reviews
     def parse_reviews(self, response):
@@ -65,6 +64,9 @@ class BookingSpider(scrapy.Spider):
         for rev in response.xpath('//li[starts-with(@class,"review_item")]'):
             item = BookingReviewItem()
             #sometimes the title is empty because of some reason, not sure when it happens but this works
+	    item['hotel_name']=response.meta['hotel_name']
+            item['hotel_address']=response.meta['hotel_address']
+            item['hotel_score']=response.meta['hotel_score']
 
             review_date = rev.xpath('.//meta[@itemprop="datePublished"]/@content') 
             if review_date:
@@ -110,7 +112,7 @@ class BookingSpider(scrapy.Spider):
         if len(listErrors)>0:
 
           #self.send_email(listErrors)
-          raise CloseSpider('Error spider')
+          raise CloseSpider('Error spider parse review')
 
 
         next_page = response.xpath('//a[@id="review_next_page_link"]/@href')

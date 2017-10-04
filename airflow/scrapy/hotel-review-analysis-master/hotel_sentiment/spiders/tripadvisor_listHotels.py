@@ -28,7 +28,7 @@ class TripadvisorSpider(scrapy.Spider):
 
             url = response.urljoin(href.extract())
             request = scrapy.Request(url, callback=self.parse_hotel)
-            res = es.search(index="index_list_hotelsTripadvisor", doc_type="hotels_unit",body={
+            res = es.search(index="index_listhotels_tripadvisor", doc_type="hotels_unit",body={
                 "query": {
                         "match_phrase": {
                                 "url": url
@@ -63,31 +63,49 @@ class TripadvisorSpider(scrapy.Spider):
         name = response.xpath('//div[@id="taplc_location_detail_header_hotels_0"]/h1/text()')
         if name:
 	        item['name'] = name.extract()[0]
-
+	else:
+                listErrors=listErrors + ['name']
 
         item['url']=response.url
 
         street = response.xpath('//span[@class="street-address"]/text()')
         if street:
         	item['street_address']= street.extract()[0] 
+	else:
+                listErrors=listErrors + ['street_address']
 
         extended = response.xpath('//span[@class="extended-address"]/text()')
         if extended:
         	item['extended_address']=extended.extract()[0] 
+	else:
+                listErrors=listErrors + ['extended_address']
 
         locality = response.xpath('//span[@class="locality"]/text()')
         if locality:
         	item['locality_address']=locality.extract()[0]
+	else:
+                listErrors=listErrors + ['locality_address']
 
         score = response.xpath('//div[@class="prw_rup prw_common_bubble_rating bubble_rating"]/span/@alt')
         if score:
         	item['score']=score.extract()[0]
+	else:
+                listErrors=listErrors + ['score']
 
 	has_review = response.xpath('//span[@class="reviews_header_count block_title"]/text()')
         if has_review == '(0)' or has_review == 0:
  		item['has_reviews'] = 0
         else:
                 item['has_reviews'] = 1
+
+        if len(listErrors)>0:
+
+	        #self.send_email(listErrors)
+                print(listErrors)
+                raise CloseSpider('Error in Parse Hotel')
+
+
+
 
         return item
 

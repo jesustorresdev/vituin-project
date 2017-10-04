@@ -24,11 +24,10 @@ class BookingSpider(scrapy.Spider):
 
 
     def parse(self, response):
-        #parse_is_ok = 0
         listErrors=[]
         es = Elasticsearch(['elasticsearch:9200'])
 
-        #la consulta a Elasticsearch se hace por medio de la url
+        #la consulta a Elasticsearch ciertos campos por medio de la url
         request = scrapy.Request(response.url, callback=self.parse_review)
         res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
             "query": {
@@ -56,14 +55,13 @@ class BookingSpider(scrapy.Spider):
 
         #se almacenan una serie de campos que se van a enviar
         request.meta['hotel_name']=hotel
-        request.meta['has_review']=has_review
         #Estos campos son opcionales. Pueden estar vacios
         request.meta['hotel_address']=address
         request.meta['hotel_score']=score
 
-        yield request
-
-        #parse_is_ok = 1
+        #si hay comentario
+        if has_review:
+        	yield request
 
 
     #Parse the reviews
@@ -76,7 +74,7 @@ class BookingSpider(scrapy.Spider):
         for rev in response.xpath('//li[starts-with(@class,"review_item")]'):
             item = BookingReviewItem()
             #sometimes the title is empty because of some reason, not sure when it happens but this works
-            item['hotel_name']=response.meta['hotel_name'] 
+            item['hotel_name']=response.meta['hotel_name']
             item['hotel_address']=response.meta['hotel_address']
             item['hotel_score']=response.meta['hotel_score']
 

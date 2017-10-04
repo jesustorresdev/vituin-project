@@ -107,14 +107,14 @@ class TripadvisorSpider(scrapy.Spider):
         date = datetime.datetime.strptime(item['review_date'] , '%d %B %Y') 
         now = datetime.datetime.combine(datetime.datetime.today(), datetime.time(0, 0))
 
-#        if (now - date).days < 7: 
-        if (now - date).days < 1000000 and len(listErrors)==0: 
+#        if (now - date).days < 7:
+        if (now - date).days < 1000000 and len(listErrors)==0:
 
-            t = response.xpath('//div[@class="quote isNew"]/a/span/text()') 
-            if t: 
+            t = response.xpath('//div[@class="quote isNew"]/a/span/text()')
+            if t:
                 item['title'] = t.extract()[0][1:-1] #strip the quotes (first and last char)
-            #else:
-                #listErrors=listErrors + ['title']    
+            else:
+                listErrors=listErrors + ['title']
 
             c = response.xpath('//div[@class="entry"]/p/text()')
             if c:
@@ -123,10 +123,10 @@ class TripadvisorSpider(scrapy.Spider):
                 listErrors=listErrors + ['content']
 
             r_l = response.xpath('//div[@class="location"]/span/text()')
-            if r_l: 
+            if r_l:
                 item['reviewer_location']  = r_l.extract()[0]
-            #else:
-                #listErrors=listErrors + ['reviewer_location']  
+            else:
+                listErrors=listErrors + ['reviewer_location']
 
             #si ejecutas como la comentada ves toda la seccion de span y te ayuda a ver los atributos. content tiene la fecha en numerico
             #item['review_date'] = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "relativeDate", " " ))]').extract()[0]
@@ -141,44 +141,8 @@ class TripadvisorSpider(scrapy.Spider):
             if len(listErrors)>0:
 
                 #self.send_email(listErrors)
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('ERRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR')
-                print('MAAAAAAAAAAAAAAAAAAAARIIIIIIIIIIIIIIIIIIIIIIIIN')
-                print(response.meta['hotel_name'])
-                print(response)
-                print('content:----')
-                print(response.xpath('//div[@class="entry"]/p/text()').extract())
                 print(listErrors)
-                raise CloseSpider('Loooooool spider')
+                raise CloseSpider('Error in Parse Reviews')
 
 
             return item
