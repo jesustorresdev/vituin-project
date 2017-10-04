@@ -1,6 +1,7 @@
 import sys
 import unicodecsv as csv
 import json
+import datetime
 
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
@@ -44,6 +45,9 @@ for row in csv.reader(f):
 	
     	for i in range(len(reference)):
         	item[reference[i]] = row[i]
+		#transformar el string de la fecha a formato datetime
+                if reference[i] == "review_date":
+                        item[reference[i]]=datetime.datetime.strptime(row[i], "%Y-%m-%d %H:%M:%S")
         action = {
         	"_index": "index_booking",
                 "_type": "review_hotels",
