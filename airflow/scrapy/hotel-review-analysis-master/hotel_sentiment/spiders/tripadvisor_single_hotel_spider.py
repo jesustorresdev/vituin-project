@@ -31,10 +31,10 @@ class TripadvisorSpider(scrapy.Spider):
 
             url = response.urljoin(href.extract())
 
-            #se forma el request 
+            #Create the request 
             request = scrapy.Request(url, callback=self.parse_review)
 
-            #la consulta a Elasticsearch ciertos campos por medio de la url
+            #Make a query to Elasticsearch using the URL
 	    res = es.search(index="index_listhotels_tripadvisor", doc_type="hotels_unit",body={
         	"query": {
                 	"match_phrase": {
@@ -61,12 +61,11 @@ class TripadvisorSpider(scrapy.Spider):
 	       	    locality = hit["_source"]["locality_address"]
 	       	    score = hit["_source"]["score"]
 
-	   
-            #se almacenan los campos que se van a unir
+            #save some fields that we will send
             request.meta['hotel_name']=hotel
             request.meta['has_review']=has_review
 
-            #Estos campos son opcionales. Pueden estar vacios
+            #this fields are optionals
             request.meta['hotel_street_address']=street
             request.meta['hotel_extended_address']=extended
             request.meta['hotel_locality_address']=locality
@@ -86,8 +85,8 @@ class TripadvisorSpider(scrapy.Spider):
     #to get the full review content I open its page, because I don't get the full content on the main page
     #there's probably a better way to do it, requires investigation
     def parse_review(self, response):
-        item = TripAdvisorReviewItem() #cambio de la clase Hotel Sentiment a la especifica de Tripadvisor
-        listErrors=[] #lista de errores si los hubiera
+        item = TripAdvisorReviewItem() #Class with Tripadvisor fields
+        listErrors=[] #if there is bugs
 
         item['hotel_name']=response.meta['hotel_name'] 
         item['hotel_street_address']=response.meta['hotel_street_address']
@@ -136,19 +135,12 @@ class TripadvisorSpider(scrapy.Spider):
             else:
                 listErrors=listErrors + ['reviewer_location']  
 
-            #si ejecutas como la comentada ves toda la seccion de span y te ayuda a ver los atributos. content tiene la fecha en numerico
-            #item['review_date'] = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "relativeDate", " " ))]').extract()[0]
-
-            #item['review_date2'] = response.xpath('//span[@class="ratingDate relativeDate"]/@tittle').extract()
-
-            #item['review_date2'] = response.xpath('//span[@class="ratingDate relativeDate"]/@title').extract()[0]
-
-            #si hay errores al extraer campos
-
+            #if there is bugs to extract fields
             if len(listErrors)>0:
                 #self.send_email(listErrors)
                 print(listErrors)
-                #si no tiene review no pasa nada por los errores
+                #if it doesnt have review there isnt problem
+                si no tiene review no pasa nada por los errores
                 if has_review != 1:
                 	raise CloseSpider('Error Spider in Parse_Review')
 
@@ -167,13 +159,13 @@ class TripadvisorSpider(scrapy.Spider):
 
             message = re.sub(', $', '.' , message)
 
-            #Mandar un correo informando si hay un error
+            #Send a email saying if some bug have ocurred
             mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
             mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
             exceptionErrorItem=True
 
-            #eliminar el archivo extraido hasta entonces
-            os.remove('itemsTripadvisor.csv') 
+            #In this case we delete the extract file until this moment
+            os.remove('itemsTripadvisor.csv')
 
 
 

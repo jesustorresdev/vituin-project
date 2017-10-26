@@ -42,10 +42,10 @@ for row in csv.reader(f):
 
     	for i in range(len(reference)):
         	item[reference[i]] = row[i]
-		item['insert_time']=datetime.datetime.today()
+		item['review_date']=datetime.datetime.today()
 
 	action = {
-        	"_index": "index_listhotels_booking",
+        	"_index": "index_establishments_booking",
                 "_type": "hotels_unit",
             	"_id": cont_id,
            	"_source": item

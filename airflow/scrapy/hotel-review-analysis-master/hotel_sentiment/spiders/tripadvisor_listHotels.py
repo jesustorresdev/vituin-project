@@ -38,7 +38,7 @@ class TripadvisorSpider(scrapy.Spider):
             repeat=''
 	    for hit in res['hits']['hits']:
 		repeat = hit["_source"]
-            #Si no esta ya en la lista(determinada URL) se extraen sus datos
+            #If the hotel doesnt have in the list, it will extract its data
             if repeat == '':
             	yield request
             parse_is_ok = 1
@@ -58,7 +58,7 @@ class TripadvisorSpider(scrapy.Spider):
 
     def parse_hotel(self, response):
         item = ListHotelsTripadvisorItem()
-        listErrors=[] #lista de errores si los hubiera
+        listErrors=[] #Bugs list, if it exists
 
         name = response.xpath('//div[@id="taplc_location_detail_header_hotels_0"]/h1/text()')
         if name:
@@ -122,12 +122,12 @@ class TripadvisorSpider(scrapy.Spider):
 
             message = re.sub(', $', '.' , message)
 
-            #Mandar un correo informando si hay un error
+            #Send a email saying if some bug have ocurred
             mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
             mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
             exceptionErrorItem=True
 
-            #eliminar el archivo extraido hasta entonces
+            #In this case we delete the extract file until this moment
             os.remove('itemslistHotelsTripadvisor.csv') 
 
 

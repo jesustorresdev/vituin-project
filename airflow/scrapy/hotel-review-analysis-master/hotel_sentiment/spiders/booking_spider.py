@@ -35,12 +35,12 @@ class BookingSpider(scrapy.Spider):
 	url = response.urljoin(reviewsurl[0].extract())
 
         request = scrapy.Request(response.url, callback=self.parse_review)
-        #se almacenan una serie de campos que se van a enviar
+        #It saves a fields that it will be send
 
         name = response.xpath('//div[@class="hp__hotel-title"]/h2/text()')
         request.meta['hotel_name']=hotel
 
-        #Estos campos son opcionales. Pueden estar vacios
+        #This fields are optionals. Can be empty
         address = response.xpath('//span[@class="hp_address_subtitle jq_tooltip"]/text()')
         request.meta['hotel_address']=address
 
@@ -49,7 +49,7 @@ class BookingSpider(scrapy.Spider):
 
         self.pageNumber = 1
 
-        #si hay comentario
+        #If there is comment
         if has_review:
 	        yield request
 
@@ -133,10 +133,10 @@ class BookingSpider(scrapy.Spider):
 
             message = re.sub(', $', '.' , message)
 
-            #Mandar un correo informando si hay un error
+            #Send a email saying if some bug have ocurred
             mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
             #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
             exceptionErrorItem=True
 
-            #eliminar el archivo extraido hasta entonces
+            #In this case we delete the extract file until this moment
             os.remove('itemsBooking.csv')

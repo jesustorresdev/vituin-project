@@ -11,7 +11,6 @@ samples = [row for row in csv.reader(f)]
 samples[0].append("key")
 review_date_position=0
 key_position=len(samples[0])-1
-print(samples[0][9])
 
 i=0
 for field in samples[0]:
@@ -22,6 +21,7 @@ for field in samples[0]:
 for i in range(1,len(samples)):
     key =  hashlib.md5(samples[i][review_date_position].encode('utf-8')).hexdigest()
     samples[i].append(key)
+
 
 #write the reviews with the keys, this file will be used for indexing
 with open('keys_' + filename, 'wb') as csvfile:

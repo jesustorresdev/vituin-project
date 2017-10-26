@@ -13,12 +13,12 @@ exceptionErrorItem=False
 class BookingSpider(scrapy.Spider):
     name = "booking_singlehotel"
     
-    #En caso de que obtengamos la lista de urls que nosotros le pasamos
+    #When we want to get it a specific URLs
     #start_urls = BookingHotelsURLs()
     start_urls = []
     es = Elasticsearch(['elasticsearch:9200'])
     res = es.search(index="index_listhotels_booking")
-    #creamos lista de urls
+    #create list of URLs
     for hit in res['hits']['hits']:
             start_urls=start_urls + [hit["_source"]["url"]]
 
@@ -27,7 +27,7 @@ class BookingSpider(scrapy.Spider):
         listErrors=[]
         es = Elasticsearch(['elasticsearch:9200'])
 
-        #la consulta a Elasticsearch ciertos campos por medio de la url
+        #Make a query to Elasticsearch using the URL
         request = scrapy.Request(response.url, callback=self.parse_review)
         res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
             "query": {
@@ -52,14 +52,13 @@ class BookingSpider(scrapy.Spider):
                 score = hit["_source"]["score"]
                 phone = hit["_source"]["phone"]
 
-
-        #se almacenan una serie de campos que se van a enviar
+        #save some fields that we will send
         request.meta['hotel_name']=hotel
-        #Estos campos son opcionales. Pueden estar vacios
+        #this fields are optionals
         request.meta['hotel_address']=address
         request.meta['hotel_score']=score
 
-        #si hay comentario
+        #if there are comment
         if has_review:
         	yield request
 
@@ -146,11 +145,11 @@ class BookingSpider(scrapy.Spider):
 
             message = re.sub(', $', '.' , message)
 
-            #Mandar un correo informando si hay un error
+            #Send a email saying if some bug have ocurred
             mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
             #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
             exceptionErrorItem=True
 
-            #eliminar el archivo extraido hasta entonces
+            #In this case we delete the extract file until this moment
             os.remove('itemsBooking.csv')
 

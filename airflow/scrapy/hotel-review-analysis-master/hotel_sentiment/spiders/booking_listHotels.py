@@ -38,7 +38,7 @@ class BookingSpider(scrapy.Spider):
             repeat=''
             for hit in res['hits']['hits']:
                 repeat = hit["_source"]
-            #Si no esta ya en la lista(determinada URL) se extraen sus datos
+            #If the hotel doesnt have in the list, it will extract its data
             if repeat == '':
                 yield request
            
@@ -56,12 +56,11 @@ class BookingSpider(scrapy.Spider):
                 raise CloseSpider('Error scraping')
 
 
-    #get its reviews page
     def parse_hotel(self, response):
 
         reviewsurl = response.xpath('//a[@class="show_all_reviews_btn"]/@href')
         item = ListHotelsBookingItem()
-        listErrors=[]
+        listErrors=[] #Bugs list, if it exists
 
 
         url = response.urljoin(reviewsurl[0].extract())
@@ -113,12 +112,12 @@ class BookingSpider(scrapy.Spider):
 
             message = re.sub(', $', '.' , message)
 
-            #Mandar un correo informando si hay un error
+            #Send a email saying if some bug have ocurred
             mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
             #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
             exceptionErrorItem=True
 
-            #eliminar el archivo extraido hasta entonces
+            #In this case we delete the extract file until this moment
             os.remove('listhotelsBooking.csv')
 
 

@@ -47,7 +47,7 @@ for row in csv.reader(f):
                 item['insert_time']=datetime.datetime.today()
 	
 	action = {
-        	"_index": "index_listhotels_tripadvisor",
+        	"_index": "index_establishments_tripadvisor",
                 "_type": "hotels_unit",
             	"_id": cont_id,
            	"_source": item
