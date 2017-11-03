@@ -1,12 +1,14 @@
 import requests
 import json
-import re
+import re, os
 import unicodecsv as csv
 import datetime
 
 from requests_oauthlib import OAuth2Session
 from requests_oauthlib.compliance_fixes import facebook_compliance_fix
+from elasticsearch import Elasticsearch
 
+es = Elasticsearch(['elasticsearch:9200'])
 
 
 params = {'access_token': \
@@ -35,15 +37,15 @@ insights=[]
 insights.append(["name", "id", "value", "period", "title", "description", "time_insert"])
 
 try:
-    for element in data['data']:
-
-        #Array	n with all insigths
-        tem=[]
-        for field in element:
-            tem.insert(0, element[field])
-        tem.append(datetime.datetime.today().isoformat()) #Add the time of create
-        insights.append(tem)
-
+    while True:
+        for element in data['data']:
+            #Array with all insigths
+            tem=[]
+            for field in element:
+               tem.insert(0, element[field])
+            tem.append(datetime.datetime.today().isoformat()) #Add the time of create
+            insights.append(tem)
+        data = requests.get(data['paging']['next']).json()
 
 except KeyError as e:
     print(e)

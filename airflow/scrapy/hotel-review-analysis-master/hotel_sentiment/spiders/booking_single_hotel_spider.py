@@ -1,4 +1,4 @@
-import scrapy, datetime, os, re
+import scrapy, datetime, re, os
 from scrapy.loader import ItemLoader
 from hotel_sentiment.items import BookingReviewItem
 from hotel_sentiment.urls import BookingHotelsURLs
@@ -7,8 +7,9 @@ from scrapy.exceptions import CloseSpider
 from elasticsearch import Elasticsearch
 from datetime import timedelta
 #crawl up to 6 pages of review per hotel
-max_pages_per_hotel = 6
+#max_pages_per_hotel = 6
 exceptionErrorItem=False
+
 
 class BookingSpider(scrapy.Spider):
     name = "booking_singlehotel"
@@ -16,20 +17,31 @@ class BookingSpider(scrapy.Spider):
     #When we want to get it a specific URLs
     #start_urls = BookingHotelsURLs()
     start_urls = []
-    es = Elasticsearch(['elasticsearch:9200'])
-    res = es.search(index="index_listhotels_booking")
+    es = Elasticsearch(
+       [
+         'elastic:vituinproject@elasticsearch:9200/',
+       ]
+    )
+    res = es.search(index="index_establishments_booking")
+
     #create list of URLs
     for hit in res['hits']['hits']:
             start_urls=start_urls + [hit["_source"]["url"]]
 
+            
+    #pageNumber = 1
 
     def parse(self, response):
         listErrors=[]
-        es = Elasticsearch(['elasticsearch:9200'])
-
         #Make a query to Elasticsearch using the URL
+        es = Elasticsearch(
+           [
+             'elastic:vituinproject@elasticsearch:9200/',
+           ]
+        )
         request = scrapy.Request(response.url, callback=self.parse_review)
-        res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
+
+        res = es.search(index="index_establishments_booking", doc_type="hotels_unit",body={
             "query": {
                     "match_phrase": {
                             "url": response.url
@@ -58,6 +70,8 @@ class BookingSpider(scrapy.Spider):
         request.meta['hotel_address']=address
         request.meta['hotel_score']=score
 
+        #self.pageNumber = 1
+
         #if there are comment
         if has_review:
         	yield request
@@ -69,21 +83,23 @@ class BookingSpider(scrapy.Spider):
         now = datetime.datetime.combine(datetime.datetime.today(), datetime.time(0, 0))
         listErrors=[]
 
+        #if self.pageNumber > max_pages_per_hotel:
+        #    return
+
 
         for rev in response.xpath('//li[starts-with(@class,"review_item")]'):
             item = BookingReviewItem()
             #sometimes the title is empty because of some reason, not sure when it happens but this works
-            item['hotel_name']=response.meta['hotel_name']
-            item['hotel_address']=response.meta['hotel_address']
-            item['hotel_score']=response.meta['hotel_score']
+            if 'hotel_name' in response.meta:
+                item['hotel_name']=response.meta['hotel_name']
+                item['hotel_address']=response.meta['hotel_address']
+                item['hotel_score']=response.meta['hotel_score']
 
-            review_date = rev.xpath('.//meta[@itemprop="datePublished"]/@content') 
+            review_date = rev.xpath('.//meta[@itemprop="datePublished"]/@content')
             if review_date:
                 item['review_date'] = review_date [0].extract()
-                date = datetime.datetime.strptime(item['review_date'], '%Y-%m-%d') 
-                item['review_date']= date   
-                
-                
+                date = datetime.datetime.strptime(item['review_date'], '%Y-%m-%d')
+                item['review_date']= date
                 #if (now - date).days < 7:
                 if (now - date).days < 1000000:
 
@@ -106,19 +122,18 @@ class BookingSpider(scrapy.Spider):
                     else:
                         listErrors=listErrors + ['score']
 
-                    #tags are separated by ;
-                    # comento las tags. No la usamos en el proyecto
-                    #item['tags'] = ";".join(rev.xpath('.//li[@class="review_info_tag"]/text()').extract())
-                    # anado codigo para sar la fecha de la revision y la localizacion del revisor
-
-                    item['reviewer_location'] = rev.xpath('.//span[@class="reviewer_country"]/span[@itemprop="nationality"]/span[@itemprop="name"]/text()')[0].extract()
+                    item['reviewer_location'] = rev.xpath('.//span[@class="reviewer_country"]/span[@itemprop="nationality"]/span[@itemprop="name"]/text()').extract()
 
                     yield item
 
                 else:
                     break
             else:
-                listErrors=listErrors + ['review_date']
+                is_photo = ''
+                is_photo = rev.xpath('//li[@class="review_item_photo review_item_photo-p"]').extract()
+                #if rev is a review item photo
+                if is_photo == '':
+                    listErrors=listErrors + ['review_date']
 
         if len(listErrors)>0:
 
@@ -128,9 +143,14 @@ class BookingSpider(scrapy.Spider):
 
         next_page = response.xpath('//a[@id="review_next_page_link"]/@href')
         if next_page:
-            self.pageNumber += 1
+            #self.pageNumber += 1
             url = response.urljoin(next_page[0].extract())
-            yield scrapy.Request(url, self.parse_reviews)
+            request = scrapy.Request(url, self.parse_review)
+            #We send the meta data to the request of the next pages
+            request.meta['hotel_name']=response.meta['hotel_name']
+            request.meta['hotel_address']=response.meta['hotel_address']
+            request.meta['hotel_score']=response.meta['hotel_score']
+            yield request
 
 
     def send_email(self, listErrors):

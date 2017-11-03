@@ -1,6 +1,6 @@
-FROM elasticsearch:2.4.4
+FROM docker.elastic.co/elasticsearch/elasticsearch:5.0.2
 
-ENV ES_JAVA_OPTS="-Des.path.conf=/etc/elasticsearch"
+#ENV ES_JAVA_OPTS="-Ees.path.conf=/etc/elasticsearch"
 
 
 

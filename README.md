@@ -17,3 +17,7 @@ También puedes acceder a Elasticsearch mediante el puerto 9200 haciendo el tún
 Y a airflow por el 8080:
 
 - ssh -L8080:localhost:8080 user@vituin.iaas.ull.es
+
+
+User elasticsearch: elastic
+Password elasticsearch: vituinproject

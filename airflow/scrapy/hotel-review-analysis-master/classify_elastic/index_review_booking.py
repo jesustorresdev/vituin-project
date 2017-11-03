@@ -32,17 +32,22 @@ reference = ["review_date",
              "review_key"
             ]
 
-es = Elasticsearch(['elasticsearch:9200'])
+es = Elasticsearch(
+   [
+     'elastic:vituinproject@elasticsearch:9200/',
+   ]
+)
 
 count = 0
 actions = []
 
+now = datetime.datetime.today()
 
 for row in csv.reader(f):
 
     if(count!=0):
         item = {}
-	
+
     	for i in range(len(reference)):
         	item[reference[i]] = row[i]
 		#transformar el string de la fecha a formato datetime
@@ -54,8 +59,9 @@ for row in csv.reader(f):
             	"_id": cont_id,
            	"_source": item
             	}
-    	'''
-        if item['review_date'] ==  now - 7:
+
+
+        if item['review_date'] ==  now.day - 7:
                 key = item['key']
                 #busqueda de una entrada igual
                 res = es.search(index="index_booking", doc_type="review_hotels",body={
@@ -65,16 +71,15 @@ for row in csv.reader(f):
                                         }
                                 }
                         })
-                exist = ''
+                exist = '0'
                 for hit in res['hits']['hits']:
                         exist = hit["_source"]
 
-                if exist = '':
+                if exist == '0':
+
                         actions.append(action)
         else:
-    	'''
-
-	actions.append(action)
+	        actions.append(action)
 
     	cont_id += 1
 

@@ -11,8 +11,11 @@ from elasticsearch import Elasticsearch
 #crawl up to 6 pages of review per hotel
 max_pages_per_hotel = 6
 exceptionErrorItem=False
-es = Elasticsearch(['elasticsearch:9200'])
-
+es = Elasticsearch(
+   [
+     'elastic:vituinproject@elasticsearch:9200/',
+   ]
+)
 
 class BookingSpider(scrapy.Spider):
     name = "booking_listHotels"
@@ -27,7 +30,7 @@ class BookingSpider(scrapy.Spider):
         for hotelurl in response.xpath('//a[@class="hotel_name_link url"]/@href'):
             url = response.urljoin(hotelurl.extract())
             request = scrapy.Request(url, callback=self.parse_hotel)
-            
+
 	    res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
                 "query": {
                         "match_phrase": {
@@ -41,7 +44,7 @@ class BookingSpider(scrapy.Spider):
             #If the hotel doesnt have in the list, it will extract its data
             if repeat == '':
                 yield request
-           
+
             parse_is_ok = 1
 
         next_page = response.xpath('//a[starts-with(@class,"paging-next")]/@href')

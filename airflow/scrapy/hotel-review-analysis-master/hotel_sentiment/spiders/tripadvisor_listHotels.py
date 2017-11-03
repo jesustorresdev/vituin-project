@@ -8,7 +8,11 @@ from scrapy.exceptions import CloseSpider
 from elasticsearch import Elasticsearch
 
 exceptionErrorItem=False
-es = Elasticsearch(['elasticsearch:9200'])
+es = Elasticsearch(
+   [
+     'elastic:vituinproject@elasticsearch:9200/',
+   ]
+)
 
 
 

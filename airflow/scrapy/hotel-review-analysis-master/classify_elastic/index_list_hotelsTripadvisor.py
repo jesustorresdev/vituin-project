@@ -31,7 +31,11 @@ reference = ["name",
              "hotel_key"
             ]
 
-es = Elasticsearch(['elasticsearch:9200'])
+es = Elasticsearch(
+   [
+     'elastic:vituinproject@elasticsearch:9200/',
+   ]
+)
 
 count = 0
 actions = []
@@ -53,7 +57,7 @@ for row in csv.reader(f):
            	"_source": item
             	}
 
-	#actions.append(action)
+	actions.append(action)
 
     	cont_id += 1
 

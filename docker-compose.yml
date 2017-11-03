@@ -3,27 +3,34 @@ version: '2'
 services:
   elasticsearch:
     build: elasticsearch/
-    command: elasticsearch -Des.network.host=0.0.0.0
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+      - /home/sdiaz/vituin_project/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
-     - "9200:9200"
-     - "9300:9300"
-  #logstash:
-  #  build: logstash/
-  #  volumes:
-  #   - /home/sdiaz/docker_compose/logstash/files:/etc/logstash/conf.d
-  #  command: logstash -f /etc/logstash/conf.d/logstash.conf
-  #  ports:
-  #   - "5000:5000"
-  #  links:
-  #   - elasticsearch
+      - 9200:9200
+      - 9300:9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 2g
+    cap_add:
+      - IPC_LOCK
   kibana:
     build: kibana/
     ports:
      -  "5601:5601"
-    links:
-     - elasticsearch
     environment:
-     - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - SERVER_HOST=0.0.0.0
+    volumes:
+      - /home/sdiaz/vituin_project/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
 
   postgres:
      image: postgres:9.6
@@ -48,15 +55,6 @@ services:
           - elasticsearch
       command: webserver
 
-
-
-
-
-
-
-
-
-
-
-
-
+volumes:
+  esdata:
+    driver: local

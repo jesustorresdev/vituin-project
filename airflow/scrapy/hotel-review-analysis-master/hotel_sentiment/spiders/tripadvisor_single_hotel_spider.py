@@ -15,8 +15,12 @@ class TripadvisorSpider(scrapy.Spider):
     name = "tripadvisor_singlehotel"
     #start_urls = TripAdvisorHotelsURLs()
     start_urls = []
-    es = Elasticsearch(['elasticsearch:9200'])
-    res = es.search(index="index_listhotels_tripadvisor")
+    es = Elasticsearch(
+       [
+         'elastic:vituinproject@elasticsearch:9200/',
+       ]
+    )
+    res = es.search(index="index_establishments_tripadvisor")
     #creamos lista de urls
     for hit in res['hits']['hits']:
             start_urls=start_urls + [hit["_source"]["url"]]
@@ -24,7 +28,6 @@ class TripadvisorSpider(scrapy.Spider):
 
     def parse(self, response):
         listErrors=[]
-        es = Elasticsearch(['elasticsearch:9200'])
 
         for href in response.xpath('//div[starts-with(@class,"quote")]/a/@href'):
 
@@ -33,9 +36,14 @@ class TripadvisorSpider(scrapy.Spider):
 
             #Create the request 
             request = scrapy.Request(url, callback=self.parse_review)
+            es = Elasticsearch(
+                [
+                    'elastic:vituinproject@elasticsearch:9200/',
+                ]
+            )
 
             #Make a query to Elasticsearch using the URL
-	    res = es.search(index="index_listhotels_tripadvisor", doc_type="hotels_unit",body={
+	    res = es.search(index="index_establishments_tripadvisor", doc_type="hotels_unit",body={
         	"query": {
                 	"match_phrase": {
                         	"url": response.url
@@ -140,7 +148,6 @@ class TripadvisorSpider(scrapy.Spider):
                 #self.send_email(listErrors)
                 print(listErrors)
                 #if it doesnt have review there isnt problem
-                si no tiene review no pasa nada por los errores
                 if has_review != 1:
                 	raise CloseSpider('Error Spider in Parse_Review')
 

@@ -19,11 +19,9 @@ def fieldsDictionaries(dic, i, item):
             item[key] = dic[element]
 
     return item
-    
 
 #Create array with the references
-def createItem(row, item): 
-    
+def createItem(row, item):
     #Firsts fields
     reference = [  "name",
                    "id",
@@ -33,13 +31,13 @@ def createItem(row, item):
                    "created_time"
 
           ]
-    
+
     for i in range(len(reference)):
         j=i
         if i >= 2:         #row[2] is a dictionary. After we extract its data 
            j = j+1
-        item[reference[i]] = row[j] 
-    
+        item[reference[i]] = row[j]
+
     field = ast.literal_eval(row[2])
 
     i = 0 #Each element behind the dictionary
@@ -48,7 +46,7 @@ def createItem(row, item):
         item=fieldsDictionaries(dic,i,item)
 
         i=i+1
-    
+
     return item
 
 #takes two arguments:
@@ -62,12 +60,17 @@ filename =  sys.argv[1]
 cont_id = int(1)
 f = open(filename)
 reference = []
-es = Elasticsearch(['elasticsearch:9200'])
+es = Elasticsearch(
+   [
+     'elastic:vituinproject@elasticsearch:9200/'
+   ]
+)
 
 count = 0
 actions = []
 
 
+#now = datetime.datetime.today()
 
 
 for row in csv.reader(f):
@@ -85,7 +88,7 @@ for row in csv.reader(f):
                 "_source": item
                 }
         ''' 
-        if item['created_time'] ==  now - 7:
+        if item['created_time'] ==  day.now - 7:
                 id = item['id']
                 #busqueda de una entrada igual
                 res = es.search(index="index_facebook", doc_type="posts",body={
@@ -95,11 +98,11 @@ for row in csv.reader(f):
                                         }
                                 }
                         })
-                exist = ''
+                exist = '0'
                 for hit in res['hits']['hits']:
                         exist = hit["_source"]
 
-                if exist = '':
+                if exist == '':
                         actions.append(action)
         else:
         '''

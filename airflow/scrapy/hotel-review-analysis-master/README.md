@@ -17,7 +17,7 @@ scrapy crawl tripadvisor -o itemsTripadvisor.csv -s CLOSESPIDER_ITEMCOUNT=15000
 To crawl from single hotel, restaurant, etc., in tripadvisor use:
 
 ```sh
-scrapy crawl tripadvisor_singlehote -o itemsTripadvisor.csv -s CLOSESPIDER_ITEMCOUNT=15000
+scrapy crawl tripadvisor_singlehotel -o itemsTripadvisor.csv -s CLOSESPIDER_ITEMCOUNT=15000
 ```
 
 You can check out the generated machine learning sentiment analysis model [here](https://app.monkeylearn.com/categorizer/projects/cl_rZ2P7hbs/tab/main-tab).

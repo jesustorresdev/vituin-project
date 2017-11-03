@@ -29,7 +29,12 @@ reference = ["name",
              "hotel_key"
             ]
 
-es = Elasticsearch(['elasticsearch:9200'])
+es = Elasticsearch(
+   [
+     'elastic:vituinproject@elasticsearch:9200/',
+   ]
+)
+#'elasticsearch:9200'
 
 count = 0
 actions = []

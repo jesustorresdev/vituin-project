@@ -1,2 +1,2 @@
-FROM logstash:2.4.0
+FROM logstash:5.0.0
 
