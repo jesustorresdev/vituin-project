@@ -88,17 +88,19 @@ class BookingSpider(scrapy.Spider):
 
 
         for rev in response.xpath('//li[starts-with(@class,"review_item")]'):
+
+
             item = BookingReviewItem()
             #sometimes the title is empty because of some reason, not sure when it happens but this works
-            if 'hotel_name' in response.meta:
-                item['hotel_name']=response.meta['hotel_name']
-                item['hotel_address']=response.meta['hotel_address']
-                item['hotel_score']=response.meta['hotel_score']
+            item['hotel_name']=response.meta['hotel_name']
+            item['hotel_address']=response.meta['hotel_address']
+            item['hotel_score']=response.meta['hotel_score']
 
             review_date = rev.xpath('.//meta[@itemprop="datePublished"]/@content')
             if review_date:
                 item['review_date'] = review_date [0].extract()
                 date = datetime.datetime.strptime(item['review_date'], '%Y-%m-%d')
+
                 item['review_date']= date
                 #if (now - date).days < 7:
                 if (now - date).days < 1000000:
@@ -122,7 +124,15 @@ class BookingSpider(scrapy.Spider):
                     else:
                         listErrors=listErrors + ['score']
 
-                    item['reviewer_location'] = rev.xpath('.//span[@class="reviewer_country"]/span[@itemprop="nationality"]/span[@itemprop="name"]/text()').extract()
+                    reviewer_location = rev.xpath('.//span[@class="reviewer_country"]/span[@itemprop="nationality"]/span[@itemprop="name"]/text()')
+                    if reviewer_location:
+                        item['reviewer_location'] = reviewer_location.extract()
+
+
+                    if len(listErrors)>0:
+                        #self.send_email(listErrors)
+                        raise CloseSpider('Error spider')
+
 
                     yield item
 
@@ -134,11 +144,9 @@ class BookingSpider(scrapy.Spider):
                 #if rev is a review item photo
                 if is_photo == '':
                     listErrors=listErrors + ['review_date']
+                    #self.send_email(listErrors)
+                    raise CloseSpider('Error spider')
 
-        if len(listErrors)>0:
-
-          #self.send_email(listErrors)
-          raise CloseSpider('Error spider')
 
 
         next_page = response.xpath('//a[@id="review_next_page_link"]/@href')

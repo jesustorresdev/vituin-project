@@ -119,7 +119,13 @@ class BookingSpider(scrapy.Spider):
         if next_page:
             self.pageNumber += 1
             url = response.urljoin(next_page[0].extract())
-            yield scrapy.Request(url, self.parse_reviews)
+            request = scrapy.Request(url, self.parse_review)
+            #We send the meta data to the request of the next pages
+            request.meta['hotel_name']=response.meta['hotel_name']
+            request.meta['hotel_address']=response.meta['hotel_address']
+            request.meta['hotel_score']=response.meta['hotel_score']
+            yield request
+
 
     def send_email(self, listErrors):
 

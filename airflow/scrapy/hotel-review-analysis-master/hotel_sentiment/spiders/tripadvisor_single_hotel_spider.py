@@ -6,6 +6,7 @@ from hotel_sentiment.urls import TripAdvisorHotelsURLs
 from scrapy.mail import MailSender
 from scrapy.exceptions import CloseSpider
 from elasticsearch import Elasticsearch
+from selenium import webdriver
 
 exceptionErrorItem=False
 
@@ -20,30 +21,36 @@ class TripadvisorSpider(scrapy.Spider):
          'elastic:vituinproject@elasticsearch:9200/',
        ]
     )
-    res = es.search(index="index_establishments_tripadvisor")
+    #SearchAllEstablishments
+    doc = {
+            'size' : 10000,
+            'query': {
+                 'match_all' : {}
+             }
+          }
+    res = es.search(index='index_establishments_tripadvisor', doc_type='hotels_unit', body=doc,scroll='1m')
+
     #creamos lista de urls
     for hit in res['hits']['hits']:
             start_urls=start_urls + [hit["_source"]["url"]]
 
 
+    def __init__(self):
+        self.driver = webdriver.Firefox()
+
     def parse(self, response):
+
         listErrors=[]
+        #Create the request
+        request = scrapy.Request(response.url, callback=self.parse_review)
+        es = Elasticsearch(
+            [
+               'elastic:vituinproject@elasticsearch:9200/',
+            ]
+        )
 
-        for href in response.xpath('//div[starts-with(@class,"quote")]/a/@href'):
-
-
-            url = response.urljoin(href.extract())
-
-            #Create the request 
-            request = scrapy.Request(url, callback=self.parse_review)
-            es = Elasticsearch(
-                [
-                    'elastic:vituinproject@elasticsearch:9200/',
-                ]
-            )
-
-            #Make a query to Elasticsearch using the URL
-	    res = es.search(index="index_establishments_tripadvisor", doc_type="hotels_unit",body={
+        #Make a query to Elasticsearch using the URL
+        res = es.search(index="index_establishments_tripadvisor", doc_type="hotels_unit",body={
         	"query": {
                 	"match_phrase": {
                         	"url": response.url
@@ -52,107 +59,119 @@ class TripadvisorSpider(scrapy.Spider):
        		})
 
 
-            hotel =  ''
-            has_review =  ''
-            street =  ''
-            extended =  ''
-            locality =  ''
-            score = ''
-            phone = ''
+        hotel =  ''
+        has_review =  ''
+        street =  ''
+        extended =  ''
+        locality =  ''
+        score = ''
+        phone = ''
 
-            for hit in res['hits']['hits']:
+        for hit in res['hits']['hits']:
 
-	       	    hotel = hit["_source"]["name"]
-       	       	    has_review = hit["_source"]["has_reviews"]
-	       	    street = hit["_source"]["name"]
-	       	    extended = hit["_source"]["extended_address"]
-	       	    locality = hit["_source"]["locality_address"]
-	       	    score = hit["_source"]["score"]
+      	    hotel = hit["_source"]["name"]
+       	    has_review = hit["_source"]["has_reviews"]
+      	    street = hit["_source"]["name"]
+       	    extended = hit["_source"]["extended_address"]
+       	    locality = hit["_source"]["locality_address"]
+       	    score = hit["_source"]["score"]
 
-            #save some fields that we will send
-            request.meta['hotel_name']=hotel
-            request.meta['has_review']=has_review
-
-            #this fields are optionals
-            request.meta['hotel_street_address']=street
-            request.meta['hotel_extended_address']=extended
-            request.meta['hotel_locality_address']=locality
-            request.meta['hotel_score']=score
-
-
-            yield request
-
-        next_page = response.xpath('//div[@class="unified pagination "]/child::*[2][self::a]/@href')
-        if next_page:
-
-            url = response.urljoin(next_page[0].extract())
-            yield scrapy.Request(url, self.parse_hotel)
-
+        #save some fields that we will send
+        request.meta['hotel_name']=hotel
+        #this fields are optionals
+        request.meta['hotel_street_address']=street
+        request.meta['hotel_extended_address']=extended
+        request.meta['hotel_locality_address']=locality
+        request.meta['hotel_score']=score
+        #if there are comment
+        if has_review:
+                yield request
 
 
     #to get the full review content I open its page, because I don't get the full content on the main page
     #there's probably a better way to do it, requires investigation
     def parse_review(self, response):
-        item = TripAdvisorReviewItem() #Class with Tripadvisor fields
         listErrors=[] #if there is bugs
 
-        item['hotel_name']=response.meta['hotel_name'] 
-        item['hotel_street_address']=response.meta['hotel_street_address']
-        item['hotel_extended_address']=response.meta['hotel_extended_address']
-        item['hotel_locality_address']=response.meta['hotel_locality_address']
-        item['hotel_score']=response.meta['hotel_score']
+        for rev in response.xpath('//div[starts-with(@class,"review-container")]'):
+            item = TripAdvisorReviewItem() #Class with Tripadvisor fields
 
-        r_d=response.xpath('//span[@class="ratingDate relativeDate"]/@title')
-        
-        if r_d:
-            item['review_date'] = r_d.extract()[0]
-        else:
-            listErrors=listErrors + ['review_date'] 
+            item['hotel_name']=response.meta['hotel_name']
+            item['hotel_street_address']=response.meta['hotel_street_address']
+            item['hotel_extended_address']=response.meta['hotel_extended_address']
+            item['hotel_locality_address']=response.meta['hotel_locality_address']
+            item['hotel_score']=response.meta['hotel_score']
 
-        date = datetime.datetime.strptime(item['review_date'] , '%d %B %Y') 
-        now = datetime.datetime.combine(datetime.datetime.today(), datetime.time(0, 0))
-        item['review_date']= date   
+            r_d=rev.xpath('.//span[@class="ratingDate relativeDate"]/@title')
 
+            if r_d:
+                item['review_date'] = r_d.extract()[0]
 
-        print(date)
-	print('-----------')
-        print(now)
-	print('-----------')
-        print(datetime.datetime.today())
-        raise CloseSpider('Error Spider in Parse_Review')
+                date = datetime.datetime.strptime(item['review_date'] , '%d %B %Y')
+                now = datetime.datetime.combine(datetime.datetime.today(), datetime.time(0, 0))
+                item['review_date']= date
 
-#        if (now - date).days < 7: 
-        if (now - date).days < 1000000 and len(listErrors)==0: 
+#                if (now - date).days < 7:
+                if (now - date).days < 1000000:
 
-            t = response.xpath('//div[@class="quote isNew"]/a/span/text()') 
-            if t: 
-                item['title'] = t.extract()[0][1:-1] #strip the quotes (first and last char)
+#                    t = response.xpath('//div[@class="quote isNew"]/a/span/text()')
+                    t = rev.xpath('.//div[starts-with(@class,"quote")]/a/span/text()')
+                    if t:
+                         item['title'] = t[0].extract()
+                    else:
+                         listErrors=listErrors + ['title']
+
+                    c = rev.xpath('.//div[@class="entry"]/p/text()')
+                    if c:
+                         item['content'] = c.extract()
+                    else:
+                         listErrors=listErrors + ['content']
+
+                    r_l = rev.xpath('.//div[@class="location"]/span/text()')
+                    if r_l:
+                        item['reviewer_location']  = r_l[0].extract()
+
+                    #if there is bugs to extract fields
+                    if len(listErrors)>0:
+                        self.send_email(listErrors)
+                        #if it doesnt have review there isnt problem
+                        raise CloseSpider('Error Spider in Parse_Review general')
+                        break
+
+                    yield item
+
+                else:
+                    break
+
             else:
-                listErrors=listErrors + ['title']    
-
-            c = response.xpath('//div[@class="entry"]/p/text()')
-            if c:
-                item['content'] = c.extract()[0]
-            else:
-                listErrors=listErrors + ['content']
-
-            r_l = response.xpath('//div[@class="location"]/span/text()')
-            if r_l: 
-                item['reviewer_location']  = r_l.extract()[0]
-        
-            else:
-                listErrors=listErrors + ['reviewer_location']  
-
-            #if there is bugs to extract fields
-            if len(listErrors)>0:
-                #self.send_email(listErrors)
-                print(listErrors)
+                listErrors=listErrors + ['review_date']
+                self.send_email(listErrors)
                 #if it doesnt have review there isnt problem
-                if has_review != 1:
-                	raise CloseSpider('Error Spider in Parse_Review')
+                raise CloseSpider('Error Spider in Parse_Review date')
+
+            #Use selenium for extract to next page
+            self.driver.get(response.url)
+            try:
+                self.driver.find_element_by_xpath("//div[@class='listContainer']/div[@class='prw_rup prw_common_north_star_pagination']/div//span[contains(@class, 'nav next taLnk')]").click()
+                url = self.driver.current_url
+                request = scrapy.Request(url, self.parse_review)
+                #We send the meta data to the request of the next pages
+                request.meta['hotel_name']=response.meta['hotel_name']
+                request.meta['hotel_score']=response.meta['hotel_score']
+                request.meta['hotel_street_address']=response.meta['hotel_street_address']
+                request.meta['hotel_extended_address']=response.meta['hotel_extended_address']
+                request.meta['hotel_locality_address']=response.meta['hotel_locality_address']
+                yield request
+
+            except:
+                driver.close()
 
 
-            return item
+
+
+
+
+
 
     def send_email(self, listErrors):
 
@@ -173,7 +192,3 @@ class TripadvisorSpider(scrapy.Spider):
 
             #In this case we delete the extract file until this moment
             os.remove('itemsTripadvisor.csv')
-
-
-
-
