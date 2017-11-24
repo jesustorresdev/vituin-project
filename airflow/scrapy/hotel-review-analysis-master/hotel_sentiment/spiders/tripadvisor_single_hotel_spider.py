@@ -7,6 +7,7 @@ from scrapy.mail import MailSender
 from scrapy.exceptions import CloseSpider
 from elasticsearch import Elasticsearch
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 exceptionErrorItem=False
 
@@ -34,9 +35,6 @@ class TripadvisorSpider(scrapy.Spider):
     for hit in res['hits']['hits']:
             start_urls=start_urls + [hit["_source"]["url"]]
 
-
-    def __init__(self):
-        self.driver = webdriver.Firefox()
 
     def parse(self, response):
 
@@ -83,7 +81,7 @@ class TripadvisorSpider(scrapy.Spider):
         request.meta['hotel_extended_address']=extended
         request.meta['hotel_locality_address']=locality
         request.meta['hotel_score']=score
-        #if there are comment
+        #if there are comment. If there isnt, it doesnt pass
         if has_review:
                 yield request
 
@@ -92,6 +90,7 @@ class TripadvisorSpider(scrapy.Spider):
     #there's probably a better way to do it, requires investigation
     def parse_review(self, response):
         listErrors=[] #if there is bugs
+
 
         for rev in response.xpath('//div[starts-with(@class,"review-container")]'):
             item = TripAdvisorReviewItem() #Class with Tripadvisor fields
@@ -134,7 +133,6 @@ class TripadvisorSpider(scrapy.Spider):
                     #if there is bugs to extract fields
                     if len(listErrors)>0:
                         self.send_email(listErrors)
-                        #if it doesnt have review there isnt problem
                         raise CloseSpider('Error Spider in Parse_Review general')
                         break
 
@@ -146,26 +144,37 @@ class TripadvisorSpider(scrapy.Spider):
             else:
                 listErrors=listErrors + ['review_date']
                 self.send_email(listErrors)
-                #if it doesnt have review there isnt problem
                 raise CloseSpider('Error Spider in Parse_Review date')
 
-            #Use selenium for extract to next page
-            self.driver.get(response.url)
-            try:
-                self.driver.find_element_by_xpath("//div[@class='listContainer']/div[@class='prw_rup prw_common_north_star_pagination']/div//span[contains(@class, 'nav next taLnk')]").click()
-                url = self.driver.current_url
-                request = scrapy.Request(url, self.parse_review)
-                #We send the meta data to the request of the next pages
-                request.meta['hotel_name']=response.meta['hotel_name']
-                request.meta['hotel_score']=response.meta['hotel_score']
-                request.meta['hotel_street_address']=response.meta['hotel_street_address']
-                request.meta['hotel_extended_address']=response.meta['hotel_extended_address']
-                request.meta['hotel_locality_address']=response.meta['hotel_locality_address']
-                yield request
+        #Use selenium for extract to next page
+        #open webdriver
+        driver = webdriver.Firefox()
+        driver.get(response.url)
 
-            except:
-                driver.close()
+        try:
+            #Make click in the buttom
+            driver.find_element_by_xpath("//div[@class='listContainer']/div[@class='prw_rup prw_common_north_star_pagination']/div//span[contains(@class, 'nav next taLnk')]").click()
+            url = driver.current_url #Get the new url
+            driver.close()
 
+            #geckdriver dont stop itself
+            os.system("pkill -f geckodriver")
+
+            request = scrapy.Request(url, self.parse_review)
+            #We send the meta data to the request of the next pages
+            request.meta['hotel_name']=response.meta['hotel_name']
+            request.meta['hotel_score']=response.meta['hotel_score']
+            request.meta['hotel_street_address']=response.meta['hotel_street_address']
+            request.meta['hotel_extended_address']=response.meta['hotel_extended_address']
+            request.meta['hotel_locality_address']=response.meta['hotel_locality_address']
+            yield request
+
+        except:
+            #If is the last page (or there is some problem)
+            driver.close()
+
+            #geckdriver dont stop itself
+            os.system("pkill -f geckodriver")
 
 
 
