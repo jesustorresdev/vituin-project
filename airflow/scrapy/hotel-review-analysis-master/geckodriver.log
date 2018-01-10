@@ -31704,3 +31704,8 @@ JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, li
 ###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
 
 A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+Sandbox: Unexpected EOF, op 2 flags 00 path /etc/fonts/conf.d/30-metric-aliases.conf
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down

@@ -1,4 +1,4 @@
-FROM selenium/node-firefox:3.7.1-beryllium
+FROM selenium/node-chrome:3.8.1-bohrium
 LABEL authors=SeleniumHQ
 
 USER seluser
@@ -13,6 +13,7 @@ EXPOSE 4444
 USER root
 
 ARG GECKODRIVER_VERSION=0.19.1
+ARG CHROMEDRIVER_VERSION=2.34
 
 #============
 # Install pip and selenium-python
@@ -31,6 +32,11 @@ RUN wget https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_
     && mv geckodriver /usr/local/bin/ \
     && export PATH=$PATH:/usr/local/bin/geckodriver
 
+RUN wget https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip \
+    && unzip chromedriver_linux64.zip \
+    && rm chromedriver_linux64.zip  \
+    && mv chromedriver /usr/local/bin/ \
+    && export PATH=$PATH:/usr/local/bin/chromedriver
 
 
 # Never prompts the user for choices on installation/configuration of packages

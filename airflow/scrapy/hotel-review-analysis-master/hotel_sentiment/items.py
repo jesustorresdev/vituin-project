@@ -23,6 +23,26 @@ class ListHotelsTripadvisorItem(scrapy.Item):
     locality_address = scrapy.Field()
     score = scrapy.Field()
 
+class ListRestaurantsTripadvisorItem(scrapy.Item):
+    name = scrapy.Field()
+    url = scrapy.Field()
+    has_reviews = scrapy.Field()
+    phone = scrapy.Field()
+    street_address = scrapy.Field()
+    extended_address = scrapy.Field()
+    locality_address = scrapy.Field()
+    score = scrapy.Field()
+    price = scrapy.Field()
+    ratingExcellent = scrapy.Field()
+    ratingVeryGood = scrapy.Field()
+    ratingAverage = scrapy.Field()
+    ratingPoor = scrapy.Field()
+    ratingTerrible = scrapy.Field()
+    service = scrapy.Field()
+    food = scrapy.Field()
+    value = scrapy.Field()
+    atmosphere = scrapy.Field()
+
 class ListHotelsBookingItem(scrapy.Item):
     name = scrapy.Field()
     url = scrapy.Field()
@@ -31,7 +51,6 @@ class ListHotelsBookingItem(scrapy.Item):
     address = scrapy.Field()
     score = scrapy.Field()
 
- 
 class TripAdvisorReviewItem(scrapy.Item):
     # comento los campos que no se usan para que no salgan en el CSV
     # los que si se usan se describen después como se extraen en el

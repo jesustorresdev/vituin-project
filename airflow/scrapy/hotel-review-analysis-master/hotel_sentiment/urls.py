@@ -27,3 +27,10 @@ def BookingZoneURLs():
 	"https://www.booking.com/searchresults.en-gb.html?aid=356984;label=gog235jc-country-en-gb-gb-unspec-es-com-L%3Aen-O%3Ax11-B%3Achrome-N%3Ayes-S%3Abo-U%3Ac-H%3As;sid=3d9a779adf10f3e6b7e0a80e5c9500df;region=777"
     ]
     return urls
+
+def TripadvisorPtoCruzRestaurantsURLs():
+
+    urls = [
+        "https://www.tripadvisor.es/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+    ]
+    return urls

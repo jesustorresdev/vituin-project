@@ -19,7 +19,7 @@ class TripadvisorSpider(scrapy.Spider):
     start_urls = []
     es = Elasticsearch(
        [
-         'elastic:vituinproject@elasticsearch:9200/',
+          'elastic:vituinproject@elasticsearch:9200/',
        ]
     )
     #SearchAllEstablishments
@@ -153,7 +153,7 @@ class TripadvisorSpider(scrapy.Spider):
 
         try:
             #Make click in the buttom
-            driver.find_element_by_xpath("//div[@class='listContainer']/div[@class='prw_rup prw_common_north_star_pagination']/div//span[contains(@class, 'nav next taLnk')]").click()
+            driver.find_element_by_xpath("//div[@class='listContainer']/div[@class='prw_rup prw_common_north_star_pagination']/div/span[contains(@class, 'nav next taLnk')]").click()
             url = driver.current_url #Get the new url
             driver.close()
 
