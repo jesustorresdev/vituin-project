@@ -1,36 +1,33 @@
 version: '2'
 
 services:
+
+
   elasticsearch:
-    build: elasticsearch/
-    environment:
-      - http.host=0.0.0.0
-      - transport.host=0.0.0.0
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    build:
+      context: elasticsearch/
     volumes:
-      - esdata:/usr/share/elasticsearch/data
-      - /home/sdiaz/vituin_project/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /home/sdiaz/vituin_project/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
-      - 9200:9200
-      - 9300:9300
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    mem_limit: 2g
-    cap_add:
-      - IPC_LOCK
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+
   kibana:
-    build: kibana/
-    ports:
-     -  "5601:5601"
-    environment:
-      - SERVER_HOST=0.0.0.0
+    build:
+      context: kibana/
     volumes:
-      - /home/sdiaz/vituin_project/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - /home/sdiaz/vituin_project/kibana/config/:/usr/share/kibana/config:ro
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
 
   postgres:
      image: postgres:9.6
@@ -38,7 +35,8 @@ services:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
       - POSTGRES_DB=airflow
-
+     networks:
+      - elk
   airflow:
       build: airflow/
       volumes:
@@ -51,10 +49,16 @@ services:
           - LOAD_EX=y
       ports:
           - "8080:8080"
-      links:
-          - elasticsearch
       command: webserver
+      networks:
+          - elk
 
-volumes:
-  esdata:
-    driver: local
+networks:
+
+  elk:
+    driver: bridge
+
+
+
+
+
