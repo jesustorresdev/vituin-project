@@ -14,11 +14,6 @@ from elasticsearch import helpers
 
 filename =  sys.argv[1]
 
-#cont_id = int(sys.argv[2])
-
-
-
-cont_id = int(1)
 f = open(filename)
 reference = ["review_date",
              "tittle",
@@ -34,12 +29,30 @@ reference = ["review_date",
 
 es = Elasticsearch(
    [
-     'elastic:vituinproject@elasticsearch:9200/',
+     'elasticsearch:9200/'
    ]
 )
 
 count = 0
 actions = []
+
+#Search the last indexed id
+doc = {
+        'size' : 10000,
+        'query': {
+             'match_all' : {}
+         }
+       }
+try:
+    res = es.search(index='index_booking_hotels_reviews', body=doc, size=0)
+    #The next element indexed going to be the next id doesn't used
+    cont_id = int(res['hits']['total'])
+
+except:
+    #If it's the first gruop of elements indexed
+    print("First indexed")
+    cont_id = 0
+
 
 now = datetime.datetime.today()
 
@@ -54,8 +67,8 @@ for row in csv.reader(f):
                 if reference[i] == "review_date":
                         item[reference[i]]=datetime.datetime.strptime(row[i], "%Y-%m-%d %H:%M:%S")
         action = {
-        	"_index": "index_booking",
-                "_type": "review_hotels",
+        	"_index": "index_booking_hotels_reviews",
+                "_type": "reviews",
             	"_id": cont_id,
            	"_source": item
             	}
@@ -64,7 +77,7 @@ for row in csv.reader(f):
         if item['review_date'] ==  now.day - 7:
                 key = item['key']
                 #busqueda de una entrada igual
-                res = es.search(index="index_booking", doc_type="review_hotels",body={
+                res = es.search(index="index_booking_hotels_reviews", body={
                         "query": {
                                 "match_phrase": {
                                         "review_key": key

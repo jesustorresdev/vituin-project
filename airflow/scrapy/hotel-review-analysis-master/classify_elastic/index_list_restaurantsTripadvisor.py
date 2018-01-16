@@ -14,73 +14,42 @@ from elasticsearch import helpers
 
 filename =  sys.argv[1]
 
-#cont_id = int(sys.argv[2])
-place_type = ["PtoCruz", "Tenerife","Canarias"]
+place_type = ["Puerto de la Cruz", "Tenerife","Canarias"]
 place = place_type[int(sys.argv[2])]
 
-
-cont_id = int(1)
 f = open(filename)
-'''
-reference = ["service",
-	     "atmosphere",
-             "name",
-             "extended_address",
-	     "food",
-             "has_reviews",
-             "locality_address",
-	     "url",
-         "ratingExcellent",
-         "value",
-         "phone",
-         "ratingVeryGood",
-         "score",
-         "ratingAverage",
-         "ratingTerrible",
-         "price",
-         "street_address",
-         "ratingPoor",
-             "key"
-            ]
-'''
+
 es = Elasticsearch(
    [
-     'elastic:vituinproject@elasticsearch:9200/',
+     'elasticsearch:9200/'
    ]
 )
 
 count = 0
 actions = []
 
+#Search the last indexed id
+doc = {
+        'size' : 10000,
+        'query': {
+             'match_all' : {}
+         }
+       }
+try:
+    res = es.search(index='index_tripadvisor_restaurants_establishments', body=doc, size=0)
+    #The next element indexed going to be the next id doesn't used
+    cont_id = int(res['hits']['total'])
+
+except:
+    #If it's the first gruop of elements indexed
+    print("First indexed")
+    cont_id = 0
 
 for row in csv.reader(f):
 
     if(count!=0):
         item={}
-        '''
-        item = {
-         "service":{ "type":"String"},
-         "atmosphere":{ "type":float},
-         "name":{ "type":"String"},
-         "extended_address":{ "type":"String"},
-         "food":{ "type":float},
-         "has_reviews":{ "type":int},
-         "locality_address":{ "type":"String"},
-         "url":{ "type":"String"},
-         "ratingExcellent":{ "type":int},
-         "value":{ "type":float},
-         "phone":{ "type":int},
-         "ratingVeryGood":{ "type":int},
-         "score":{ "type":float},
-         "ratingAverage": { "type":"integer"},
-         "ratingTerrible":{ "type":int},
-         "price":{ "type":"String"},
-         "street_address":{ "type":"String"},
-         "ratingPoor":{ "type":int},
-         "key":{ "type":"String"}
 
-        }
-        '''
         item['insert_time']=datetime.datetime.today()
         try:
             item['service']=float(row[0])#service
@@ -95,15 +64,15 @@ for row in csv.reader(f):
         try:
             item['food']=float(row[4])#food
         except:
-            item['food']=float(-1)        
+            item['food']=float(-1)
         item['has_review']=int(row[5])#has_review
         item['locality']=row[6]#locality
         item['url']=row[7]#url
         item['ratingExcellent']=int(row[8])#ratingExcelent
-        try:        
+        try:
             item['value']=float(row[9])#value
         except:
-            item['value']=float(-1)              
+            item['value']=float(-1)
         item['phone']=row[10]#phone
         item['ratingVeryGood']=int(row[11])#ratingVeryGood
         item['score']=float(row[12])#score
@@ -115,54 +84,18 @@ for row in csv.reader(f):
         item['street_address']=row[16]#street_address
         item['ratingpoor']=int(row[17])#ratingpoor
         item['key']=str(row[18])#key
-        item['place'] = 'Canarias'
+        item['place'] = place
 
-        '''
-        item['insert_time']=datetime.datetime.today()
-        item[reference[0]]=row[0]#service
-        item[reference[1]]=row[1]#atmosphere
-        item[reference[2]]=row[2]#name
-        item[reference[3]]=row[3]#extended
-        item[reference[4]]=row[4]#food
-        item[reference[5]]=row[5]#has_review
-        item[reference[6]]=row[6]#locality
-        item[reference[7]]=row[7]#url
-        item['ratingExcellent']=int(3)#ratingExcelent
-        item[reference[9]]=row[9]#value
-        item[reference[10]]=row[10]#phone
-        item[reference[11]]=int(row[11])#ratingVeryGood
-        item[reference[12]]=row[12]#score
-        item[reference[13]]=int(row[13])#ratingAverage
-        item[reference[14]]=int(row[14])#ratingTerrible
-        item[reference[15]]=row[15]#price
-        item[reference[16]]=row[16]#street_address
-        item[reference[17]]=int(row[17])#ratingpoor
-        item[reference[18]]=row[18]#key
-        '''
-
-        '''
-    	for i in range(len(reference)):
-            item[reference[i]] = row[i]
-            item['insert_time']=datetime.datetime.today()
-            if item[reference[i]] == "":
-                item[reference[i]] = -1
-            try:
-                item[reference[i]] = float(item[reference[i]])
-                print(item[reference[i]])
-                print(type(item[reference[i]]))
-            except:
-                pass
-        '''        
 	action = {
-        	"_index": "index_establishments_tripadvisor",
-                "_type": "restaurants_list",
-            	#"_id": cont_id,
+        	"_index": "index_tripadvisor_restaurants_establishments",
+                "_type": "restaurant",
+            	"_id": cont_id,
            	"_source": item
             	}
 
 	actions.append(action)
     	cont_id += 1
-        
+
     count += 1
 
 if count > 0:

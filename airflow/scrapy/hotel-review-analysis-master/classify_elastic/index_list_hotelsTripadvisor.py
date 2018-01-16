@@ -14,11 +14,6 @@ from elasticsearch import helpers
 
 filename =  sys.argv[1]
 
-#cont_id = int(sys.argv[2])
-
-
-
-cont_id = int(1)
 f = open(filename)
 reference = ["name",
 	     "extended_address",
@@ -33,12 +28,29 @@ reference = ["name",
 
 es = Elasticsearch(
    [
-     'elastic:vituinproject@elasticsearch:9200/',
+     'elasticsearch:9200/' 
    ]
 )
 
 count = 0
 actions = []
+
+#Search the last indexed id
+doc = {
+        'size' : 10000,
+        'query': {
+             'match_all' : {}
+         }
+       }
+try:
+    res = es.search(index='index_tripadvisor_hotels_establishments', body=doc, size=0)
+    #The next element indexed going to be the next id doesn't used
+    cont_id = int(res['hits']['total'])
+
+except:
+    #If it's the first gruop of elements indexed
+    print("First indexed")
+    cont_id = 0
 
 
 for row in csv.reader(f):
@@ -49,10 +61,10 @@ for row in csv.reader(f):
     	for i in range(len(reference)):
         	item[reference[i]] = row[i]
                 item['insert_time']=datetime.datetime.today()
-	
+
 	action = {
-        	"_index": "index_establishments_tripadvisor",
-                "_type": "hotels_unit",
+        	"_index": "index_tripadvisor_hotels_establishments",
+                "_type": "hotels",
             	"_id": cont_id,
            	"_source": item
             	}

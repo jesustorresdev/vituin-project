@@ -14,11 +14,6 @@ from elasticsearch import helpers
 
 filename =  sys.argv[1]
 
-#cont_id = int(sys.argv[2])
-
-
-
-cont_id = int(1)
 f = open(filename)
 reference = ["id",
              "created_time",
@@ -38,9 +33,27 @@ reference = ["id",
 
 es = Elasticsearch(
    [
-     'elastic:vituinproject@elasticsearch:9200/',
+     'elasticsearch:9200/' 
    ]
 )
+
+#Search the last indexed id
+doc = {
+        'size' : 10000,
+        'query': {
+             'match_all' : {}
+         }
+       }
+try:
+    res = es.search(index='index_facebook_posts', body=doc, size=0)
+    #The next element indexed going to be the next id doesn't used
+    cont_id = int(res['hits']['total'])
+
+except:
+    #If it's the first gruop of elements indexed
+    print("First indexed")
+    cont_id = 0
+
 
 count = 0
 actions = []
@@ -55,7 +68,7 @@ for row in csv.reader(f):
                 item[reference[i]] = row[i]
 
         action = {
-                "_index": "index_facebook",
+                "_index": "index_facebook_posts",
                 "_type": "posts",
                 "_id": cont_id,
                 "_source": item
@@ -66,7 +79,7 @@ for row in csv.reader(f):
         if item['created_time'] ==  now.day - 7:
                 id = item['id']
                 #busqueda de una entrada igual
-                res = es.search(index="index_facebook", doc_type="posts",body={
+                res = es.search(index="index_facebook_posts", body={
                         "query": {
                                 "match_phrase": {
                                         "id": id
