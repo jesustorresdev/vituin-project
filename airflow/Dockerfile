@@ -126,6 +126,7 @@ RUN sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && pip install scrapy \
     && pip install nltk \
     && pip install elasticsearch \
+    && pip install xlrd \
     && apt-get remove --purge -yqq $buildDeps \
     && apt-get clean \
     && rm -rf \

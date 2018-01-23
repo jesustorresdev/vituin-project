@@ -1,0 +1,709 @@
+1513332913153	geckodriver	INFO	geckodriver 0.19.1
+1513332913162	geckodriver	INFO	Listening on 127.0.0.1:50919
+1513332914407	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.J7vQ7cbHqAyw"
+1513332916217	Marionette	INFO	Enabled via --marionette
+1513332921310	Marionette	INFO	Listening on port 34487
+1513332921421	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513332921605	Marionette	DEBUG	Register listener.js for window 2147483649
+1513332921731	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513332922681	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513332922682	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513332925039	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513332925414	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513332926735	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513332927015	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513332927812	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+ExceptionHandler::GenerateDump cloned child 39205
+ExceptionHandler::WaitForContinueSignal waiting for continue signal...
+ExceptionHandler::SendContinueSignalToChild sent continue signal to child
+1513332991979	geckodriver	INFO	geckodriver 0.19.1
+1513332991994	geckodriver	INFO	Listening on 127.0.0.1:52395
+1513332993219	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.gT9QsKWFJEAV"
+1513332995084	Marionette	INFO	Enabled via --marionette
+1513332999546	Marionette	INFO	Listening on port 36019
+1513332999601	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513332999818	Marionette	DEBUG	Register listener.js for window 2147483649
+1513332999938	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513333000767	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513333000768	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513333003711	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513333004071	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333005305	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333005598	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513333006128	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 39250, Gecko_IOThread] WARNING: pipe error (69): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 39250, Gecko_IOThread] WARNING: pipe error (28): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 39250, Gecko_IOThread] WARNING: pipe error (33): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513333169604	geckodriver	INFO	geckodriver 0.19.1
+1513333169618	geckodriver	INFO	Listening on 127.0.0.1:50169
+1513333170877	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.zGQ74nR6vYn0"
+1513333172567	Marionette	INFO	Enabled via --marionette
+1513333176724	Marionette	INFO	Listening on port 32931
+1513333176859	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513333177037	Marionette	DEBUG	Register listener.js for window 2147483649
+1513333177256	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513333178095	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513333178096	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513333180213	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513333180567	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333182030	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333182407	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513333182812	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 39471, Gecko_IOThread] WARNING: pipe error (44): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513333199490	geckodriver	INFO	geckodriver 0.19.1
+1513333199498	geckodriver	INFO	Listening on 127.0.0.1:55307
+1513333200730	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.eH6wv7a4cTGa"
+1513333202566	Marionette	INFO	Enabled via --marionette
+1513333207193	Marionette	INFO	Listening on port 34167
+1513333207254	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513333207418	Marionette	DEBUG	Register listener.js for window 2147483649
+1513333207548	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513333208358	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513333208359	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513333210325	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513333210591	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333212093	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333212397	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513333212854	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 39636, Gecko_IOThread] WARNING: pipe error (27): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 39636, Gecko_IOThread] WARNING: pipe error (34): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+1513333222752	geckodriver	INFO	geckodriver 0.19.1
+1513333222760	geckodriver	INFO	Listening on 127.0.0.1:48611
+1513333224130	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.Z4pB9f7Phxs9"
+1513333225746	Marionette	INFO	Enabled via --marionette
+1513333230323	Marionette	INFO	Listening on port 46109
+1513333230385	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513333230550	Marionette	DEBUG	Register listener.js for window 2147483649
+1513333230707	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513333246732	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513333246733	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513333249046	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513333249462	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333250797	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333251107	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513333251746	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 39809, Gecko_IOThread] WARNING: pipe error (68): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 39809, Gecko_IOThread] WARNING: pipe error (44): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 39809, Gecko_IOThread] WARNING: pipe error (33): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+1513333760318	geckodriver	INFO	geckodriver 0.19.1
+1513333760327	geckodriver	INFO	Listening on 127.0.0.1:51927
+1513333761675	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.hr9asZyuGmWl"
+1513333763578	Marionette	INFO	Enabled via --marionette
+1513333767669	Marionette	INFO	Listening on port 35971
+1513333767720	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513333767909	Marionette	DEBUG	Register listener.js for window 2147483649
+1513333768035	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513333769042	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513333769043	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513333771251	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513333771604	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333772901	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513333773216	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513333773822	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 40188, Gecko_IOThread] WARNING: pipe error (37): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 40188, Gecko_IOThread] WARNING: pipe error (33): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+1513337469039	geckodriver	INFO	geckodriver 0.19.1
+1513337469052	geckodriver	INFO	Listening on 127.0.0.1:45209
+1513337470341	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.AQ5nmQ8ArNdM"
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :99.0
+1513337504886	geckodriver	INFO	geckodriver 0.19.1
+1513337504920	geckodriver	INFO	Listening on 127.0.0.1:45291
+1513337506153	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.aF70lua2Eggv"
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :99.0
+1513337640969	geckodriver	INFO	geckodriver 0.19.1
+1513337640984	geckodriver	INFO	Listening on 127.0.0.1:45581
+1513337642248	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.31pIuTnBGtV0"
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :99.0
+1513337753899	geckodriver	INFO	geckodriver 0.19.1
+1513337753913	geckodriver	INFO	Listening on 127.0.0.1:55365
+1513337755165	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.FZMiAfpjITSi"
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :99.0
+1513337907277	geckodriver	INFO	geckodriver 0.19.1
+1513337907285	geckodriver	INFO	Listening on 127.0.0.1:51977
+1513337908647	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.lPGc9vic4x7V"
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :99.0
+1513338264239	geckodriver	INFO	geckodriver 0.19.1
+1513338264249	geckodriver	INFO	Listening on 127.0.0.1:49681
+1513338265492	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.7nSQtTNQxcEa"
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :99.0
+1513338853835	geckodriver	INFO	geckodriver 0.19.1
+1513338853857	geckodriver	INFO	Listening on 127.0.0.1:49173
+1513338855149	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.uhuEUD0GaCtz"
+Failed to connect to Mir: Failed to connect to server socket: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :99.0
+1513339028445	geckodriver	INFO	geckodriver 0.19.1
+1513339028465	geckodriver	INFO	Listening on 127.0.0.1:51345
+1513339029800	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.DWML7YKp0TCS"
+1513339031537	Marionette	INFO	Enabled via --marionette
+1513339036365	Marionette	INFO	Listening on port 40537
+1513339036410	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339036632	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339036734	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339037690	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339037691	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339040189	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339040448	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339041790	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339144485	geckodriver	INFO	geckodriver 0.19.1
+1513339144499	geckodriver	INFO	Listening on 127.0.0.1:58465
+1513339145850	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.PazccYDAX96Y"
+1513339147186	Marionette	INFO	Enabled via --marionette
+1513339151881	Marionette	INFO	Listening on port 39915
+1513339152102	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339152353	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339152461	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339153413	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339153414	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339155315	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339155645	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339156663	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339157003	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+[Parent 397, Gecko_IOThread] WARNING: pipe error (58): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 397, Gecko_IOThread] WARNING: pipe error (45): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 397, Gecko_IOThread] WARNING: pipe error (34): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513339235930	geckodriver	INFO	geckodriver 0.19.1
+1513339235945	geckodriver	INFO	Listening on 127.0.0.1:59261
+1513339237283	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.m7e8KgquGBp6"
+1513339238826	Marionette	INFO	Enabled via --marionette
+1513339243576	Marionette	INFO	Listening on port 38449
+1513339243689	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339243955	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339244171	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339245055	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339245056	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339247409	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339247737	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339249269	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339249603	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+[Parent 580, Gecko_IOThread] WARNING: pipe error (58): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 580, Gecko_IOThread] WARNING: pipe error (45): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 580, Gecko_IOThread] WARNING: pipe error (34): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513339277120	geckodriver	INFO	geckodriver 0.19.1
+1513339277135	geckodriver	INFO	Listening on 127.0.0.1:38513
+1513339278488	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.rse2UVk3KFZ7"
+1513339280317	Marionette	INFO	Enabled via --marionette
+1513339285036	Marionette	INFO	Listening on port 36267
+1513339285081	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339285372	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339285474	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339286290	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339286291	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339288713	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339289092	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339290543	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339290848	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+[Parent 741, Gecko_IOThread] WARNING: pipe error (51): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 741, Gecko_IOThread] WARNING: pipe error (45): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 741, Gecko_IOThread] WARNING: pipe error (34): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513339346494	geckodriver	INFO	geckodriver 0.19.1
+1513339346510	geckodriver	INFO	Listening on 127.0.0.1:38921
+1513339347847	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.ezqELnrlO6Mf"
+1513339349806	Marionette	INFO	Enabled via --marionette
+1513339354587	Marionette	INFO	Listening on port 36343
+1513339354719	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339354926	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339355093	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339355950	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339355951	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339358207	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339358631	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339360005	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339420679	geckodriver	INFO	geckodriver 0.19.1
+1513339420689	geckodriver	INFO	Listening on 127.0.0.1:45157
+1513339422112	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.uMt9oldXrOjM"
+1513339423821	Marionette	INFO	Enabled via --marionette
+1513339428022	Marionette	INFO	Listening on port 39487
+1513339428196	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339428340	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339428485	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339429266	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339429267	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339431606	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339431973	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339433359	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339433841	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513339434506	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 1119, Gecko_IOThread] WARNING: pipe error (45): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513339482573	geckodriver	INFO	geckodriver 0.19.1
+1513339482586	geckodriver	INFO	Listening on 127.0.0.1:55401
+1513339483926	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.VpEFcKCxq2tt"
+1513339485699	Marionette	INFO	Enabled via --marionette
+1513339490362	Marionette	INFO	Listening on port 36317
+1513339490458	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339490666	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339490850	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339491691	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339491692	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339493983	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339494323	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339495791	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339496176	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513339496634	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 1297, Gecko_IOThread] WARNING: pipe error (28): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513339523229	geckodriver	INFO	geckodriver 0.19.1
+1513339523244	geckodriver	INFO	Listening on 127.0.0.1:50177
+1513339524553	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.JoTZl8NA5EOI"
+1513339526067	Marionette	INFO	Enabled via --marionette
+1513339535259	geckodriver	INFO	geckodriver 0.19.1
+1513339535278	geckodriver	INFO	Listening on 127.0.0.1:59907
+1513339536609	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.HBHwKFT3LdVD"
+1513339538006	Marionette	INFO	Enabled via --marionette
+1513339542888	Marionette	INFO	Listening on port 34773
+1513339543008	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339543235	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339543445	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339544260	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339544261	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339546688	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339547047	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339548392	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339548866	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513339549383	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Parent 1568, Gecko_IOThread] WARNING: pipe error (44): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+1513339585129	geckodriver	INFO	geckodriver 0.19.1
+1513339585139	geckodriver	INFO	Listening on 127.0.0.1:37333
+1513339586489	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.5LbcUIaIwnct"
+1513339588415	Marionette	INFO	Enabled via --marionette
+1513339593325	Marionette	INFO	Listening on port 39405
+1513339593556	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339593801	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339593950	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339594802	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339594803	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339596958	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339597268	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339598640	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339599026	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+[Parent 1747, Gecko_IOThread] WARNING: pipe error (28): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[Parent 1747, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+1513339727205	geckodriver	INFO	geckodriver 0.19.1
+1513339727214	geckodriver	INFO	Listening on 127.0.0.1:33829
+1513339728584	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.m8NNMNpV4yQR"
+1513339730652	Marionette	INFO	Enabled via --marionette
+1513339734807	Marionette	INFO	Listening on port 33205
+1513339735054	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339735304	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339735428	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339736291	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339736292	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339738708	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339739051	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339740458	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339740937	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513339741611	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+1513339785002	geckodriver	INFO	geckodriver 0.19.1
+1513339785016	geckodriver	INFO	Listening on 127.0.0.1:43615
+1513339786355	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.24QU2WfgRLxo"
+1513339788170	Marionette	INFO	Enabled via --marionette
+1513339792470	Marionette	INFO	Listening on port 35229
+1513339792549	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339792720	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339792853	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339793720	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339793720	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339795828	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339796071	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339797400	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513339797895	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513339798473	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+1513339799436	geckodriver	INFO	geckodriver 0.19.1
+1513339799443	geckodriver	INFO	Listening on 127.0.0.1:44521
+1513339800783	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.PwA2qNxEEY7m"
+1513339801541	addons.manager	WARN	Failed to copy the application shipped blocklist to the profile: [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIFile.copyTo]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://gre/modules/AddonManager.jsm :: validateBlocklist :: line 657"  data: no] Stack trace: validateBlocklist()@resource://gre/modules/AddonManager.jsm:657 < startup()@resource://gre/modules/AddonManager.jsm:805 < startup()@resource://gre/modules/AddonManager.jsm:3081 < observe()@jar:file:///opt/firefox-57.0/omni.ja!/components/addonManager.js:65
+1513339802284	Marionette	INFO	Enabled via --marionette
+1513339806406	Marionette	INFO	Listening on port 43427
+1513339806498	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513339806641	Marionette	DEBUG	Register listener.js for window 2147483649
+1513339806798	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513339807545	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513339807546	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513339809648	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513339810031	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+[Parent 2304, Gecko_IOThread] WARNING: pipe error (44): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 2304, Gecko_IOThread] WARNING: pipe error: Broken pipe: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1513340447034	geckodriver	INFO	geckodriver 0.19.1
+1513340447048	geckodriver	INFO	Listening on 127.0.0.1:42377
+1513340448393	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.W3aKPz5KfAVY"
+1513340450138	Marionette	INFO	Enabled via --marionette
+1513340454915	Marionette	INFO	Listening on port 35169
+1513340454997	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513340455238	Marionette	DEBUG	Register listener.js for window 2147483649
+1513340455384	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513340456217	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513340456218	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513340458671	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513340459019	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513340460550	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+1513340461083	Marionette	DEBUG	Received DOM event "popstate" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+1513340461633	Marionette	DEBUG	Canceled page load listener because no navigation has been detected
+[Child 2685, Chrome_ChildThread] WARNING: pipe error (16): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 2685, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1513340462706	geckodriver	INFO	geckodriver 0.19.1
+1513340462719	geckodriver	INFO	Listening on 127.0.0.1:33127
+1513340464030	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.MgpfwhAjpoyc"
+1513340466050	Marionette	INFO	Enabled via --marionette
+1513340470587	Marionette	INFO	Listening on port 37573
+1513340470669	Marionette	WARN	TLS certificate errors will be ignored for this session
+1513340470795	Marionette	DEBUG	Register listener.js for window 2147483649
+1513340470973	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1513340471817	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1513340471818	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, line 13: String.toLowerCase is deprecated; use String.prototype.toLowerCase instead
+1513340474092	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1513340474487	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.tripadvisor.co.uk/Restaurants-g187481-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html#EATERY_OVERVIEW_BOX"
+[Parent 2785, Gecko_IOThread] WARNING: pipe error (79): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 2785, Gecko_IOThread] WARNING: pipe error (28): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 2785, Gecko_IOThread] WARNING: pipe error (34): Connection reset by peer: file /builds/worker/workspace/build/src/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x420017,name=PHttpChannel::Msg_DeleteSelf) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
