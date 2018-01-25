@@ -14,4 +14,6 @@ name_items = {
 start_row = 9
 start_col = 1
 
-index_excels.main(excel, name_index, type_index, name_items, start_row, start_col)
+type_value = int
+
+index_excels.main(excel, name_index, type_index, name_items, start_row, start_col, type_value)

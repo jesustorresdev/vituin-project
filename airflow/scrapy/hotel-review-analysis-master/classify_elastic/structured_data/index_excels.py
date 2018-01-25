@@ -6,7 +6,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
 
-def main(excel, name_index, type_index, name_items, start_row, start_col):
+def main(excel, name_index, type_index, name_items, start_row, start_col, type_value):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
 
@@ -26,9 +26,9 @@ def main(excel, name_index, type_index, name_items, start_row, start_col):
     subtype_rows = subtype_row(sheet,n_rows)
 
     #Upload to elasticsearch
-    upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, start_row, start_col)
+    upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, start_row, start_col, type_value)
 
-def upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, start_row, start_col):
+def upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, start_row, start_col, type_value):
 
     es = Elasticsearch(
        [
@@ -78,7 +78,11 @@ def upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_co
                     item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                     item[name_items["type_cols"]] = type_cols[m].strip()
                     item[name_items["subtype_cols"]] = subtype_cols[n].strip()
-                    item["value"] = value
+                    if type_value == int:
+                        item["value"] = int(value.replace(".",""))
+                    else:
+                        item["value"] = value
+
                     item["key"] = key
 
                     action = {
