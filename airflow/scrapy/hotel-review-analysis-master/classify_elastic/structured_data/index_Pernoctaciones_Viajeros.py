@@ -1,7 +1,7 @@
 import index_excels
 
-excel = "ingresos.xls"
-name_index = "index_ingresos"
+excel = "Pernoctaciones_Viajeros.xls"
+name_index = "index_pernoctaciones_viajeros""
 type_index = "structured"
 
 name_items = {
