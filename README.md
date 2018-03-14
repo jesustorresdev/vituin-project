@@ -28,5 +28,5 @@ Password elasticsearch: vituinproject
 Este trabajo ha sido financiado por la Fundación CajaCanarias a través del proyecto titulado “VITUIN: Vigilancia Turística Inteligente de Tenerife en Redes Sociales” nº2016TUR15.
 
 <p align="center">
-<img src="http://www.fyde-cajacanarias.es/wp-content/uploads/2017/01/fyde-logo-azul.png" alt="Fundación Fyde Caja Canarias">
+<img src="https://www.vectorlogo.es/wp-content/uploads/2015/02/logo-vector-fundacion-caja-canarias.jpg" alt="Fundación Caja Canarias" width="250">
 </p>
