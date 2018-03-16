@@ -28,7 +28,7 @@ fixed_attributes={
     "place": "Puerto de la Cruz"
 }
 
-pos_value = [3,8]
+pos_value = [3,9]
 
 name_items = ["year","month","country","4 y 5 stars", "3 stars", "1 y 2 stars", "hoteliers","non-hoteliers","total"]
 name_extraItem = "type"

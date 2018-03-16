@@ -119,7 +119,6 @@ def upload_elastic_with(sheet, type_cols, subtype_cols, type_rows, subtype_rows,
                         "_source": item
                     }
 
-                    actions.append(action)
 
                     if index_elastic["exist_index"] == 1:
                         exist_element = '0'               #Does it exist element in index?

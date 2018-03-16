@@ -31,7 +31,8 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     actions = []
     index_elastic=call_elastic(name_index,es)
     cont_id = index_elastic["cont_id"]
-
+    init_cont_id = cont_id
+    end_cont_id = cont_id
 
     #Get all values of the sheet
     for i in range(t_se["start_value_row"],t_se["end_row"]):
@@ -54,13 +55,15 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
             for k,v in fixed_attributes.iteritems():
                 item[k]=v
 
+
         if restriction:
 
             for j in range(pos_value[0], pos_value[1]):
 
+                item = item.copy() #It ins't actions point to the same item and modified action append before
+
                 if(type_items["value"] is str):
                    item["value"] = row[j]                      #If is str it is going to be a unicode type
-                   print "eee"
                 else:
                    item["value"] = type_items["value"](row[j]) #If it is other type, like int or float, it is going to this type
 
@@ -68,17 +71,21 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
                 item[name_extraItem] = type_items[name_extraItem](name_items[j]) #It is going to be str ever
 
                 item["key"]=getKey(item)
-                actions = getActions(actions, es, item, name_index, type_index,  index_elastic)
+
+                actions = getActions(actions, es, item, name_index, type_index, index_elastic)
 
         else:
-
             item["key"]=getKey(item)
             actions = getActions(actions, es, item, name_index, type_index, index_elastic)
 
+
     if count > 0:
         helpers.bulk(es, actions)
+        end_cont_id = cont_id
+        count_indexed = end_cont_id - init_cont_id
         print "leftovers"
-        print "indexed %d" %cont_id
+        print "indexed %d" %count_indexed
+        print "last id %d" %cont_id
     else:
         print "Not indexed"
 
@@ -97,8 +104,6 @@ def getActions(actions, es, item, name_index, type_index, index_elastic):
                 "_source": item
          }
 
-
-        actions.append(action)
 
         if index_elastic["exist_index"] == 1:
             exist_element = '0'               #Does it exist element in index?
@@ -119,7 +124,6 @@ def getActions(actions, es, item, name_index, type_index, index_elastic):
                 actions.append(action)
                 cont_id += 1
                 count += 1
-
 
         else:
             actions.append(action)
