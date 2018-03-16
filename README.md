@@ -1,4 +1,4 @@
-# Projecto VITUIN
+# Proyecto VITUIN
 
 En cada carpeta se encuentra lo necesario para construir cada contenedor. 
 Esto es el fichero dockerfile.
