@@ -1,6 +1,7 @@
-import index_excels
+import index_excels_Istac
 
-excel = "ingresos.xls"
+excel = "excels_hoteles/ingresos.xls"
+sheet = 0
 name_index = "index_ingresos"
 type_index = "structured"
 
@@ -10,9 +11,19 @@ name_items = {
     "subtype_cols" :"year"
 }
 
-start_row = 9
-start_col = 1
+
+table_start_and_end = {
+    "start_row": 7,
+    "start_col": 0,
+    "end_row": 12,
+    "end_col": 81,
+    "start_value_row": 9,
+    "start_value_col": 1
+}
+
 
 type_value = float
 
-index_excels.main(excel, name_index, type_index, name_items, start_row, start_col, type_value)
+fixed_attributes={}
+
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, fixed_attributes)

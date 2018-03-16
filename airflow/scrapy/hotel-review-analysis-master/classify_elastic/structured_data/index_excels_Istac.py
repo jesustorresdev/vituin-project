@@ -6,31 +6,35 @@ from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
 
-def main(excel, name_index, type_index, name_items, start_row, start_col, type_value):
+def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, fixed_attributes):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
 
     # Get the worksheet
-    sheet = wb.sheet_by_index(0)
+    sheet = wb.sheet_by_index(n_sheet)
+
+
+    t_se = table_start_and_end
 
     # Get type and subtype of the cols
-    cols = type_col(sheet)
+    cols = type_col(sheet,t_se)
     n_cols = cols["n_cols"]
     type_cols = cols["array_cols"]
-    subtype_cols = subtype_col(sheet,n_cols)
+    subtype_cols = subtype_col(sheet,n_cols, t_se)
 
     # Get type and subtype of the rows
-    rows = type_row(sheet)
+    rows = type_row(sheet,t_se)
     n_rows = rows["n_rows"]
     type_rows = rows["array_rows"]
+
+
     if n_rows != 0:
-        subtype_rows = subtype_row(sheet,n_rows)
-
+        subtype_rows = subtype_row(sheet,n_rows, t_se)
         #Upload to elasticsearch with subtype_rows
-        upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, start_row, start_col, type_value)
-
-    #Upload to elasticsearch without subtype_rows
-    upload_elastic(sheet, type_cols, subtype_cols, type_rows, n_cols, name_index, type_index, name_items, start_row, start_col, type_value)
+        upload_elastic_with(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, t_se["start_value_row"], t_se["start_value_col"], type_value)
+    else:
+        #Upload to elasticsearch without subtype_rows
+        upload_elastic_without(sheet, type_cols, subtype_cols, type_rows, n_cols, name_index, type_index, name_items, t_se["start_row"], t_se["start_col"], type_value)
 
 def call_elastic(name_index,es):
 
@@ -64,7 +68,7 @@ def call_elastic(name_index,es):
     return index_elastic
 
 #upload_elastic with subtype_rows
-def upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, start_row, start_col, type_value):
+def upload_elastic_with(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_cols, n_rows, name_index, type_index, name_items, start_row, start_col, type_value):
 
     es = Elasticsearch(
        [
@@ -90,6 +94,8 @@ def upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_co
 
                     item = {}
 
+
+
                     item['insert_time']=datetime.datetime.today()
                     item[name_items["type_rows"]] = type_rows[i].strip()
                     item[name_items["subtype_rows"]] = subtype_rows[j].strip()
@@ -97,6 +103,7 @@ def upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_co
                     item[name_items["subtype_cols"]] = subtype_cols[n].strip()
                     if type_value == int:
                         item["value"] = int(value.replace(".",""))
+
                     elif type_value == float:
                         item["value"] = value.replace(".","")
                         item["value"] = float(item["value"].replace(",","."))
@@ -149,7 +156,7 @@ def upload_elastic(sheet, type_cols, subtype_cols, type_rows, subtype_rows, n_co
         print "Not indexed"
 
 #upload_elastic without subtype_rows
-def upload_elastic(sheet, type_cols, subtype_cols, type_rows, n_cols, name_index, type_index, name_items, start_row, start_col, type_value):
+def upload_elastic_without(sheet, type_cols, subtype_cols, type_rows, n_cols, name_index, type_index, name_items, start_row, start_col, type_value):
     es = Elasticsearch(
        [
          'elasticsearch:9200/'
@@ -234,18 +241,21 @@ def upload_elastic(sheet, type_cols, subtype_cols, type_rows, n_cols, name_index
 
 
 #Return array with types of columns
-def type_col(sheet):
+def type_col(sheet,t_se):
     n_cols = 0                      # Number of columns of subtypes for each cloumn of type
     array_cols = []                 # Array with each name of the types
 
     i=0                             # Number of cells in the table
-    all_cols = sheet.row_values(7)  # In ISTAC the table starts at 7 position
+    all_cols = sheet.row_slice(rowx=t_se["start_row"],
+                            start_colx=t_se["start_value_col"], # Saving since col values starts, not where it starts table (not col type there)
+                            end_colx=t_se["end_col"])
+
     for element in all_cols:
-        if element != '':
-            array_cols.append(element)
+        if element.value != "":
+            array_cols.append(element.value)
         i=i+1
 
-    n_cols = i / len(array_cols)     # Number of columnss
+    n_cols = i / len(array_cols)     # Number of columns (its numbers of subtype_cols)
 
     cols =  {
       "n_cols" : n_cols,
@@ -254,50 +264,44 @@ def type_col(sheet):
     return cols
 
 #Return array with subtypes of columns
-def subtype_col(sheet, n_cols):
-    array_cols = sheet.row_slice(rowx=8,
-                            start_colx=1,
-                            end_colx=1+n_cols) #In ISTAC, it will be start in row 8 and col 1
+def subtype_col(sheet, n_cols, t_se):
+    array_cols = sheet.row_slice(rowx=t_se["start_row"]+1, #Subtypecol is in the second line
+                            start_colx=t_se["start_value_col"], #The line where start cols and values is the same
+                            end_colx=t_se["start_value_col"]+n_cols)
 
     for i in range(0,len(array_cols)):
         array_cols[i] = array_cols[i].value    #Transform format of row_slice
 
+
     return array_cols
 
 #Return array with types of rows
-def type_row(sheet):
+def type_row(sheet, t_se):
     n_rows = 0                      # Number of columns of subtypes for each row of type
     array_rows = []                 # Array with each name of the types
-    end_row = 9                     # We don't know where the table finish at first. But the start is in pos 9
 
-    all_rows = sheet.col_slice(colx=0,
-                            start_rowx=9)
+    array_rows0 = sheet.col_slice(colx=t_se["start_col"],
+                            start_rowx=t_se["start_value_row"],  # Saving since row values starts, not where it starts table (not row type there)
+                            end_rowx=t_se["end_row"])
 
-    for element in all_rows:
-        if element.value == '':
-            break
-        end_row = end_row + 1
+    array_rows1 = sheet.col_slice(colx=t_se["start_col"]+1,      #If there aren't value at right is a type row
+                            start_rowx=t_se["start_value_row"],  # Saving since row values starts, not where it starts table (not row type there)
+                            end_rowx=t_se["end_row"])
 
-
-    array_rows0 = sheet.col_slice(colx=0,
-                            start_rowx=9,
-                            end_rowx=end_row) # Array with all elements in col 0
-    array_rows1 = sheet.col_slice(colx=1,
-                            start_rowx=9,
-                            end_rowx=end_row) # Array with all elements in col 1
     nElements = len(array_rows0)              # Length of each column in the table
 
     try:
-        n_rows = (nElements-len(array_rows)) / len(array_rows)
         for i in range(0,nElements):
             if array_rows1[i].value == '':
                 array_rows.append(array_rows0[i].value)
 
+        n_rows = (nElements-len(array_rows)) / len(array_rows)
 
     except ZeroDivisionError:
         n_rows = 0
         for i in range(0,nElements):
             array_rows.append(array_rows0[i].value)
+
 
     rows =  {
       "n_rows" : n_rows,
@@ -307,10 +311,10 @@ def type_row(sheet):
     return rows
 
 #Return array with subtypes of rows
-def subtype_row(sheet, n_rows):
-    array_rows = sheet.col_slice(colx=0,
-                            start_rowx=10,
-                            end_rowx=10+n_rows)
+def subtype_row(sheet, n_rows, t_se):
+    array_rows = sheet.col_slice(colx=t_se["start_col"],
+                            start_rowx=t_se["start_value_row"]+1, # First is type and not subtype
+                            end_rowx=t_se["start_value_row"]+1+n_rows)
 
     for i in range(0,len(array_rows)):
         array_rows[i] = array_rows[i].value    #Transform format of col_slice
