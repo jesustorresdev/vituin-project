@@ -1,3 +1,5 @@
+# Proyecto VITUIN
+
 En cada carpeta se encuentra lo necesario para construir cada contenedor. 
 Esto es el fichero dockerfile.
 
@@ -18,6 +20,13 @@ Y a airflow por el 8080:
 
 - ssh -L8080:localhost:8080 user@vituin.iaas.ull.es
 
-
 User elasticsearch: elastic
 Password elasticsearch: vituinproject
+
+## Trabajo financiado por
+
+Este trabajo ha sido financiado por la Fundación CajaCanarias a través del proyecto titulado “VITUIN: Vigilancia Turística Inteligente de Tenerife en Redes Sociales” nº2016TUR15.
+
+<p align="center">
+<img src="https://www.vectorlogo.es/wp-content/uploads/2015/02/logo-vector-fundacion-caja-canarias.jpg" alt="Fundación Caja Canarias" width="250">
+</p>
