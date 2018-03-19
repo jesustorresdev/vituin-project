@@ -28,11 +28,16 @@ fixed_attributes={
     "place": "Puerto de la Cruz"
 }
 
-pos_value = [3,9]
+pos_value_restrictions = [
+     {
+        'name':'type',
+        'ini':3,
+        'end':8
+     }
+]
 
 name_items = ["year","month","country","4 y 5 stars", "3 stars", "1 y 2 stars", "hoteliers","non-hoteliers","total"]
-name_extraItem = "type"
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, name_extraItem, pos_value, fixed_attributes)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions, fixed_attributes)
 
 
 

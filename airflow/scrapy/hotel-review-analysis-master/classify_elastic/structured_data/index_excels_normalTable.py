@@ -8,7 +8,7 @@ from elasticsearch import helpers
 count = 0
 cont_id = 0
 
-def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items, name_items, name_extraItem, pos_value, fixed_attributes):
+def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions, fixed_attributes):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
 
@@ -43,10 +43,22 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
         item = {}
 
         restriction = False
-        if pos_value: restriction = True
+        if pos_value_restrictions: restriction = True
+
+        pos_restrictions = []
+        name_pos_restrictions = []
 
         if restriction:
-           item = getSomeItems(item, pos_value, row, type_items, name_items)
+
+           #It returns arrays with restrictions
+           arrays_restrictions = getArraysRestrictions(pos_value_restrictions)
+
+           pos_restrictions = arrays_restrictions['array_pos_restrictions']
+           name_pos_restrictions = arrays_restrictions['array_name_pos_restrictions']
+
+           item = getSomeItems(item, pos_restrictions, row, type_items, name_items)
+
+
         else:
            item = getAllItems(item,row, type_items, name_items)
 
@@ -57,22 +69,23 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
 
         if restriction:
+            for restr in name_pos_restrictions:
 
-            for j in range(pos_value[0], pos_value[1]):
+                for j in restr['pos']:
 
-                item = item.copy() #It ins't actions point to the same item and modified action append before
+                    item = item.copy() #It ins't actions point to the same item and modified action append before
 
-                if(type_items["value"] is str):
-                   item["value"] = row[j]                      #If is str it is going to be a unicode type
-                else:
-                   item["value"] = type_items["value"](row[j]) #If it is other type, like int or float, it is going to this type
+                    if(type_items["value"] is str):
+                       item["value"] = row[j]                      #If is str it is going to be a unicode type
+                    else:
+                       item["value"] = type_items["value"](row[j]) #If it is other type, like int or float, it is going to this type
 
 
-                item[name_extraItem] = type_items[name_extraItem](name_items[j]) #It is going to be str ever
+                    item[restr['name']] = type_items[restr['name']](name_items[j]) #It is going to be str ever
 
-                item["key"]=getKey(item)
+                    item["key"]=getKey(item)
 
-                actions = getActions(actions, es, item, name_index, type_index, index_elastic)
+                    actions = getActions(actions, es, item, name_index, type_index, index_elastic)
 
         else:
             item["key"]=getKey(item)
@@ -189,16 +202,40 @@ def getAllItems(item, row, type_items, name_items):
     return item
 
 #There are cols that are only one
-def getSomeItems(item, pos_value, row, type_items, name_items):
+def getSomeItems(item, pos_restrictions, row, type_items, name_items):
 
 
     for i in range(0,len(row)):
-        if i < pos_value[0] or i > pos_value[1]:
+        if i not in pos_restrictions:
             if(type_items[name_items[i]] is str):
                item[name_items[i]] = row[i]                            #If is str it is going to be a unicode type
             else:
                item[name_items[i]] = type_items[name_items[i]](row[i]) #If it is other type, like int or float, it is going to this type 
-
     return item
+
+#return all position with restrictions
+def getArraysRestrictions(pos_value_restrictions):
+    array_restrictions = {}           #dict to return
+    array_pos_restrictions = []       #array with all pos restrictions
+    array_name_pos_restrictions = []  #array with name restrictios and its pos
+
+
+    for element in pos_value_restrictions:
+        array_restrictions_for_element = []
+        for i in range(element['ini'], element['end']+1):
+            array_pos_restrictions.append(i)
+            array_restrictions_for_element.append(i)
+
+        array_name_pos_restrictions.append({
+                           'name':element['name'],
+                           'pos':array_restrictions_for_element
+        })
+
+    array_restrictions = {
+                      'array_pos_restrictions':array_pos_restrictions,
+                      'array_name_pos_restrictions':array_name_pos_restrictions}
+
+    return array_restrictions
+
 
 
