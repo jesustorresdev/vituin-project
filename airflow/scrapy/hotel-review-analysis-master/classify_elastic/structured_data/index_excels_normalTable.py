@@ -180,12 +180,8 @@ def call_elastic(name_index,es):
 def getKey(item):
 
     str_key = ''
-    for element in item:
-        if type(element) is not unicode:
-                str_key = str_key + str(element) #If is unicode it is going to be unicode for the sum, if not it is going to be str type
-        else:
-            str_key += element
-
+    for key,value in item.iteritems():
+        str_key = str_key + unicode(value)
     key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
 
     return key
@@ -208,7 +204,7 @@ def getSomeItems(item, pos_restrictions, row, type_items, name_items):
     for i in range(0,len(row)):
         if i not in pos_restrictions:
             if(type_items[name_items[i]] is str):
-               item[name_items[i]] = row[i]                            #If is str it is going to be a unicode type
+               item[name_items[i]] = unicode(row[i])                   #If is str it is going to be a unicode type
             else:
                item[name_items[i]] = type_items[name_items[i]](row[i]) #If it is other type, like int or float, it is going to this type 
     return item
