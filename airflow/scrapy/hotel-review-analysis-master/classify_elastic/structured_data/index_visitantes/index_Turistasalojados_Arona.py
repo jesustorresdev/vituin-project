@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('../')
 import index_excels_normalTable
 
-excel = "excels_visitantes/turistasalojadosadeje.xls"
+excel = "excels_visitantes/turistasalojadosarona.xls"
 name_index = "index_turistas_alojados"
 type_index = "structured"
 
@@ -28,7 +30,7 @@ type_items = {
 }
 
 fixed_attributes={
-    "place": "Adeje"
+    "place": "Arona"
 }
 name_items = ["year","month","country","4 y 5 stars", "3 stars", "1 y 2 stars", "hoteliers","non-hoteliers","total"]
 

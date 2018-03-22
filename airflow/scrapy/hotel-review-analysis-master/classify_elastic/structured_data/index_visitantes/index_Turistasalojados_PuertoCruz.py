@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('../')
 import index_excels_normalTable
 
 excel = "excels_visitantes/turistasalojadospuertodelacruz.xls"
@@ -17,8 +19,8 @@ table_start_and_end = {
 }
 
 type_items = {
-    "year" : int,
-    "month" : int,
+    "year" : str,
+    "month" : str,
     "country" : str,
     "type" : str,
     "value" : int

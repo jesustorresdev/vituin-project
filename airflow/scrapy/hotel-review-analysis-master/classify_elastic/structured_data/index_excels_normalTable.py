@@ -193,7 +193,7 @@ def getAllItems(item, row, type_items, name_items):
         if(type_items[name_items[j]] is str):
             item[name_items[j]] = row[j]                            #If is str it is going to be a unicode type
         else:
-            item[name_items[j]] = type_items[name_items[j]](row[j]) #If it is other type, like int or float, it is going to this type 
+            item[name_items[j]] = type_items[name_items[j]](row[j]) #If it is other type, like int or float, it is going to this type
 
     return item
 
@@ -203,10 +203,16 @@ def getSomeItems(item, pos_restrictions, row, type_items, name_items):
 
     for i in range(0,len(row)):
         if i not in pos_restrictions:
-            if(type_items[name_items[i]] is str):
-               item[name_items[i]] = unicode(row[i])                   #If is str it is going to be a unicode type
+            if(type_items[name_items[i]] is str):                      #If it is str it is going to be a unicode type
+               if type(row[i]) is float:                                            #If it was a number before, like years
+                   if int(row[i]) == row[i]:                                               #If it was a int
+                       item[name_items[i]] =unicode(int(row[i]))
+                   else:
+                       item[name_items[i]] = unicode(row[i])
+               else:                                                                #If it has ever been a str or it was a float
+                   item[name_items[i]] = unicode(row[i])
             else:
-               item[name_items[i]] = type_items[name_items[i]](row[i]) #If it is other type, like int or float, it is going to this type 
+               item[name_items[i]] = type_items[name_items[i]](row[i]) #If it is other type, like int or float, it is going to this type
     return item
 
 #return all position with restrictions

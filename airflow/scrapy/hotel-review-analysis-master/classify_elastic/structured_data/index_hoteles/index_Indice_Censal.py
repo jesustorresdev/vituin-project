@@ -1,8 +1,10 @@
+import sys
+sys.path.append('../')
 import index_excels_Istac
 
-excel = "excels_hoteles/ingresos.xls"
+excel = "excels_hoteles/indice_Censal.xls"
 sheet = 0
-name_index = "index_ingresos"
+name_index = "index_indice_censal"
 type_index = "structured"
 
 name_items = {
@@ -11,11 +13,10 @@ name_items = {
     "subtype_cols" :"year"
 }
 
-
 table_start_and_end = {
     "start_row": 7,
     "start_col": 0,
-    "end_row": 12,
+    "end_row": 10,
     "end_col": 81,
     "start_value_row": 9,
     "start_value_col": 1
@@ -27,3 +28,4 @@ type_value = float
 fixed_attributes={}
 
 index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, fixed_attributes)
+

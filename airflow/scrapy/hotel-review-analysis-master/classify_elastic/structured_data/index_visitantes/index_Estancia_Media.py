@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../')
 import index_excels_Istac
 
 excel = "excels_visitantes/estancia_Media.xls"
