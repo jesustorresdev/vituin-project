@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 sys.path.append('../')
-import index_excels_normalTable
+
+from structured_data import index_excels_normalTable
 
 excel = "excels_visitantes/turistasalojadosarona.xls"
 name_index = "index_turistas_alojados"

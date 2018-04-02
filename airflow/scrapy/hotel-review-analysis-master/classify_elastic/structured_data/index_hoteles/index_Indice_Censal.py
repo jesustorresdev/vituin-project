@@ -1,6 +1,7 @@
 import sys
 sys.path.append('../')
-import index_excels_Istac
+
+from structured_data import index_excels_Istac
 
 excel = "excels_hoteles/indice_Censal.xls"
 sheet = 0
@@ -17,7 +18,7 @@ table_start_and_end = {
     "start_row": 7,
     "start_col": 0,
     "end_row": 10,
-    "end_col": 81,
+    "end_col": 80,
     "start_value_row": 9,
     "start_value_col": 1
 }
