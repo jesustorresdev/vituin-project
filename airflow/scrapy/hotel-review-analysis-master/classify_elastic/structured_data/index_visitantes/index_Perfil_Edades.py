@@ -9,9 +9,9 @@ name_index = "index_perfil_turistico"
 type_index = "structured"
 
 name_items = {
-    "type_rows" : "place_tourist_residence",
+    "type_rows" : "gender",
     "type_cols" : "year",
-    "subtype_rows" : "gender",
+    "subtype_rows" : "place_tourist_residence",
     "subtype_cols" :"age"
 }
 
