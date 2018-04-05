@@ -56,6 +56,7 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
         update_elastic(sheet, n_cols, 0, name_index, type_index, name_items, t_se["start_value_row"], t_se["start_value_col"], type_value, type_cols, type_rows, sub_c)
     elif n_rows != 0:
         subtype_rows = subtype_row(sheet,n_rows, t_se)
+        sub_r = ['subtype_rows', subtype_rows]
         #Upload to elasticsearch with subtype_rows
         update_elastic(sheet, 0, n_rows, name_index, type_index, name_items, t_se["start_value_row"], t_se["start_value_col"], type_value, type_cols, type_rows, sub_r)
     else:
