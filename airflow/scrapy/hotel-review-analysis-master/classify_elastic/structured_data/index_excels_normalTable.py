@@ -194,9 +194,6 @@ def getAllItems(item, row, type_items, name_items):
             item[name_items[j]] = row[j]                            #If is str it is going to be a unicode type
         else:
             item[name_items[j]] = type_items[name_items[j]](row[j]) #If it is other type, like int or float, it is going to this type
-    print row
-    import sys
-    sys.exit()
     return item
 
 #There are cols that are only one

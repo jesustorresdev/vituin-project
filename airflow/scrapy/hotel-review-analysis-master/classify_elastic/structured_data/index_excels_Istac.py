@@ -147,7 +147,10 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
                     #Generate key of this value
                     value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row, colx=(m*n_cols+n)+start_col)
-                    str_key = str(value) + type_rows[i].strip() + subtype_rows[j].strip() + type_cols[m].strip() + subtype_cols[n].strip()
+                    if type_value != str:
+                        str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
+                    else:
+                        str_key = value + type_rows[i].strip() + type_cols[m].strip()
 
                     item = {}
                     '''
@@ -208,7 +211,10 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
 
                 #Generate key of this value
                 value = sheet.cell_value(rowx=i+start_row, colx=(m*n_cols+n)+start_col)
-                str_key = str(value) + type_rows[i].strip() + type_cols[m].strip() + subtype_cols[n].strip()
+                if type_value != str:
+                    str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
+                else:
+                    str_key = value + type_rows[i].strip() + type_cols[m].strip()
 
                 '''
                 print '-----------------------------------'
@@ -267,7 +273,10 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
 
                 #Generate key of this value
                 value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row, colx=m+start_col)
-                str_key = str(value) + type_rows[i].strip() + subtype_rows[j].strip() + type_cols[m].strip()
+                if type_value != str:
+                    str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
+                else:
+                    str_key = value + type_rows[i].strip() + type_cols[m].strip()
 
                 item = {}
 
@@ -326,8 +335,10 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
 
             #Generate key of this value
             value = sheet.cell_value(rowx=i+start_row, colx=m+start_col)
-            str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
-
+            if type_value != str:
+                str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
+            else:
+                str_key = value + type_rows[i].strip() + type_cols[m].strip()
             item = {}
 
             '''
@@ -458,7 +469,6 @@ def subtype_col(sheet, n_cols, t_se):
 
     for i in range(0,len(array_cols)):
         array_cols[i] = array_cols[i].value    #Transform format of row_slice
-
 
     return array_cols
 
