@@ -13,7 +13,7 @@ es = Elasticsearch(
 
 fix_attr = {}
 
-def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, *fixed_attributes):
+def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, *extra_arguments):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
 
@@ -38,9 +38,10 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     type_rows = rows["array_rows"]
 
     #Are there fixed_attributes?
-    if fixed_attributes:
+    if extra_arguments[0]["fixed_attributes"]:
         global fix_attr
-        fix_attr = fixed_attributes[0]
+        fix_attr = extra_arguments[0]["fixed_attributes"]
+
 
     if  n_cols != 0 and n_rows != 0:
         subtype_cols = subtype_col(sheet,n_cols, t_se)

@@ -27,7 +27,5 @@ table_start_and_end = {
 
 type_value = float
 
-fixed_attributes={}
-
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, fixed_attributes)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value)
 
