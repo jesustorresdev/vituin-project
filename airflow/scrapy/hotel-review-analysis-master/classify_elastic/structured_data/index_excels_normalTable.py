@@ -8,7 +8,7 @@ from elasticsearch import helpers
 count = 0
 cont_id = 0
 
-def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions, fixed_attributes):
+def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions, attributes_to_fixed):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
 
@@ -63,8 +63,8 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
            item = getAllItems(item,row, type_items, name_items)
 
         #If there are fixed attributes
-        if fixed_attributes:
-            for k,v in fixed_attributes.iteritems():
+        if attributes_to_fixed:
+            for k,v in attributes_to_fixed.iteritems():
                 item[k]=v
 
 

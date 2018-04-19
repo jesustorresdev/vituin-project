@@ -24,7 +24,7 @@ table_start_and_end = {
 }
 
 extra_arguments={}
-extra_arguments["fixed_attributes"]={
+extra_arguments["attributes_to_fixed"]={
     "gender": "AMBOS SEXOS",
     "age" : "Cualquiera"
 }

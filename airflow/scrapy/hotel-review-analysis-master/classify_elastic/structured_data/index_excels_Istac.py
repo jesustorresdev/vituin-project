@@ -11,7 +11,8 @@ es = Elasticsearch(
        ]
     )
 
-fix_attr = {}
+attr_fix = {}
+attr_spl = {}
 
 def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, *extra_arguments):
     # Open a workbook
@@ -37,11 +38,21 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     n_rows = rows["n_rows"]
     type_rows = rows["array_rows"]
 
-    #Are there fixed_attributes?
-    if extra_arguments[0]["fixed_attributes"]:
-        global fix_attr
-        fix_attr = extra_arguments[0]["fixed_attributes"]
+    #Are there attributes_to_fixed?
+    try:
+        if extra_arguments[0]["attributes_to_fixed"]:
+            global attr_fix
+            attr_fix = extra_arguments[0]["attributes_to_fixed"]
+    except:
+        pass
 
+    #Are there arguments to split?
+    try:
+        if extra_arguments[0]["attribute_to_split"]:
+            global attr_spl
+            attr_spl = extra_arguments[0]["attribute_to_split"]
+    except:
+        pass
 
     if  n_cols != 0 and n_rows != 0:
         subtype_cols = subtype_col(sheet,n_cols, t_se)
@@ -168,12 +179,16 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                     item[name_items["type_cols"]] = type_cols[m].strip()
                     item[name_items["subtype_cols"]] = subtype_cols[n].strip()
-                    #if there are fixed_attributes
-                    global fix_attr
-                    if fix_attr:
-                        item=getFixed_Attributes(item)
-                        for element in fix_attr:
-                            str_key = str_key + fix_attr[element]
+                    #if there are attributes_to_fixed
+                    global attr_fix
+                    if attr_fix:
+                        item=getAttribute_Fixed(item)
+                        for element in attr_fix:
+                            str_key = str_key + attr_fix[element]
+
+                    global attr_spl
+                    if attr_spl:
+                        item=getAttributes_Split(item,name_items)
 
                     if value == '.':               #if there isn't value
                         continue
@@ -232,12 +247,12 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 item[name_items["type_rows"]] = type_rows[i].strip()
                 item[name_items["type_cols"]] = type_cols[m].strip()
                 item[name_items["subtype_cols"]] = subtype_cols[n].strip()
-                #if there are fixed_attributes
-                global fix_attr
-                if fix_attr:
-                    item=getFixed_Attributes(item)
-                    for element in fix_attr:
-                        str_key = str_key + fix_attr[element]
+                #if there are attributes_to_fixed
+                global attr_fix
+                if attr_fix:
+                    item=getAttribute_Fixed(item)
+                    for element in attr_fix:
+                        str_key = str_key + attr_fix[element]
 
                 if value == '.':               #if there isn't value
                     continue
@@ -295,12 +310,12 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 item[name_items["type_rows"]] = type_rows[i].strip()
                 item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                 item[name_items["type_cols"]] = type_cols[m].strip()
-                #if there are fixed_attributes
-                global fix_attr
-                if fix_attr:
-                    item=getFixed_Attributes(item)
-                    for element in fix_attr:
-                        str_key = str_key + fix_attr[element]
+                #if there are attributes_to_fixed
+                global attr_fix
+                if attr_fix:
+                    item=getAttribute_Fixed(item)
+                    for element in attr_fix:
+                        str_key = str_key + attr_fix[element]
 
                 if value == '.':               #if there isn't value
                      continue
@@ -355,12 +370,12 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             item['insert_time']=datetime.datetime.today()
             item[name_items["type_rows"]] = type_rows[i].strip()
             item[name_items["type_cols"]] = type_cols[m].strip()
-            #if there are fixed_attributes
-            global fix_attr
-            if fix_attr:
-                item=getFixed_Attributes(item)
-                for element in fix_attr:
-                    str_key = str_key + fix_attr[element]
+            #if there are attributes_to_fixed
+            global attr_fix
+            if attr_fix:
+                item=getAttribute_Fixed(item)
+                for element in attr_fix:
+                    str_key = str_key + attr_fix[element]
 
             if value == '.':               #if there isn't value
                  continue
@@ -387,13 +402,34 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
 
     return {'actions' : actions, 'count':count}
 
-def getFixed_Attributes(item):
-   global fix_attr
+def getAttribute_Fixed(item):
+   global attr_fix
 
-   for k,v in fix_attr.items():
+   for k,v in attr_fix.items():
        item[k]=v
 
    return item
+
+def getAttributes_Split(item, name_items):
+    global attr_spl
+
+    for k,v in name_items.items():
+        if v[:-2]=="attribute_to_split":                                #if is a attr_split type
+            for i in range (0,len(attr_spl)):                           #See how many attr_spl there are. For each one, we'll save new item
+                attribute = attr_spl[i]
+                value_item = item["attribute_to_split_"+str(i)].split() #It's a array with all words for the name of the first item (without split)
+
+                for j in range(0,len(attribute["attributes"])):         #Number of new items than we are going to create
+                    key_item = attribute["attributes"][j]
+                    item[key_item] = ''
+
+                    for number in attribute["attr"+str(j)]:
+                        item[key_item] += value_item[number]            #Set new items
+                        item[key_item] += ' '
+                item[key_item] = item[key_item][:-1]                    #Eliminate last space
+                del item["attribute_to_split_"+str(i)]                  #Delete to the old item
+    return item
+
 
 def getValue_with_type(type_value, value):
     if type_value == int:
@@ -403,11 +439,7 @@ def getValue_with_type(type_value, value):
             value_type = int(value)
 
     elif type_value == float:
-        try:
-            value_type = value.replace(".","")
-        except:
-            pass
-        value_type = float(value_type.replace(",","."))
+        value_type = float(value)
     else:
         value_type = value
 
