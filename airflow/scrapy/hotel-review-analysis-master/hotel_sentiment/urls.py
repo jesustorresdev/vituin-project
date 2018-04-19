@@ -17,6 +17,13 @@ def TripAdvisorZoneURLs():
 
     return urls
 
+def TripAdvisorZoneFuerteventuraURLs():
+    urls = [
+        "https://www.tripadvisor.co.uk/Hotels-g187467-Fuerteventura_Canary_Islands-Hotels.html"
+    ]
+
+    return urls
+
 def BookingHotelsURLs():
     urls = [ ]
 

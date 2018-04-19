@@ -29,14 +29,21 @@ class TripadvisorSpider(scrapy.Spider):
                  'match_all' : {}
              }
           }
-    res = es.search(index='index_establishments_tripadvisor', doc_type='hotels_unit', body=doc,scroll='1m')
+    res = es.search(index='index_tripadvisor_hotels_establishments', doc_type='hotels', body=doc,scroll='1m')
 
     #creamos lista de urls
     for hit in res['hits']['hits']:
             start_urls=start_urls + [hit["_source"]["url"]]
 
 
+    start_urls = [
+        # "https://www.tripadvisor.co.uk/Hotel_Review-g187481-d10437912-Reviews-Hotel_Weare_La_Paz-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html",
+       "https://www.tripadvisor.co.uk/Hotel_Review-g187481-d567656-Reviews-Hotel_Tosca-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+    ]
+
+
     def parse(self, response):
+
 
         listErrors=[]
         #Create the request
@@ -48,7 +55,7 @@ class TripadvisorSpider(scrapy.Spider):
         )
 
         #Make a query to Elasticsearch using the URL
-        res = es.search(index="index_establishments_tripadvisor", doc_type="hotels_unit",body={
+        res = es.search(index="index_tripadvisor_hotels_establishments", doc_type="hotels",body={
         	"query": {
                 	"match_phrase": {
                         	"url": response.url
@@ -67,12 +74,13 @@ class TripadvisorSpider(scrapy.Spider):
 
         for hit in res['hits']['hits']:
 
-      	    hotel = hit["_source"]["name"]
-       	    has_review = hit["_source"]["has_reviews"]
-      	    street = hit["_source"]["name"]
-       	    extended = hit["_source"]["extended_address"]
-       	    locality = hit["_source"]["locality_address"]
-       	    score = hit["_source"]["score"]
+            hotel = hit["_source"]["name"]
+            has_review = hit["_source"]["has_reviews"]
+            street = hit["_source"]["name"]
+            extended = hit["_source"]["extended_address"]
+            locality = hit["_source"]["locality_address"]
+            score = hit["_source"]["score"]
+
 
         #save some fields that we will send
         request.meta['hotel_name']=hotel
@@ -91,7 +99,6 @@ class TripadvisorSpider(scrapy.Spider):
     def parse_review(self, response):
         listErrors=[] #if there is bugs
 
-
         for rev in response.xpath('//div[starts-with(@class,"review-container")]'):
             item = TripAdvisorReviewItem() #Class with Tripadvisor fields
 
@@ -101,8 +108,7 @@ class TripadvisorSpider(scrapy.Spider):
             item['hotel_locality_address']=response.meta['hotel_locality_address']
             item['hotel_score']=response.meta['hotel_score']
 
-            r_d=rev.xpath('.//span[@class="ratingDate relativeDate"]/@title')
-
+            r_d=rev.xpath('.//span[@class="ratingDate"]/@title')
             if r_d:
                 item['review_date'] = r_d.extract()[0]
 
@@ -125,6 +131,15 @@ class TripadvisorSpider(scrapy.Spider):
                          item['content'] = c.extract()
                     else:
                          listErrors=listErrors + ['content']
+                    print '++++++++++++++++++++++'
+                    print '++++++++++++++++++++++'
+                    print '++++++++++++++++++++++'
+                    print '++++++++++++++++++++++'
+                    print t, c
+                    print '++++++++++++++++++++++'
+                    print '++++++++++++++++++++++'
+                    print '++++++++++++++++++++++'
+                    print '++++++++++++++++++++++'
 
                     r_l = rev.xpath('.//div[@class="location"]/span/text()')
                     if r_l:
@@ -132,9 +147,38 @@ class TripadvisorSpider(scrapy.Spider):
 
                     #if there is bugs to extract fields
                     if len(listErrors)>0:
-                        self.send_email(listErrors)
-                        raise CloseSpider('Error Spider in Parse_Review general')
-                        break
+                        #self.send_email(listErrors)
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        print '-----------------------'
+                        # print listErrors
+                        # print 'response --> ', response
+                        # print 'title ', item['title']
+                        # print 'entry ---> ', rev.xpath('.//div[@class="entry"]')
+                        # print 'entry/p ---> ', rev.xpath('.//div[@class="entry"]/p/text()')
+                        # print 'partial entry ---> ', rev.xpath('.//p[@class="partial_entry"]')
+                        # raise CloseSpider('Error Spider in Parse_Review general')
+                        # break
 
                     yield item
 
@@ -143,8 +187,24 @@ class TripadvisorSpider(scrapy.Spider):
 
             else:
                 listErrors=listErrors + ['review_date']
-                self.send_email(listErrors)
+                print listErrors
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print response
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                print 'HOOOOOOOOOOOOOOOOOOOOOOOOOOLA'
+                #self.send_email(listErrors)
                 raise CloseSpider('Error Spider in Parse_Review date')
+
 
         #Use selenium for extract to next page
         #open webdriver
@@ -180,24 +240,24 @@ class TripadvisorSpider(scrapy.Spider):
 
 
 
-
-
-    def send_email(self, listErrors):
-
-        global exceptionErrorItem
-
-        if exceptionErrorItem == False:
-            message = 'Al hacer el scrapy de Tripadvisor no existen los campos '
-
-            for elementError in listErrors:
-                message = message + elementError + ', '
-
-            message = re.sub(', $', '.' , message)
-
-            #Send a email saying if some bug have ocurred
-            mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
-            mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
-            exceptionErrorItem=True
-
-            #In this case we delete the extract file until this moment
-            os.remove('itemsTripadvisor.csv')
+    #
+    #
+    # def send_email(self, listErrors):
+    #
+    #     global exceptionErrorItem
+    #
+    #     if exceptionErrorItem == False:
+    #         message = 'Al hacer el scrapy de Tripadvisor, no existen los campos '
+    #
+    #         for elementError in listErrors:
+    #             message = message + elementError + ', '
+    #
+    #         message = re.sub(', $', '.' , message)
+    #
+    #         #Send a email saying if some bug have ocurred
+    #         mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
+    #         mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
+    #         exceptionErrorItem=True
+    #
+    #         #In this case we delete the extract file until this moment
+    #         os.remove('itemsTripadvisor.csv')

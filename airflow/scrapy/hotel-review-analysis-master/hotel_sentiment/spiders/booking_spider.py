@@ -126,23 +126,23 @@ class BookingSpider(scrapy.Spider):
             request.meta['hotel_score']=response.meta['hotel_score']
             yield request
 
-
-    def send_email(self, listErrors):
-
-        global exceptionErrorItem
-
-        if exceptionErrorItem == False:
-            message = 'Al hacer el scrapy de Tripadvisor no existen los campos '
-
-            for elementError in listErrors:
-                message = message + elementError + ', '
-
-            message = re.sub(', $', '.' , message)
-
-            #Send a email saying if some bug have ocurred
-            mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
-            #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
-            exceptionErrorItem=True
-
-            #In this case we delete the extract file until this moment
-            os.remove('itemsBooking.csv')
+    #
+    # def send_email(self, listErrors):
+    #
+    #     global exceptionErrorItem
+    #
+    #     if exceptionErrorItem == False:
+    #         message = 'Al hacer el scrapy de Tripadvisor no existen los campos '
+    #
+    #         for elementError in listErrors:
+    #             message = message + elementError + ', '
+    #
+    #         message = re.sub(', $', '.' , message)
+    #
+    #         #Send a email saying if some bug have ocurred
+    #         mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
+    #         #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
+    #         exceptionErrorItem=True
+    #
+    #         #In this case we delete the extract file until this moment
+    #         os.remove('itemsBooking.csv')

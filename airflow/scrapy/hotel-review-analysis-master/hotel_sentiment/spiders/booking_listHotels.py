@@ -27,11 +27,13 @@ class BookingSpider(scrapy.Spider):
 
     #for every hotel
     def parse(self, response):
+        listErrors=[]
+
         for hotelurl in response.xpath('//a[@class="hotel_name_link url"]/@href'):
             url = response.urljoin(hotelurl.extract())
             request = scrapy.Request(url, callback=self.parse_hotel)
 
-	    res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
+            res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
                 "query": {
                         "match_phrase": {
                                 "url": url
@@ -54,9 +56,9 @@ class BookingSpider(scrapy.Spider):
 
         if parse_is_ok != 1:
 
-                listErrors=listErrors + ['def parse']
-                #self.send_email(listErrors)
-                raise CloseSpider('Error scraping')
+            listErrors=listErrors + ['def parse']
+            #self.send_email(listErrors)
+            raise CloseSpider('Error scraping')
 
 
     def parse_hotel(self, response):
@@ -70,8 +72,8 @@ class BookingSpider(scrapy.Spider):
         item['url']=url
 
         name = response.xpath('//div[@class="hp__hotel-title"]/h2/text()')
-	if name:
-          item['name']=name.extract()[0]
+        if name:
+            item['name']=name.extract()[0]
         else:
            listErrors=listErrors + ['name']
 
@@ -82,7 +84,7 @@ class BookingSpider(scrapy.Spider):
         else:
            listErrors=listErrors + ['address']
 
-	score = response.xpath('//span[@class="review-score-badge"]/text()')
+        score = response.xpath('//span[@class="review-score-badge"]/text()')
         if score:
           item['score']=score.extract()[0]
         else:
@@ -103,24 +105,24 @@ class BookingSpider(scrapy.Spider):
         return item
 
 
-    def send_email(self, listErrors):
-
-        global exceptionErrorItem
-
-        if exceptionErrorItem == False:
-            message = 'Al hacer el scrapy de Booking no existen los campos '
-
-            for elementError in listErrors:
-                message = message + elementError + ', '
-
-            message = re.sub(', $', '.' , message)
-
-            #Send a email saying if some bug have ocurred
-            mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
-            #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
-            exceptionErrorItem=True
-
-            #In this case we delete the extract file until this moment
-            os.remove('listhotelsBooking.csv')
-
+    # def send_email(self, listErrors):
+    #
+    #     global exceptionErrorItem
+    #
+    #     if exceptionErrorItem == False:
+    #         message = 'Al hacer el scrapy de Booking no existen los campos '
+    #
+    #         for elementError in listErrors:
+    #             message = message + elementError + ', '
+    #
+    #         message = re.sub(', $', '.' , message)
+    #
+    #         #Send a email saying if some bug have ocurred
+    #         mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
+    #         #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
+    #         exceptionErrorItem=True
+    #
+    #         #In this case we delete the extract file until this moment
+    #         os.remove('listhotelsBooking.csv')
+    #
 

@@ -22,8 +22,10 @@ reference = ["name",
 	     "locality_address",
              "phone",
              "score",
+             "postal_code",
+             "island",
 	     "street_address",
-             "hotel_key"
+             "key"
             ]
 
 es = Elasticsearch(
@@ -58,25 +60,24 @@ for row in csv.reader(f):
     if(count!=0):
         item = {}
 
-    	for i in range(len(reference)):
-        	item[reference[i]] = row[i]
-                item['insert_time']=datetime.datetime.today()
+        for i in range(len(reference)):
+            item[reference[i]] = row[i]
+            item['insert_time']=datetime.datetime.today()
 
-	action = {
+        action = {
         	"_index": "index_tripadvisor_hotels_establishments",
                 "_type": "hotels",
             	"_id": cont_id,
            	"_source": item
             	}
+        actions.append(action)
 
-	actions.append(action)
-
-    	cont_id += 1
+        cont_id += 1
 
     count += 1
 
 if count > 0:
-	helpers.bulk(es, actions)
-	print "leftovers"
-	print "indexed %d" %cont_id
+    helpers.bulk(es, actions)
+    print "leftovers"
+    print "indexed %d" %cont_id
 

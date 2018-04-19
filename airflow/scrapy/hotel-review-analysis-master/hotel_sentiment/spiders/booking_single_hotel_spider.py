@@ -22,7 +22,7 @@ class BookingSpider(scrapy.Spider):
          'elastic:vituinproject@elasticsearch:9200/',
        ]
     )
-    res = es.search(index="index_establishments_booking")
+    res = es.search(index="index_booking_hotels_establishments")
 
     #create list of URLs
     for hit in res['hits']['hits']:
@@ -41,7 +41,7 @@ class BookingSpider(scrapy.Spider):
         )
         request = scrapy.Request(response.url, callback=self.parse_review)
 
-        res = es.search(index="index_establishments_booking", doc_type="hotels_unit",body={
+        res = es.search(index="index_booking_hotels_establishments", doc_type="hotels",body={
             "query": {
                     "match_phrase": {
                             "url": response.url
@@ -161,23 +161,23 @@ class BookingSpider(scrapy.Spider):
             yield request
 
 
-    def send_email(self, listErrors):
-
-        global exceptionErrorItem
-
-        if exceptionErrorItem == False:
-            message = 'Al hacer el scrapy de Tripadvisor no existen los campos '
-
-            for elementError in listErrors:
-                message = message + elementError + ', '
-
-            message = re.sub(', $', '.' , message)
-
-            #Send a email saying if some bug have ocurred
-            mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
-            #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
-            exceptionErrorItem=True
-
-            #In this case we delete the extract file until this moment
-            os.remove('itemsBooking.csv')
+    # def send_email(self, listErrors):
+    #
+    #     global exceptionErrorItem
+    #
+    #     if exceptionErrorItem == False:
+    #         message = 'Al hacer el scrapy de Tripadvisor no existen los campos '
+    #
+    #         for elementError in listErrors:
+    #             message = message + elementError + ', '
+    #
+    #         message = re.sub(', $', '.' , message)
+    #
+    #         #Send a email saying if some bug have ocurred
+    #         mailer = MailSender(mailfrom="erroresSpider@gmail.com",smtphost="smtp.gmail.com",smtpport=587,smtpuser="erroresSpider@gmail.com",smtppass="errores1234")
+    #         #mailer.send(to=["erroresSpider@gmail.com"], subject='Errores en el Spider', body=message)
+    #         exceptionErrorItem=True
+    #
+    #         #In this case we delete the extract file until this moment
+    #         os.remove('itemsBooking.csv')
 

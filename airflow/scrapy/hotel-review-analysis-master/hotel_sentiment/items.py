@@ -13,6 +13,13 @@ class HotelSentimentItem(scrapy.Item):
     content = scrapy.Field()
     stars = scrapy.Field()
 
+class ListPriceHotelsItem(scrapy.Item):
+    name = scrapy.Field()
+    url = scrapy.Field()
+    time_borrow = scrapy.Field()
+    company = scrapy.Field()
+    price = scrapy.Field()
+
 class ListHotelsTripadvisorItem(scrapy.Item):
     name = scrapy.Field()
     url = scrapy.Field()
@@ -21,7 +28,9 @@ class ListHotelsTripadvisorItem(scrapy.Item):
     street_address = scrapy.Field()
     extended_address = scrapy.Field()
     locality_address = scrapy.Field()
+    postal_code = scrapy.Field()
     score = scrapy.Field()
+    island = scrapy.Field()
 
 class ListRestaurantsTripadvisorItem(scrapy.Item):
     name = scrapy.Field()
