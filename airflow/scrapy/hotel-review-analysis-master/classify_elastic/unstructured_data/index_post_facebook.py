@@ -1,8 +1,5 @@
 import sys
 import unicodecsv as csv
-import json
-import datetime
-
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
@@ -16,7 +13,6 @@ filename =  sys.argv[1]
 
 f = open(filename)
 reference = ["id",
-             "created_time",
              "message",
              "story",
              "comments",
@@ -28,7 +24,10 @@ reference = ["id",
              "sads",
              "angries",
              "thankfuls",
-             "prides"
+             "prides",
+             "key"
+             "created_time",
+             "extract_time"
             ]
 
 es = Elasticsearch(
@@ -67,35 +66,52 @@ for row in csv.reader(f):
         for i in range(len(reference)):
                 item[reference[i]] = row[i]
 
-        action = {
+        #ID in facebook
+        id = item['id']
+        res = es.search(index="index_facebook_posts", body={
+            "query": {
+                "match_phrase": {
+                    "id": id
+                }
+            }
+        })
+        exist = False
+        same = True
+
+        #ID of the index in elastic
+        _id = 0
+        for hit in res['hits']['hits']:
+            exist = True
+
+            if exist:
+                if hit["_source"]["key"] != item['key']:
+                    same = False
+                    _id = hit["_source"]["_id"]
+
+        #If not exists in de index this element
+        if exist is False:
+
+            action = {
+                    "_index": "index_facebook_posts",
+                    "_type": "posts",
+                    "_id": cont_id,
+                    "_source": item
+            }
+
+            actions.append(action)
+
+            cont_id += 1
+
+        #If exists but it hasn't modified
+        elif same is False:
+
+            action = {
                 "_index": "index_facebook_posts",
                 "_type": "posts",
-                "_id": cont_id,
+                "_id": _id,
                 "_source": item
-                }
+            }
 
-        now = datetime.datetime.today()
-
-        if item['created_time'] ==  now.day - 7:
-                id = item['id']
-                #busqueda de una entrada igual
-                res = es.search(index="index_facebook_posts", body={
-                        "query": {
-                                "match_phrase": {
-                                        "id": id
-                                        }
-                                }
-                        })
-                exist = '0'
-                for hit in res['hits']['hits']:
-                        exist = hit["_source"]
-
-                if exist == '0':
-                        actions.append(action)
-        else:
-                actions.append(action)
-
-        cont_id += 1
 
     count += 1
 

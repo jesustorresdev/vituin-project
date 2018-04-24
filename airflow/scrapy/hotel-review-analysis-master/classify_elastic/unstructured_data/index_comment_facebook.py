@@ -1,8 +1,5 @@
 import sys
 import unicodecsv as csv
-import json
-import datetime
-
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
@@ -16,8 +13,6 @@ filename =  sys.argv[1]
 
 f = open(filename)
 reference = ["id",
-             "created_time",
-             "id_transmitter",
              "message",
              "likes",
              "loves",
@@ -27,6 +22,9 @@ reference = ["id",
              "angries",
              "thankfuls",
              "prides",
+             "key"
+             "created_time",
+             "extract_time"
              "parent"
             ]
 
@@ -57,9 +55,6 @@ except:
     cont_id = 0
 
 
-
-now = datetime.datetime.today()
-
 for row in csv.reader(f):
 
     if(count!=0):
@@ -68,34 +63,52 @@ for row in csv.reader(f):
         for i in range(len(reference)):
                 item[reference[i]] = row[i]
 
-        action = {
+        #ID in facebook
+        id = item['id']
+        #busqueda de una entrada igual
+        res = es.search(index="index_facebook_comments", body={
+                "query": {
+                        "match_phrase": {
+                                "id": id
+                                }
+                        }
+        })
+        exist = False
+        same = True
+
+        #ID of the index in elastic
+        _id = 0
+        for hit in res['hits']['hits']:
+                exist = hit["_source"]
+
+                if exist:
+                    if hit["_source"]["key"] != item['key']:
+                        same = False
+                        _id = hit["_source"]["_id"]
+
+        #If not exists in de index this element
+        if exist is False:
+
+            action = {
                 "_index": "index_facebook_comments",
                 "_type": "comments",
                 "_id": cont_id,
                 "_source": item
-                }
+            }
 
-        if item['created_time'] ==  now.day - 7:
-                id = item['id']
-                #busqueda de una entrada igual
-                res = es.search(index="index_facebook_comments", body={
-                        "query": {
-                                "match_phrase": {
-                                        "id": id
-                                        }
-                                }
-                        })
-                exist = '0'
-                for hit in res['hits']['hits']:
-                        exist = hit["_source"]
+            actions.append(action)
 
-                if exist == '0':
-                        actions.append(action)
-        else:
+            cont_id += 1
 
-                actions.append(action)
+        elif same is False:
 
-        cont_id += 1
+            action = {
+                "_index": "index_facebook_posts",
+                "_type": "posts",
+                "_id": _id,
+                "_source": item
+            }
+
 
     count += 1
 

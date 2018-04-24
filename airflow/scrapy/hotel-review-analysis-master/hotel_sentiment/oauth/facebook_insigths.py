@@ -47,7 +47,7 @@ try:
             insights.append(tem)
         data = requests.get(data['paging']['next']).json()
 
-except KeyError as e:
+except:
     print(e)
 
 #Create the file
