@@ -38,10 +38,10 @@ def getPosts(data,comments, posts_comments, days):
             for element in data['data']:
 
                 now = datetime.datetime.today()
-                created_time = datetime.datetime.strptime(element['created_time'], '%Y-%m-%dT%H:%M:%S+%f')
-                extract_time = now
+                creation_time = datetime.datetime.strptime(element['creation_time'], '%Y-%m-%dT%H:%M:%S+%f')
+                extraction_time = now
 
-                if (now - created_time).days < days:
+                if (now - creation_time).days < days:
                     samples_posts.append(element['id'])
 
                     if 'message' in element: #Could not have message
@@ -80,8 +80,8 @@ def getPosts(data,comments, posts_comments, days):
 
                     key = hashlib.md5(str_key.encode('utf-8')).hexdigest()
                     samples_posts[index_posts].append(key)
-                    samples_posts[index_posts].append(created_time)
-                    samples_posts[index_posts].append(extract_time)
+                    samples_posts[index_posts].append(creation_time)
+                    samples_posts[index_posts].append(extraction_time)
 
                     index_posts=index_posts+1
 

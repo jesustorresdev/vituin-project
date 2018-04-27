@@ -22,9 +22,9 @@ reference = ["id",
              "angries",
              "thankfuls",
              "prides",
-             "key"
-             "created_time",
-             "extract_time"
+             "key",
+             "creation_time",
+             "extraction_time"
              "parent"
             ]
 
@@ -80,15 +80,26 @@ for row in csv.reader(f):
         _id = 0
         for hit in res['hits']['hits']:
                 exist = hit["_source"]
+                element = hit
 
-                if exist:
-                    if hit["_source"]["key"] != item['key']:
-                        same = False
-                        _id = hit["_source"]["_id"]
+        if exist:
+            #If exists but it has modified
+            if element["_source"]["key"] != item['key']:
+
+                _id = element["_source"]["_id"]
+
+                action = {
+                    "_index": "index_facebook_posts",
+                    "_type": "posts",
+                    "_id": _id,
+                    "_source": item
+                }
+
+                actions.append(action)
+
 
         #If not exists in de index this element
-        if exist is False:
-
+        else:
             action = {
                 "_index": "index_facebook_comments",
                 "_type": "comments",
@@ -100,14 +111,8 @@ for row in csv.reader(f):
 
             cont_id += 1
 
-        elif same is False:
 
-            action = {
-                "_index": "index_facebook_posts",
-                "_type": "posts",
-                "_id": _id,
-                "_source": item
-            }
+
 
 
     count += 1

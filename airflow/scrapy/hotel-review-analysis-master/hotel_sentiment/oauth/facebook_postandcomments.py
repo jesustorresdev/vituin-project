@@ -25,14 +25,17 @@ comments_files = os.path.join(CSVdir, comments_files)
 
 #Arrays will be save the dada
 samples_posts=[]
-samples_posts.append(["id", "created_time", "message", "story", "comments", "shares","likes","loves","wows","hahas","sads","angries","thankfuls","prides"])
+samples_posts.append(["id", "message", "story", "comments", "shares","likes","loves","wows","hahas","sads","angries","thankfuls","prides", "key", "creation_time", "extraction_time"])
 
 samples_comments=[]
-samples_comments.append(["id", "created_time", "message","likes","loves","wows","hahas","sads","angries","thankfuls","prides", "parent"])
+samples_comments.append(["id", "message","likes","loves","wows","hahas","sads","angries","thankfuls","prides", "key", "creation_time", "extraction_time" "parent"])
 
+samples_hastags=[]
+samples_hastags.append(["hastag", "parent", "social_network", "type_parent", "key", "creation_time", "extraction_time","number_hastag", "number_of_this_hastags_in_message"])
 
 index_posts=1
 index_comments=1
+index_hastags=1
 
 comments = True
 posts_comments = {}

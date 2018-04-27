@@ -54,9 +54,9 @@ def getComments(post, index_comments):
                 key = hashlib.md5(str_key.encode('utf-8')).hexdigest()
                 samples_comments[index_comments].append(key)
 
-                samples_comments[index_comments].append(comment['created_time'])
-                extract_time = datetime.datetime.today()
-                samples_comments[index_comments].append(extract_time)
+                samples_comments[index_comments].append(comment['creation_time'])
+                extraction_time = datetime.datetime.today()
+                samples_comments[index_comments].append(extraction_time)
 
                 #We add that it doesnt exist parent comment
                 #In this point all comments are parent comment. Ever
@@ -99,9 +99,9 @@ def getComments(post, index_comments):
                         key = hashlib.md5(str_key.encode('utf-8')).hexdigest()
                         samples_comments[index_comments].append(key)
 
-                        samples_comments[index_comments].append(comment['created_time'])
-                        extract_time = datetime.datetime.today()
-                        samples_comments[index_comments].append(extract_time)
+                        samples_comments[index_comments].append(comment['creation_time'])
+                        extraction_time = datetime.datetime.today()
+                        samples_comments[index_comments].append(extraction_time)
 
                         #Parent comment that it comes
                         samples_comments[index_comment].append(parent_id)

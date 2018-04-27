@@ -28,7 +28,7 @@ def createItem(row, item):
                    "period",
                    "title",
                    "description",
-                   "created_time"
+                   "creation_time"
 
           ]
 
@@ -105,7 +105,7 @@ for row in csv.reader(f):
                 "_source": item
                 }
         ''' 
-        if item['created_time'] ==  day.now - 7:
+        if item['creation_time'] ==  day.now - 7:
                 id = item['id']
                 #busqueda de una entrada igual
                 res = es.search(index="index_facebook", doc_type="posts",body={

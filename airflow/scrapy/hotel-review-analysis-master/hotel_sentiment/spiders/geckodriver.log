@@ -707,3 +707,5 @@ JavaScript warning: https://static.tacdn.com/js3/mootools-c-v22847647807b.js, li
 ###!!! [Parent][MessageChannel] Error: (msgtype=0x150083,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
 
 A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1523526783019	geckodriver	INFO	geckodriver 0.19.1
+1523526783025	geckodriver	INFO	Listening on 127.0.0.1:39829
