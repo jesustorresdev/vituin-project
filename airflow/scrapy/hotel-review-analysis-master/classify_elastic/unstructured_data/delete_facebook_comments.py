@@ -47,7 +47,8 @@ for hit in res['hits']['hits']:
             break
 
     if not exist:
-        es.delete_by_query(index='index_facebook_comments',doc_type='unstructured', q={'id': id})
+        es.update(index='index_facebook_comments',doc_type='unstructured',id=id,
+                  body={"doc": {"exist_now": 0 }})
         count += 1
 
 if count > 0:

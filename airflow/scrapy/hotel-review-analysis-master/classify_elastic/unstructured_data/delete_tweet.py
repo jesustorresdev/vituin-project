@@ -21,7 +21,7 @@ es = Elasticsearch(
 now = datetime.datetime.today()
 timeAgo =  now.day - 100
 
-res = es.search(index="index_facebook_posts", body={
+res = es.search(index="index_tweets", body={
     "query": {
         "range" : {
             "timestamp" : {
@@ -47,8 +47,8 @@ for hit in res['hits']['hits']:
             break
 
     if not exist:
-        es.update(index='index_facebook_posts',doc_type='unstructured',id=id,
-              body={"doc": {"exist_now": 0 }})
+        es.update(index='index_tweets',doc_type='unstructured',id=id,
+                    body={"doc": {"exist_now": 0 }})
         count += 1
 
 if count > 0:

@@ -66,8 +66,10 @@ for row in csv.reader(f):
         for i in range(len(reference)):
                 item[reference[i]] = row[i]
 
+
         #ID in facebook
         id = item['id']
+        item['exist_now'] = 1
         res = es.search(index="index_facebook_posts", body={
             "query": {
                 "match_phrase": {
@@ -90,7 +92,7 @@ for row in csv.reader(f):
 
                 action = {
                     "_index": "index_facebook_posts",
-                    "_type": "posts",
+                    "_type": "unestructured",
                     "_id": _id,
                     "_source": item
                 }
@@ -102,7 +104,7 @@ for row in csv.reader(f):
 
             action = {
                     "_index": "index_facebook_posts",
-                    "_type": "posts",
+                    "_type": "unstructured",
                     "_id": cont_id,
                     "_source": item
             }
