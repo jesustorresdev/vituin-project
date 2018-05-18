@@ -1,6 +1,6 @@
 import datetime
-from facebook_reactions import getReactions
-from facebook_comments import getComments
+from functions_facebook_reactions import getReactions
+from functions_facebook_comments import getComments
 import requests
 import hashlib
 
@@ -42,7 +42,7 @@ def getPosts(data,comments, posts_comments, days):
                 extraction_time = now
 
                 if (now - creation_time).days < days:
-                    samples_posts.append(element['id'])
+                    samples_posts.append([element['id']])
 
                     if 'message' in element: #Could not have message
                         samples_posts[index_posts].append(element['message'])

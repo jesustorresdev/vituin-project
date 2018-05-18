@@ -1,4 +1,4 @@
-from facebook_reactions import getReactions
+from functions_facebook_reactions import getReactions
 import requests
 import datetime
 import hashlib
@@ -34,8 +34,12 @@ def getComments(post, index_comments):
 
         while True:
             try:
-                sample_comment.append([comment['id'], comment['message']])
+                sample_comment.append([comment['id']])
 
+                if 'message' in comment: #Could not have message
+                    sample_comment[index_comments].append(element['message'])
+                else:
+                    sample_comment[index_comments].append('')
                 #Reactions of comments
                 this_comment_reactions_url = comments_reactions_url.replace("{comment_id}",comment['id'])
                 comment_reactions = requests.get(this_comment_reactions_url, params = params).json()
