@@ -2,18 +2,12 @@
 import sys
 sys.path.append('../')
 
-from structured_data import index_excels_Istac
+from structured_data import index_excels_normalTable
 
 excel = "excels_recursos_naturales/recursos.xlsx"
 sheet = 1
 name_index = "index_playas"
 type_index = "structured"
-
-name_items = {
-    "type_rows" : "name",
-    "type_cols" : "type"
-}
-
 
 table_start_and_end = {
     "start_row": 1,
@@ -23,8 +17,23 @@ table_start_and_end = {
     "start_value_row": 2,
     "start_value_col": 1
 }
-type_value = str
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value)
+type_items = {
+    "beach" : str,
+    "season" : str,
+    "blue flag" : str,
+    "condition" : str,
+    "water classification" : str
+}
+
+fixed_attributes={
+    "place": "Puerto de la Cruz"
+}
+
+
+name_items = ["beach", "season", "blue flag", "condition", "water classification"]
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, attributes_to_fixed = fixed_attributes)
+
+
 
 

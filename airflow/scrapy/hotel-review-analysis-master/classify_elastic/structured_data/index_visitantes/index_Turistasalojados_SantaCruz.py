@@ -35,7 +35,7 @@ fixed_attributes={
 }
 name_items = ["year","month","country","4 y 5 stars", "3 stars", "1 y 2 stars", "hoteliers","non-hoteliers","total"]
 
-index_excels_normalTable.main(excel, name_index, type_index, table_start_and_end, type_items, name_items, fixed_attributes)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions = pos_value_restrictions, attributes_to_fixed =fixed_attributes)
 
 
 

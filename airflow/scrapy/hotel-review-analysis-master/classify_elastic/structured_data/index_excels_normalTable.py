@@ -8,7 +8,7 @@ from elasticsearch import helpers
 count = 0
 cont_id = 0
 
-def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions, attributes_to_fixed):
+def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items, name_items, **kwords):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
 
@@ -33,6 +33,15 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     cont_id = index_elastic["cont_id"]
     init_cont_id = cont_id
     end_cont_id = cont_id
+
+    if 'attributes_to_fixed' in kwords:
+        attributes_to_fixed = kwords['attributes_to_fixed']
+    else:
+        attributes_to_fixed = {}
+    if 'pos_value_restrictions' in kwords:
+        pos_value_restrictions = kwords['pos_value_restrictions']
+    else:
+        pos_value_restrictions = []
 
     #Get all values of the sheet
     for i in range(t_se["start_value_row"],t_se["end_row"]+1):
