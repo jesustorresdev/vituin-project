@@ -4,6 +4,7 @@ import datetime
 import hashlib
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
+from googlemaps import Client as GoogleMaps
 
 count = 0
 cont_id = 0
@@ -34,14 +35,18 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     init_cont_id = cont_id
     end_cont_id = cont_id
 
-    if 'attributes_to_fixed' in kwords:
+    if 'attributes_to_fixed' in kwords:                           #If it exits, we're going to add a extra field
         attributes_to_fixed = kwords['attributes_to_fixed']
     else:
-        attributes_to_fixed = {}
+        attributes_to_fixed = {}                                  #If it exists, we're going to join some fields in only one
     if 'pos_value_restrictions' in kwords:
         pos_value_restrictions = kwords['pos_value_restrictions']
     else:
         pos_value_restrictions = []
+    if 'coordinates' in kwords:                                    #If it exists, we're going to search and fix the coordinates
+        coordinates = kwords['coordinates']
+    else:
+        coordinates = []
 
     #Get all values of the sheet
     for i in range(t_se["start_value_row"],t_se["end_row"]+1):
@@ -76,6 +81,10 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
             for k,v in attributes_to_fixed.iteritems():
                 item[k]=v
 
+        if coordinates:
+            coor=getCoordinates(coordinates, item)
+            item['lat']=coor['lat']
+            item['lng']=coor['lng']
 
         if restriction:
             for restr in name_pos_restrictions:
@@ -249,3 +258,29 @@ def getArraysRestrictions(pos_value_restrictions):
 
 
 
+def getCoordinates(coordinates,item):
+
+    result_coordinates = {'lat':'','lng':''}
+
+    place = ''
+    for field in coordinates:
+        if field in item:
+            place += str(item[field].encode('UTF-8'))                   #The place searched is the composed to the fields to get the coordinates
+            place += ' '
+    api_key = 'AIzaSyD2owaTzJTWi9m1f2QqAlJ1S0hfFT3nT0w'
+    gmaps = GoogleMaps(api_key)
+    location = gmaps.geocode(place)
+    try:
+        if 'location' in location[0]['geometry']:
+            lat=location[0]['geometry']['location']['lat']
+            lng=location[0]['geometry']['location']['lng']
+        else:  #if it's a aproximation
+            lat = location[0]['geometry']['bounds']['northeast']['lat'] + location[0]['geometry']['bounds']['southwest']['lat']
+            lng = location[0]['geometry']['bounds']['northeast']['lng'] + location[0]['geometry']['bounds']['southwest']['lng']
+    except:
+        print 'algo va mal'
+        pass
+
+    result_coordinates['lat']=lat
+    result_coordinates['lng']=lng
+    return result_coordinates

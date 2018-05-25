@@ -22,9 +22,9 @@ reference = ["name",
 	     "locality_address",
              "phone",
              "score",
-             "postal_code",
-             "island",
 	     "street_address",
+             "lat",
+             "lng",
              "key"
             ]
 

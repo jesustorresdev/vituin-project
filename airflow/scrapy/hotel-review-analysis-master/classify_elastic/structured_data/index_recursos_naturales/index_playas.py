@@ -30,9 +30,9 @@ fixed_attributes={
     "place": "Puerto de la Cruz"
 }
 
-
+coordinates = ['beach','place']
 name_items = ["beach", "season", "blue flag", "condition", "water classification"]
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, attributes_to_fixed = fixed_attributes)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, attributes_to_fixed = fixed_attributes, coordinates = coordinates)
 
 
 

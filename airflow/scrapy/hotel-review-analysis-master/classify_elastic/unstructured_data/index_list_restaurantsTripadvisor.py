@@ -83,7 +83,9 @@ for row in csv.reader(f):
         item['price']=row[15]#price
         item['street_address']=row[16]#street_address
         item['ratingpoor']=int(row[17])#ratingpoor
-        item['key']=str(row[18])#key
+        item['lat']=row[18]#lon
+        item['lng']=row[19]#lng
+        item['key']=str(row[20])#key
         item['place'] = place
 
 	action = {
