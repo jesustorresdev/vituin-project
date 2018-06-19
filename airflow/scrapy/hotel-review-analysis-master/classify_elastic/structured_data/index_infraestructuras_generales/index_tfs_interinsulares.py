@@ -4,29 +4,37 @@ sys.path.append('../')
 
 from structured_data import index_excels_Istac
 
-excel = "excels_visitantes/infraestructuras.xlsx"
-sheet = "Infraestructuras civiles"
+excel = "excels_infraestructuras_generales/infraestructuras.xlsx"
+sheet = 0
 name_index = "index_aeropuertos"
 type_index = "structured"
 
 name_items = {
-    "type_rows" : "destination",
-    "subtype_rows" : "place_origin"
+    "type_rows" : "place_origin",
     "type_cols" : "year_month"
 }
 
 
 table_start_and_end = {
-    "start_row": 142,
+    "start_row": 139,
     "start_col": 0,
-    "end_row": 150,
+    "end_row": 146,
     "end_col": 106,
-    "start_value_row": 143,
+    "start_value_row": 140,
     "start_value_col": 1
 }
 type_value = int
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value)
+fixed_attributes={
+    "airport": "Tenerife Sur"
+}
+
+field_region = ['place_origin']
+
+fields_to_change = {'TOTAL AEROPUERTOS DE ORIGEN' : 'Canarias'}
+
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = fixed_attributes, field_region = fields_to_change, fields_to_change = fields_to_change)
+
 
 
 
