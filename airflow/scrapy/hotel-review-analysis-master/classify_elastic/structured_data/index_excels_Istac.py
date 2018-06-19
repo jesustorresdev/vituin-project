@@ -4,17 +4,19 @@ import datetime
 import hashlib
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-
+from contries_region import get_region
 es = Elasticsearch(
        [
          'elasticsearch:9200/'
        ]
     )
 
+field_region = []
 attr_fix = {}
 attr_spl = {}
+fs_change = {}
 
-def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, *extra_arguments):
+def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, **kwords):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
 
@@ -40,17 +42,33 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
 
     #Are there attributes_to_fixed?
     try:
-        if extra_arguments[0]["attributes_to_fixed"]:
+        if kwords["attributes_to_fixed"]:
             global attr_fix
-            attr_fix = extra_arguments[0]["attributes_to_fixed"]
+            attr_fix = kwords["attributes_to_fixed"]
     except:
         pass
 
     #Are there arguments to split?
     try:
-        if extra_arguments[0]["attribute_to_split"]:
+        if kwords["attribute_to_split"]:
             global attr_spl
-            attr_spl = extra_arguments[0]["attribute_to_split"]
+            attr_spl = kwords["attribute_to_split"]
+    except:
+        pass
+
+    #Are there arguments to split?
+    try:
+        if kwords["field_region"]:
+            global field_region
+            field_region = kwords["field_region"]
+    except:
+        pass
+
+    #Are name fields to change?
+    try:
+        if kwords["fields_to_change"]:
+            global fs_change
+            fs_change = kwords["fields_to_change"]
     except:
         pass
 
@@ -121,7 +139,6 @@ def call_elastic(name_index,es):
 
     #Search the last indexed id
     doc = {
-            'size' : 10000,
             'query': {
                  'match_all' : {}
             }
@@ -158,14 +175,27 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
             for m in range(0,len(type_cols)):
                 for n in range(0,len(subtype_cols)):
 
-                    #Generate key of this value
                     value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row, colx=(m*n_cols+n)+start_col)
-                    if type_value != str:
-                        str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
-                    else:
-                        str_key = value + type_rows[i].strip() + type_cols[m].strip()
 
                     item = {}
+
+                    item["insert_time"]=datetime.datetime.today()
+                    item[name_items["type_rows"]] = type_rows[i].strip()
+                    item[name_items["subtype_rows"]] = type_rows[j].strip()
+                    item[name_items["type_cols"]] = type_cols[m].strip()
+                    item[name_items["subtype_cols"]] = subtype_cols[n].strip()
+
+                    global fs_change
+                    #if exist field to change
+                    if fs_change:
+                        item = change_field_name(item)
+
+                    #Generate key of this value
+                    if type_value != str:
+                        str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_rows"]] + item[name_items["subtype_cols"]]
+                    else:
+                        str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_rows"]] + item[name_items["subtype_cols"]]
+
                     '''
                     print '-----------------------------------'
                     print 'rowx = ', (i*n_rows+i+1+j)+start_row
@@ -174,18 +204,24 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     print 'all'
                     '''
 
-                    item["insert_time"]=datetime.datetime.today()
-                    item[name_items["type_rows"]] = type_rows[i].strip()
-                    item[name_items["subtype_rows"]] = subtype_rows[j].strip()
-                    item[name_items["type_cols"]] = type_cols[m].strip()
-                    item[name_items["subtype_cols"]] = subtype_cols[n].strip()
-                    #if there are attributes_to_fixed
                     global attr_fix
-                    if attr_fix:
-                        item=getAttribute_Fixed(item)
-                        for element in attr_fix:
-                            str_key = str_key + attr_fix[element]
+                    #if it's place, country or city
+                    global field_region
+                    tem_attr_fix = {}
+                    if field_region:
+                        for name in name_items:
+                            for element in field_region:
+                                if element == name_items[name]:
+                                    regions = get_region(item[name_items[name]], field = name_items[name])
+                                    tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
+                                    tem_attr_fix.update(attr_fix)
+                                    tem_attr_fix.update(regions)
 
+                    #if there are attributes_to_fixed
+                    if tem_attr_fix:
+                        item=getAttribute_Fixed(item,tem_attr_fix)
+                        for element in tem_attr_fix:
+                            str_key += tem_attr_fix[element]
                     global attr_spl
                     if attr_spl:
                         item=getAttributes_Split(item,name_items)
@@ -206,7 +242,7 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     }
 
 
-                    acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions, index_elastic)
+                    acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
 
                     if acts:                       #if actions was append
                         actions = acts
@@ -226,12 +262,25 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
         for m in range(0,len(type_cols)):
             for n in range(0,len(subtype_cols)):
 
-                #Generate key of this value
                 value = sheet.cell_value(rowx=i+start_row, colx=(m*n_cols+n)+start_col)
+
+                item = {}
+
+                item['insert_time']=datetime.datetime.today()
+                item[name_items["type_rows"]] = type_rows[i].strip()
+                item[name_items["type_cols"]] = type_cols[m].strip()
+                item[name_items["subtype_cols"]] = subtype_cols[n].strip()
+
+                global fs_change
+                #if exist field to change
+                if fs_change:
+                    item = change_field_name(item)
+
+                #Generate key of this value
                 if type_value != str:
-                    str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
+                    str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
                 else:
-                    str_key = value + type_rows[i].strip() + type_cols[m].strip()
+                    str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
 
                 '''
                 print '-----------------------------------'
@@ -241,18 +290,24 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 print 'sub_c'
                 '''
 
-                item = {}
-
-                item['insert_time']=datetime.datetime.today()
-                item[name_items["type_rows"]] = type_rows[i].strip()
-                item[name_items["type_cols"]] = type_cols[m].strip()
-                item[name_items["subtype_cols"]] = subtype_cols[n].strip()
-                #if there are attributes_to_fixed
                 global attr_fix
-                if attr_fix:
-                    item=getAttribute_Fixed(item)
-                    for element in attr_fix:
-                        str_key = str_key + attr_fix[element]
+                #if it's place, country or city
+                global field_region
+                tem_attr_fix = {}
+                if field_region:
+                    for name in name_items:
+                        for element in field_region:
+                            if element == name_items[name]:
+                                regions = get_region(item[name_items[name]], field = name_items[name])
+                                tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
+                                tem_attr_fix.update(attr_fix)
+                                tem_attr_fix.update(regions)
+
+                #if there are attributes_to_fixed
+                if tem_attr_fix:
+                    item=getAttribute_Fixed(item,tem_attr_fix)
+                    for element in tem_attr_fix:
+                        str_key += tem_attr_fix[element]
 
                 if value == '.':               #if there isn't value
                     continue
@@ -270,7 +325,7 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 }
 
 
-                acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions, index_elastic)
+                acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
 
                 if acts:                       #if actions was append
                     actions = acts
@@ -288,14 +343,26 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
         for j in range(0,len(subtype_rows)):
             for m in range(0,len(type_cols)):
 
-                #Generate key of this value
                 value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row, colx=m+start_col)
-                if type_value != str:
-                    str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
-                else:
-                    str_key = value + type_rows[i].strip() + type_cols[m].strip()
 
                 item = {}
+
+                item['insert_time']=datetime.datetime.today()
+                item[name_items["type_rows"]] = type_rows[i].strip()
+                item[name_items["type_cols"]] = type_cols[m].strip()
+                item[name_items["subtype_rows"]] = subtype_rows[j].strip()
+
+                global fs_change
+                #if exist field to change
+                if fs_change:
+                    item = change_field_name(item)
+
+                #Generate key of this value
+                if type_value != str:
+                    str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_rows"]]
+                else:
+                    str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_rows"]]
+
 
                 '''
                 print '-----------------------------------'
@@ -306,16 +373,24 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 print type(value)
                 '''
 
-                item['insert_time']=datetime.datetime.today()
-                item[name_items["type_rows"]] = type_rows[i].strip()
-                item[name_items["subtype_rows"]] = subtype_rows[j].strip()
-                item[name_items["type_cols"]] = type_cols[m].strip()
-                #if there are attributes_to_fixed
                 global attr_fix
-                if attr_fix:
-                    item=getAttribute_Fixed(item)
-                    for element in attr_fix:
-                        str_key = str_key + attr_fix[element]
+                #if it's place, country or city
+                tem_attr_fix = {}
+                global field_region
+                if field_region:
+                    for name in name_items:
+                        for element in field_region:
+                            if element == name_items[name]:
+                                regions = get_region(item[name_items[name]], field = name_items[name])
+                                tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
+                                tem_attr_fix.update(attr_fix)
+                                tem_attr_fix.update(regions)
+
+                #if there are attributes_to_fixed
+                if tem_attr_fix:
+                    item=getAttribute_Fixed(item,tem_attr_fix)
+                    for element in tem_attr_fix:
+                        str_key += tem_attr_fix[element]
 
                 if value == '.':               #if there isn't value
                      continue
@@ -333,7 +408,7 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 }
 
 
-                acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions, index_elastic)
+                acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
 
                 if acts:                       #if actions was append
                     actions = acts
@@ -350,13 +425,24 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
     for i in range(0,len(type_rows)):
         for m in range(0,len(type_cols)):
 
-            #Generate key of this value
             value = sheet.cell_value(rowx=i+start_row, colx=m+start_col)
-            if type_value != str:
-                str_key = str(value) + type_rows[i].strip() + type_cols[m].strip()
-            else:
-                str_key = value + type_rows[i].strip() + type_cols[m].strip()
+
             item = {}
+
+            item['insert_time']=datetime.datetime.today()
+            item[name_items["type_rows"]] = type_rows[i].strip()
+            item[name_items["type_cols"]] = type_cols[m].strip()
+
+            global fs_change
+            #if exist field to change
+            if fs_change:
+                item = change_field_name(item)
+
+            #Generate key of this value
+            if type_value != str:
+                str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]]
+            else:
+                str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]]
 
             '''
             print '-----------------------------------'
@@ -367,15 +453,24 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             print type(value)
             '''
 
-            item['insert_time']=datetime.datetime.today()
-            item[name_items["type_rows"]] = type_rows[i].strip()
-            item[name_items["type_cols"]] = type_cols[m].strip()
-            #if there are attributes_to_fixed
             global attr_fix
-            if attr_fix:
-                item=getAttribute_Fixed(item)
-                for element in attr_fix:
-                    str_key = str_key + attr_fix[element]
+            #if it's place, country or city
+            global field_region
+            tem_attr_fix = {}
+            if field_region:
+                for name in name_items:
+                    for element in field_region:
+                        if element == name_items[name]:
+                            regions = get_region(item[name_items[name]], field = name_items[name])
+                            tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
+                            tem_attr_fix.update(attr_fix)
+                            tem_attr_fix.update(regions)
+
+            #if there are attributes_to_fixed
+            if tem_attr_fix:
+                item=getAttribute_Fixed(item,tem_attr_fix)
+                for element in tem_attr_fix:
+                    str_key += tem_attr_fix[element]
 
             if value == '.':               #if there isn't value
                  continue
@@ -393,7 +488,7 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             }
 
 
-            acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions, index_elastic)
+            acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
 
             if acts:                       #if actions was append
                 actions = acts
@@ -402,8 +497,8 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
 
     return {'actions' : actions, 'count':count}
 
-def getAttribute_Fixed(item):
-   global attr_fix
+
+def getAttribute_Fixed(item, attr_fix):
 
    for k,v in attr_fix.items():
        item[k]=v
@@ -430,6 +525,14 @@ def getAttributes_Split(item, name_items):
                 del item["attribute_to_split_"+str(i)]                  #Delete to the old item
     return item
 
+def change_field_name(item):
+    global fs_change
+    for element in item:
+        #if the name of item is a field that should to change
+        if item[element] in fs_change:
+            item[element] = fs_change[item[element]].decode('UTF-8')
+
+    return item
 
 def getValue_with_type(type_value, value):
     if type_value == int:
@@ -439,15 +542,22 @@ def getValue_with_type(type_value, value):
             value_type = int(value)
 
     elif type_value == float:
-        value_type = float(value)
+        try:
+            value_type = float(value.replace(",","."))
+        except:
+            try:
+                value_type = value.replace(".","")
+                value_type = float(value_type.replace(",","."))
+            except:
+                value_type = float(value)
     else:
         value_type = value
 
     return value_type
 
-def append_Action(exist_index, key, name_index, action, actions, index_elastic):
-    if index_elastic["exist_index"] == 1:
-        exist_element = '0'               #Does it exist element in index?
+def append_Action(exist_index, key, name_index, action, actions):
+    if exist_index == 1:
+        # exist_element = '0'               #Does it exist element in index?
         global es
 
         #Search if there is same data in the index
@@ -553,3 +663,4 @@ def subtype_row(sheet, n_rows, t_se):
         array_rows[i] = array_rows[i].value    #Transform format of col_slice
 
     return array_rows
+
