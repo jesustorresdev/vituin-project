@@ -12,7 +12,7 @@ type_index = "structured"
 
 name_items = {
     "type_rows" : "port",
-    "subtype_rows" : "type"
+    "subtype_rows" : "type",
     "type_cols" : "year_month"
 }
 

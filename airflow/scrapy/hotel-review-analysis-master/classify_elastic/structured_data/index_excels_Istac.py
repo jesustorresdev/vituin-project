@@ -2,9 +2,10 @@
 import xlrd
 import datetime
 import hashlib
+import generals_functions
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-from contries_region import get_region
+from countries_region import get_region
 es = Elasticsearch(
        [
          'elasticsearch:9200/'
@@ -188,7 +189,7 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     global fs_change
                     #if exist field to change
                     if fs_change:
-                        item = change_field_name(item)
+                        item = generals_functions.change_field_name(item,fs_change)
 
                     #Generate key of this value
                     if type_value != str:
@@ -219,17 +220,17 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
                     #if there are attributes_to_fixed
                     if tem_attr_fix:
-                        item=getAttribute_Fixed(item,tem_attr_fix)
+                        item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
                         for element in tem_attr_fix:
                             str_key += tem_attr_fix[element]
                     global attr_spl
                     if attr_spl:
-                        item=getAttributes_Split(item,name_items)
+                        item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
                     if value == '.':               #if there isn't value
                         continue
 
-                    item["value"] = getValue_with_type(type_value, value)
+                    item["value"] = generals_functions.getValue_with_type(type_value, value)
 
                     key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                     item["key"] = key
@@ -250,7 +251,6 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                         count += 1
 
     return {'actions' : actions, 'count':count}
-
 
 def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col, type_value, name_index, type_index, name_items, cont_id, sheet, index_elastic):
 
@@ -274,7 +274,7 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 global fs_change
                 #if exist field to change
                 if fs_change:
-                    item = change_field_name(item)
+                    item = generals_functions.change_field_name(item,fs_change)
 
                 #Generate key of this value
                 if type_value != str:
@@ -305,14 +305,19 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
 
                 #if there are attributes_to_fixed
                 if tem_attr_fix:
-                    item=getAttribute_Fixed(item,tem_attr_fix)
+                    item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
                     for element in tem_attr_fix:
                         str_key += tem_attr_fix[element]
+
+
+                global attr_spl
+                if attr_spl:
+                    item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
                 if value == '.':               #if there isn't value
                     continue
 
-                item["value"] = getValue_with_type(type_value, value)
+                item["value"] = generals_functions.getValue_with_type(type_value, value)
 
                 key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                 item["key"] = key
@@ -355,7 +360,7 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 global fs_change
                 #if exist field to change
                 if fs_change:
-                    item = change_field_name(item)
+                    item = generals_functions.change_field_name(item,fs_change)
 
                 #Generate key of this value
                 if type_value != str:
@@ -388,14 +393,18 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
 
                 #if there are attributes_to_fixed
                 if tem_attr_fix:
-                    item=getAttribute_Fixed(item,tem_attr_fix)
+                    item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
                     for element in tem_attr_fix:
                         str_key += tem_attr_fix[element]
+
+                global attr_spl
+                if attr_spl:
+                    item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
                 if value == '.':               #if there isn't value
                      continue
 
-                item["value"] = getValue_with_type(type_value, value)
+                item["value"] = generals_functions.getValue_with_type(type_value, value)
 
                 key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                 item["key"] = key
@@ -436,7 +445,7 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             global fs_change
             #if exist field to change
             if fs_change:
-                item = change_field_name(item)
+                item = generals_functions.change_field_name(item,fs_change)
 
             #Generate key of this value
             if type_value != str:
@@ -468,14 +477,18 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
 
             #if there are attributes_to_fixed
             if tem_attr_fix:
-                item=getAttribute_Fixed(item,tem_attr_fix)
+                item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
                 for element in tem_attr_fix:
                     str_key += tem_attr_fix[element]
+
+            global attr_spl
+            if attr_spl:
+                item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
             if value == '.':               #if there isn't value
                  continue
 
-            item["value"] = getValue_with_type(type_value, value)
+            item["value"] = generals_functions.getValue_with_type(type_value, value)
 
             key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
             item["key"] = key
@@ -496,64 +509,6 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
                 count += 1
 
     return {'actions' : actions, 'count':count}
-
-
-def getAttribute_Fixed(item, attr_fix):
-
-   for k,v in attr_fix.items():
-       item[k]=v
-
-   return item
-
-def getAttributes_Split(item, name_items):
-    global attr_spl
-
-    for k,v in name_items.items():
-        if v[:-2]=="attribute_to_split":                                #if is a attr_split type
-            for i in range (0,len(attr_spl)):                           #See how many attr_spl there are. For each one, we'll save new item
-                attribute = attr_spl[i]
-                value_item = item["attribute_to_split_"+str(i)].split() #It's a array with all words for the name of the first item (without split)
-
-                for j in range(0,len(attribute["attributes"])):         #Number of new items than we are going to create
-                    key_item = attribute["attributes"][j]
-                    item[key_item] = ''
-
-                    for number in attribute["attr"+str(j)]:
-                        item[key_item] += value_item[number]            #Set new items
-                        item[key_item] += ' '
-                item[key_item] = item[key_item][:-1]                    #Eliminate last space
-                del item["attribute_to_split_"+str(i)]                  #Delete to the old item
-    return item
-
-def change_field_name(item):
-    global fs_change
-    for element in item:
-        #if the name of item is a field that should to change
-        if item[element] in fs_change:
-            item[element] = fs_change[item[element]].decode('UTF-8')
-
-    return item
-
-def getValue_with_type(type_value, value):
-    if type_value == int:
-        try:
-            value_type = int(value.replace(".",""))
-        except:
-            value_type = int(value)
-
-    elif type_value == float:
-        try:
-            value_type = float(value.replace(",","."))
-        except:
-            try:
-                value_type = value.replace(".","")
-                value_type = float(value_type.replace(",","."))
-            except:
-                value_type = float(value)
-    else:
-        value_type = value
-
-    return value_type
 
 def append_Action(exist_index, key, name_index, action, actions):
     if exist_index == 1:

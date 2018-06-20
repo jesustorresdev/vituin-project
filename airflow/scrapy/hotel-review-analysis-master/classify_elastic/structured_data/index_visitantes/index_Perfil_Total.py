@@ -23,13 +23,12 @@ table_start_and_end = {
     "start_value_col": 1
 }
 
-extra_arguments={}
-extra_arguments["attributes_to_fixed"]={
+attributes_to_fixed={
     "gender": "AMBOS SEXOS",
     "age" : "Cualquiera"
 }
 
 type_value = int
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, extra_arguments)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed=attributes_to_fixed)
 

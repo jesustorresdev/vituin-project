@@ -24,8 +24,9 @@ table_start_and_end = {
     "start_value_col": 1
 }
 
+field_region = ["place_tourist_residence"]
 
 type_value = float
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, field_region = field_region)
 

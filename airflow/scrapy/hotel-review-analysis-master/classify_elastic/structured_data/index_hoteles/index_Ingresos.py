@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-print 'cacddasa'
 import sys
 sys.path.append('../')
 
