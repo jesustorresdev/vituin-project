@@ -26,13 +26,13 @@ type_items = {
     "water classification" : str
 }
 
-fixed_attributes={
+attributes_to_fixed={
     "place": "Puerto de la Cruz"
 }
 
 coordinates = ['beach','place']
 name_items = ["beach", "season", "blue flag", "condition", "water classification"]
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, attributes_to_fixed = fixed_attributes, coordinates = coordinates)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, attributes_to_fixed = attributes_to_fixed, coordinates = coordinates)
 
 
 

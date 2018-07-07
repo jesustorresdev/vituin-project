@@ -6,7 +6,7 @@ from structured_data import index_excels_Istac
 
 excel = "excels_gasto_consumo/gasto.xls"
 sheet = 0
-name_index = "index_gasto_por_residencia"
+name_index = "index_estimacion_gasto_por_residencia"
 type_index = "structured"
 
 name_items = {
@@ -35,4 +35,6 @@ attribute_to_split_remove = [{
 field_region = ["place_tourist_residence"]
 
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attribute_to_split_remove = attribute_to_split_remove, field_region = field_region)
+fields_to_change = {'TOTAL PAISES' : 'Total'}
+
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attribute_to_split_remove = attribute_to_split_remove, field_region = field_region, fields_to_change = fields_to_change)

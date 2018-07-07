@@ -27,9 +27,9 @@ type_items = {
 }
 
 pos_value_restrictions = []
-fixed_attributes={}
+attributes_to_fixed={}
 name_items = ["scientific name", "common name", "endemic", "island", "category"]
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions, fixed_attributes)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions, attributes_to_fixed)
 
 
 

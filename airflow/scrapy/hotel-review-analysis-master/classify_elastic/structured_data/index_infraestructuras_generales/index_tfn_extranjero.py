@@ -25,11 +25,11 @@ table_start_and_end = {
 }
 type_value = int
 
-fixed_attributes={
+attributes_to_fixed={
     "airport": "Tenerife Norte"
 }
 
 field_region = ['place_origin']
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = fixed_attributes, field_region = field_region)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, field_region = field_region)
 

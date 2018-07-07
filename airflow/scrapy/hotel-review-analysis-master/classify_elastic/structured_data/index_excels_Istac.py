@@ -61,7 +61,7 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     #Are there arguments to split and delete element?
     try:
         if kwords["attribute_to_split_remove"]:
-            global attribute_to_split_remove
+            global attr_spl_r
             attr_spl_r = kwords["attribute_to_split_remove"]
     except:
         pass
@@ -139,7 +139,7 @@ def update_elastic(sheet, n_cols, n_rows, name_index, type_index, name_items, st
     if count > 0:
         helpers.bulk(es, actions)
         print "leftovers"
-        print "indexed %d" %count
+        print "indexed", str(count), ",", name_index
     else:
         print "Not indexed"
 
@@ -232,13 +232,16 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                         item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
                         for element in tem_attr_fix:
                             str_key += tem_attr_fix[element]
-                    global attr_spl
-                    if attr_spl:
-                        item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
                     global attr_spl_r
                     if attr_spl_r:
                         item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+
+
+                    global attr_spl
+                    if attr_spl:
+                        item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
+
 
                     if value == '.':               #if there isn't value
                         continue
@@ -322,14 +325,13 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                     for element in tem_attr_fix:
                         str_key += tem_attr_fix[element]
 
+                global attr_spl_r
+                if attr_spl_r:
+                    item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
                 global attr_spl
                 if attr_spl:
                     item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
-
-                global attr_spl_r
-                if attr_spl_r:
-                    item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
                 if value == '.':               #if there isn't value
                     continue
@@ -414,13 +416,13 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                     for element in tem_attr_fix:
                         str_key += tem_attr_fix[element]
 
-                global attr_spl
-                if attr_spl:
-                    item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
-
                 global attr_spl_r
                 if attr_spl_r:
                     item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+
+                global attr_spl
+                if attr_spl:
+                    item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
                 if value == '.':               #if there isn't value
                      continue
@@ -502,13 +504,13 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
                 for element in tem_attr_fix:
                     str_key += tem_attr_fix[element]
 
-            global attr_spl
-            if attr_spl:
-                item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
-
             global attr_spl_r
             if attr_spl_r:
                 item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+
+            global attr_spl
+            if attr_spl:
+                item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
             if value == '.':               #if there isn't value
                  continue

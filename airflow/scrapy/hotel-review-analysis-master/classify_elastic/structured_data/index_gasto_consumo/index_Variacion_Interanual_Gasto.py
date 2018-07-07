@@ -13,16 +13,16 @@ name_items = {
     "type_rows" : "type",
     "subtype_rows" : "place_tourist_residence",
     "type_cols" : "year",
-    "subtype_cols" : "place",
+    "subtype_cols" : "place"
 }
 
 
 table_start_and_end = {
-    "start_row": 11,
+    "start_row": 110,
     "start_col": 0,
-    "end_row": 120,
-    "end_col": 87,
-    "start_value_row": 113,
+    "end_row": 119,
+    "end_col": 42,
+    "start_value_row": 112,
     "start_value_col": 1
 }
 type_value = float

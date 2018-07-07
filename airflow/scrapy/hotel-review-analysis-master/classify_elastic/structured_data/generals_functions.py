@@ -46,12 +46,30 @@ def getAttributes_Split(item, name_items, attr_spl):
 
 def getAttributes_Split_Remove(item, name_items, attr_spl_r):
 
-    for i in range(0,len(attr_spl_r["attributes"])):                                  #All elements to split
-        for k,v in name_items.items():
-            if v == attr_spl_r["attributes"][i]:                                      #if is the element
-                split_item = item[v].split()
-                item[v] = split_item["attr"+str(i)]
+    for element in attr_spl_r:
+        for i in range(0,len(element["attributes"])):                                  #All elements to split
+            for k,v in name_items.items():
+                if v == element["attributes"][i]:                                      #if is the element
+                    split_item = item[v].split()
+                    condition = False
+                    #There are condition in this split. It means that exits value that should change but others not should change
+                    if "condition" in element:
+                        condition = True
+                        for j in range(0,len(element["condition"])):
+                            try:
+                                if element["condition"][j].decode('UTF-8') != split_item[element["condition_pos"][j]]:
+                                    condition = False
+                                    break
+                            except:
+                                condition =  False
+                    else:
+                        condition = True
 
+                    if condition == True:
+                        item[v] = ''
+                        for attribute in element["attr"+str(i)]:
+                            item[v] += split_item[attribute] + ' '
+                        item[v] = item[v][:-1]                                              #Eliminate last space
     return item
 
 

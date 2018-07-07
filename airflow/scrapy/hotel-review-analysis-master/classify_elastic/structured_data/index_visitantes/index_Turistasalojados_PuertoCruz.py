@@ -27,7 +27,7 @@ type_items = {
     "value" : int
 }
 
-fixed_attributes={
+attributes_to_fixed={
     "place": "Puerto de la Cruz"
 }
 
@@ -43,7 +43,7 @@ name_items = ["year","month","country","4 y 5 stars", "3 stars", "1 y 2 stars", 
 
 field_region = ["country"]
 
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions = pos_value_restrictions, attributes_to_fixed =fixed_attributes,  field_region = field_region)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions = pos_value_restrictions, attributes_to_fixed =attributes_to_fixed,  field_region = field_region)
 
 
 

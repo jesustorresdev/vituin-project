@@ -25,7 +25,7 @@ table_start_and_end = {
 }
 type_value = int
 
-fixed_attributes={
+attributes_to_fixed={
     "airport": "Tenerife Sur"
 }
 
@@ -33,7 +33,7 @@ field_region = ['place_origin']
 
 fields_to_change = {'TOTAL AEROPUERTOS DE ORIGEN' : 'Canarias'}
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = fixed_attributes, field_region = fields_to_change, fields_to_change = fields_to_change)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, field_region = fields_to_change, fields_to_change = fields_to_change)
 
 
 
