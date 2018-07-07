@@ -26,6 +26,7 @@ table_start_and_end = {
 
 type_value = int
 
+field_region = ["place_tourist_residence"]
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value,field_region = field_region)
 

@@ -30,5 +30,7 @@ attributes_to_fixed={
 
 type_value = int
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed=attributes_to_fixed)
+field_region = ["place_tourist_residence"]
+
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed=attributes_to_fixed, field_region = field_region)
 
