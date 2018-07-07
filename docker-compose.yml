@@ -53,6 +53,19 @@ services:
       networks:
           - elk
 
+  dashboard:
+      build: dashboard/
+      volumes:
+      - /home/sdiaz/dash.conf:/etc/apache2/conf-available/dash.conf
+      - /home/sdiaz/extra_components-0.0.1-py2.7.egg:/usr/local/lib/python2.7/dist-packages/
+      - /home/sdiaz/vituin_project/dashboard/vituin_dashboard/web:/var/www/html
+      - /home/sdiaz/vituin_project/dashboard/vituin_dashboard/graficas:/var/local/plotly
+      ports:
+          - "80:80"
+          - "8050:8050"
+      networks:
+          - elk
+
 networks:
 
   elk:
