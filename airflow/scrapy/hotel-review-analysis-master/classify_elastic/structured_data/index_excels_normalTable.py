@@ -4,7 +4,8 @@ import datetime
 import hashlib
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-from googlemaps import Client as GoogleMaps
+import generals_functions
+import countries_region
 
 count = 0
 cont_id = 0
@@ -33,7 +34,7 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     index_elastic=call_elastic(name_index,es)
     cont_id = index_elastic["cont_id"]
     init_cont_id = cont_id
-    end_cont_id = cont_id
+
 
     if 'attributes_to_fixed' in kwords:                           #If it exits, we're going to add a extra field
         attributes_to_fixed = kwords['attributes_to_fixed']
@@ -47,6 +48,12 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
         coordinates = kwords['coordinates']
     else:
         coordinates = []
+    #Are there arguments with region?
+    if 'field_region' in kwords:
+        field_region = kwords["field_region"]
+    else:
+        field_region = []
+
 
     #Get all values of the sheet
     for i in range(t_se["start_value_row"],t_se["end_row"]+1):
@@ -78,11 +85,10 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
         #If there are fixed attributes
         if attributes_to_fixed:
-            for k,v in attributes_to_fixed.iteritems():
-                item[k]=v
+            item = generals_functions.getAttribute_Fixed(item, attributes_to_fixed)
 
         if coordinates:
-            coor=getCoordinates(coordinates, item)
+            coor=generals_functions.getCoordinates(coordinates, item)
             item['lat']=coor['lat']
             item['lng']=coor['lng']
 
@@ -101,11 +107,16 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
                     item[restr['name']] = type_items[restr['name']](name_items[j]) #It is going to be str ever
 
-                    item["key"]=getKey(item)
+                    if field_region:
+                        item = loopRegion(item, field_region)
 
+                    item["key"]=getKey(item)
                     actions = getActions(actions, es, item, name_index, type_index, index_elastic)
 
         else:
+            if field_region:
+                item = loopRegion(item, field_region)
+
             item["key"]=getKey(item)
             actions = getActions(actions, es, item, name_index, type_index, index_elastic)
 
@@ -204,7 +215,7 @@ def getKey(item):
 
     return key
 
-#It isn't cols that are only one
+#There aren't cols that are only one
 def getAllItems(item, row, type_items, name_items):
 
     for j in range(0,len(row)):
@@ -256,31 +267,18 @@ def getArraysRestrictions(pos_value_restrictions):
 
     return array_restrictions
 
+#return item with region
+def loopRegion(item, field_region):
+    tem_attr_fix = {}
+    if field_region:
+        for field in item:
+            for element in field_region:
+                if element == field:
+                    regions = countries_region.get_region(item[field], field = field)
+                    tem_attr_fix = {}
+                    tem_attr_fix.update(regions)
 
-
-def getCoordinates(coordinates,item):
-
-    result_coordinates = {'lat':'','lng':''}
-
-    place = ''
-    for field in coordinates:
-        if field in item:
-            place += str(item[field].encode('UTF-8'))                   #The place searched is the composed to the fields to get the coordinates
-            place += ' '
-    api_key = 'AIzaSyD2owaTzJTWi9m1f2QqAlJ1S0hfFT3nT0w'
-    gmaps = GoogleMaps(api_key)
-    location = gmaps.geocode(place)
-    try:
-        if 'location' in location[0]['geometry']:
-            lat=location[0]['geometry']['location']['lat']
-            lng=location[0]['geometry']['location']['lng']
-        else:  #if it's a aproximation
-            lat = location[0]['geometry']['bounds']['northeast']['lat'] + location[0]['geometry']['bounds']['southwest']['lat']
-            lng = location[0]['geometry']['bounds']['northeast']['lng'] + location[0]['geometry']['bounds']['southwest']['lng']
-    except:
-        print 'algo va mal'
-        pass
-
-    result_coordinates['lat']=lat
-    result_coordinates['lng']=lng
-    return result_coordinates
+    #if there are attributes_to_fixed
+    if tem_attr_fix:
+        item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
+    return item

@@ -16,6 +16,7 @@ field_region = []
 attr_fix = {}
 attr_spl = {}
 fs_change = {}
+attr_spl_r = {}
 
 def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, **kwords):
     # Open a workbook
@@ -54,6 +55,14 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
         if kwords["attribute_to_split"]:
             global attr_spl
             attr_spl = kwords["attribute_to_split"]
+    except:
+        pass
+
+    #Are there arguments to split and delete element?
+    try:
+        if kwords["attribute_to_split_remove"]:
+            global attribute_to_split_remove
+            attr_spl_r = kwords["attribute_to_split_remove"]
     except:
         pass
 
@@ -182,7 +191,7 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
                     item["insert_time"]=datetime.datetime.today()
                     item[name_items["type_rows"]] = type_rows[i].strip()
-                    item[name_items["subtype_rows"]] = type_rows[j].strip()
+                    item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                     item[name_items["type_cols"]] = type_cols[m].strip()
                     item[name_items["subtype_cols"]] = subtype_cols[n].strip()
 
@@ -226,6 +235,10 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     global attr_spl
                     if attr_spl:
                         item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
+
+                    global attr_spl_r
+                    if attr_spl_r:
+                        item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
                     if value == '.':               #if there isn't value
                         continue
@@ -314,6 +327,10 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 if attr_spl:
                     item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
+                global attr_spl_r
+                if attr_spl_r:
+                    item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+
                 if value == '.':               #if there isn't value
                     continue
 
@@ -401,6 +418,10 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 if attr_spl:
                     item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
+                global attr_spl_r
+                if attr_spl_r:
+                    item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+
                 if value == '.':               #if there isn't value
                      continue
 
@@ -484,6 +505,10 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             global attr_spl
             if attr_spl:
                 item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
+
+            global attr_spl_r
+            if attr_spl_r:
+                item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
             if value == '.':               #if there isn't value
                  continue

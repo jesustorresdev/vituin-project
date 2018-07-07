@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from googlemaps import Client as GoogleMaps
+
 def change_field_name_json(field, fs_change):
     return fs_change[field].decode('UTF-8')
 
@@ -10,23 +12,48 @@ def getAttribute_Fixed(item, attr_fix):
     return item
 
 def getAttributes_Split(item, name_items, attr_spl):
-
     for k,v in name_items.items():
         if v[:-2]=="attribute_to_split":                                #if is a attr_split type
-            for i in range (0,len(attr_spl)):                           #See how many attr_spl there are. For each one, we'll save new item
+            for i in range(0,len(attr_spl)):                           #See how many attr_spl there are. For each one, we'll save new item
                 attribute = attr_spl[i]
                 value_item = item["attribute_to_split_"+str(i)].split() #It's a array with all words for the name of the first item (without split)
 
-                for j in range(0,len(attribute["attributes"])):         #Number of new items than we are going to create
-                    key_item = attribute["attributes"][j]
-                    item[key_item] = ''
+                #If not an exception. It can be a field without second value
+                if len(value_item) != 1:
+                    for j in range(0,len(attribute["attributes"])):         #Number of new items than we are going to create
+                        key_item = attribute["attributes"][j]
+                        item[key_item] = ''
 
-                    for number in attribute["attr"+str(j)]:
-                        item[key_item] += value_item[number]            #Set new items
-                        item[key_item] += ' '
-                item[key_item] = item[key_item][:-1]                    #Eliminate last space
-                del item["attribute_to_split_"+str(i)]                  #Delete to the old item
+                        for number in attribute["attr"+str(j)]:
+                            item[key_item] += value_item[number]            #Set new items
+                            item[key_item] += ' '
+                    item[key_item] = item[key_item][:-1]                    #Eliminate last space
+                    del item["attribute_to_split_"+str(i)]                  #Delete to the old item
+                else:
+                    key_item = attribute["exception"]
+                    item[key_item] = value_item[0]
+                    del item["attribute_to_split_"+str(i)]                  #Delete to the old item
+
+                    temp_attr = attribute["attributes"][:]                  #copy the list
+                    temp_attr.remove(attribute["exception"])
+                    #For each exclude add value
+                    for j in range(0,len(temp_attr)):
+                        key_item = temp_attr[j]
+                        item[key_item] = attribute["exclude"][j]
+
+
     return item
+
+def getAttributes_Split_Remove(item, name_items, attr_spl_r):
+
+    for i in range(0,len(attr_spl_r["attributes"])):                                  #All elements to split
+        for k,v in name_items.items():
+            if v == attr_spl_r["attributes"][i]:                                      #if is the element
+                split_item = item[v].split()
+                item[v] = split_item["attr"+str(i)]
+
+    return item
+
 
 def change_field_name(item, fs_change):
 
@@ -57,3 +84,30 @@ def getValue_with_type(type_value, value):
         value_type = value
 
     return value_type
+
+def getCoordinates(coordinates,item):
+
+    result_coordinates = {'lat':'','lng':''}
+
+    place = ''
+    for field in coordinates:
+        if field in item:
+            place += str(item[field].encode('UTF-8'))                   #The place searched is the composed to the fields to get the coordinates
+            place += ' '
+    api_key = 'AIzaSyD2owaTzJTWi9m1f2QqAlJ1S0hfFT3nT0w'
+    gmaps = GoogleMaps(api_key)
+    location = gmaps.geocode(place)
+    try:
+        if 'location' in location[0]['geometry']:
+            lat=location[0]['geometry']['location']['lat']
+            lng=location[0]['geometry']['location']['lng']
+        else:  #if it's a aproximation
+            lat = location[0]['geometry']['bounds']['northeast']['lat'] + location[0]['geometry']['bounds']['southwest']['lat']
+            lng = location[0]['geometry']['bounds']['northeast']['lng'] + location[0]['geometry']['bounds']['southwest']['lng']
+    except:
+        print 'algo va mal'
+        pass
+
+    result_coordinates['lat']=lat
+    result_coordinates['lng']=lng
+    return result_coordinates
