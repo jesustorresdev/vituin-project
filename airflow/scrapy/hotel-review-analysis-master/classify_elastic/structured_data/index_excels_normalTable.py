@@ -123,7 +123,7 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
 
     if count > 0:
-        # helpers.bulk(es, actions)
+        helpers.bulk(es, actions)
         end_cont_id = cont_id
         count_indexed = end_cont_id - init_cont_id
         print "leftovers"
