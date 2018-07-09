@@ -58,8 +58,9 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     #Get all values of the sheet
     for i in range(t_se["start_value_row"],t_se["end_row"]+1):
 
-        row = sheet.row_values(i)
-
+        row = sheet.row_slice(rowx=i,
+                        start_colx=t_se["start_value_col"], # Saving since col values starts, not where it starts table (not col type there)
+                        end_colx=t_se["end_col"]+1)         # row_slice uses end col - 1 by defect. For this it's necessary sum 1
         #Generate key of this value
         item = {}
 
@@ -100,9 +101,9 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
                     item = item.copy() #It ins't actions point to the same item and modified action append before
 
                     if(type_items["value"] is str):
-                       item["value"] = row[j]                      #If is str it is going to be a unicode type
+                       item["value"] = row[j].value                      #If is str it is going to be a unicode type
                     else:
-                       item["value"] = type_items["value"](row[j]) #If it is other type, like int or float, it is going to this type
+                       item["value"] = type_items["value"](row[j].value) #If it is other type, like int or float, it is going to this type
 
 
                     item[restr['name']] = type_items[restr['name']](name_items[j]) #It is going to be str ever
@@ -122,7 +123,7 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
 
     if count > 0:
-        helpers.bulk(es, actions)
+        # helpers.bulk(es, actions)
         end_cont_id = cont_id
         count_indexed = end_cont_id - init_cont_id
         print "leftovers"
@@ -219,10 +220,11 @@ def getKey(item):
 def getAllItems(item, row, type_items, name_items):
 
     for j in range(0,len(row)):
+        print type_items[name_items[j]], row[j].value
         if(type_items[name_items[j]] is str):
-            item[name_items[j]] = row[j]                            #If is str it is going to be a unicode type
+            item[name_items[j]] = row[j].value                            #If is str it is going to be a unicode type
         else:
-            item[name_items[j]] = type_items[name_items[j]](row[j]) #If it is other type, like int or float, it is going to this type
+            item[name_items[j]] = type_items[name_items[j]](row[j].value) #If it is other type, like int or float, it is going to this type
     return item
 
 #There are cols that are only one
