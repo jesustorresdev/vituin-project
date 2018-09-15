@@ -15,13 +15,23 @@ from elasticsearch import helpers
 filename =  sys.argv[1]
 
 f = open(filename)
-reference = ["name",
-             "url",
-             "has_reviews",
+reference = ["value_for_money",
+             "wifi",
+             "name",
              "phone",
+             "cleanliness",
+             "has_reviews",
+             "comfort",
+             "facilities",
              "score",
-	     "address",
-             "hotel_key"
+             "location",
+             "stars",
+             "address",
+             "url",
+             "staff",
+             "lat",
+             "lng",
+             "key"
             ]
 
 es = Elasticsearch(
@@ -58,11 +68,11 @@ for row in csv.reader(f):
 
         for i in range(len(reference)):
             item[reference[i]] = row[i]
-            item['review_date']=datetime.datetime.today()
+            item['upload_date']=datetime.datetime.today()
 
         action = {
         	"_index": "index_booking_hotels_establishments",
-                "_type": "hotels",
+                "_type": "unstructured",
             	"_id": cont_id,
            	"_source": item
             	}

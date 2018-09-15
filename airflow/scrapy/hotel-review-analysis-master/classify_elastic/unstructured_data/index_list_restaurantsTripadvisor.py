@@ -85,12 +85,12 @@ for row in csv.reader(f):
         item['ratingpoor']=int(row[17])#ratingpoor
         item['lat']=row[18]#lon
         item['lng']=row[19]#lng
-        item['key']=str(row[20])#key
+        # item['key']=str(row[20])#key
         item['place'] = place
 
 	action = {
         	"_index": "index_tripadvisor_restaurants_establishments",
-                "_type": "restaurant",
+                "_type": "unstructured",
             	"_id": cont_id,
            	"_source": item
             	}

@@ -14,31 +14,33 @@ from elasticsearch import helpers
 
 filename =  sys.argv[1]
 
+place_type = ["Puerto de la Cruz", "Tenerife","Canarias"]
+place = place_type[int(sys.argv[2])]
+
+
 f = open(filename)
-reference = [
-        "excelent",
-        "poor",
-        "name",
-	     "extended_address",
-             "url",
-             "has_reviews",
-        "average",
-        "terrible",
-             "phone",
-             "score",
-    "postal_code",
-    "very_good",
-    "island",
-    "locality_address",
-	     "street_address",
-             "lat",
-             "lng",
-            ]
+reference = ["id_airbnb",
+             "type",
+             "price",
+             "numberReviews",
+             "mainBubbles",
+             "accuracy",
+             "communication",
+             "cleanliness",
+             "location",
+             "check_in",
+             "value",
+             "min_stay",
+             "n_people",
+             "rooms",
+             "beds",
+             "bathrooms"
+             ]
 
 es = Elasticsearch(
-   [
-     'elasticsearch:9200/' 
-   ]
+    [
+        'elasticsearch:9200/'
+    ]
 )
 
 count = 0
@@ -46,13 +48,13 @@ actions = []
 
 #Search the last indexed id
 doc = {
-        'size' : 10000,
-        'query': {
-             'match_all' : {}
-         }
-       }
+    'size' : 10000,
+    'query': {
+        'match_all' : {}
+    }
+}
 try:
-    res = es.search(index='index_tripadvisor_hotels_establishments', body=doc, size=0)
+    res = es.search(index='index_list_description_airbnb', body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -67,17 +69,18 @@ for row in csv.reader(f):
     if(count!=0):
         item = {}
 
-        print row
         for i in range(len(reference)):
             item[reference[i]] = row[i]
-            item['insert_time']=datetime.datetime.today()
+            item['place'] = place
+            item['upload_date']=datetime.datetime.today()
 
         action = {
-        	"_index": "index_tripadvisor_hotels_establishments",
-                "_type": "unstructured",
-            	"_id": cont_id,
-           	"_source": item
-            	}
+            "_index": "index_list_description_airbnb",
+            "_type": "unstructured",
+            "_id": cont_id,
+            "_source": item
+        }
+
         actions.append(action)
 
         cont_id += 1

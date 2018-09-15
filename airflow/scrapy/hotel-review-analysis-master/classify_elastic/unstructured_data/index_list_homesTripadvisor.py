@@ -16,24 +16,21 @@ filename =  sys.argv[1]
 
 f = open(filename)
 reference = [
-        "excelent",
-        "poor",
+        "bathrooms",
         "name",
-	     "extended_address",
-             "url",
+        "locality",
+	     "url",
              "has_reviews",
-        "average",
-        "terrible",
-             "phone",
-             "score",
-    "postal_code",
-    "very_good",
-    "island",
-    "locality_address",
-	     "street_address",
-             "lat",
+             "price",
+        "score",
+        "n_people",
+        "rooms",
              "lng",
-            ]
+             "lat",
+    "type"
+]
+
+
 
 es = Elasticsearch(
    [
@@ -52,7 +49,7 @@ doc = {
          }
        }
 try:
-    res = es.search(index='index_tripadvisor_hotels_establishments', body=doc, size=0)
+    res = es.search(index='index_tripadvisor_homes_establishments', body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -67,13 +64,12 @@ for row in csv.reader(f):
     if(count!=0):
         item = {}
 
-        print row
         for i in range(len(reference)):
             item[reference[i]] = row[i]
             item['insert_time']=datetime.datetime.today()
-
+            item['place'] = 'Puerto de la Cruz'
         action = {
-        	"_index": "index_tripadvisor_hotels_establishments",
+        	"_index": "index_tripadvisor_homes_establishments",
                 "_type": "unstructured",
             	"_id": cont_id,
            	"_source": item
