@@ -31,6 +31,25 @@ class ListHotelsTripadvisorItem(scrapy.Item):
     postal_code = scrapy.Field()
     score = scrapy.Field()
     island = scrapy.Field()
+    excelent = scrapy.Field()
+    very_good = scrapy.Field()
+    average = scrapy.Field()
+    poor = scrapy.Field()
+    terrible = scrapy.Field()
+
+class ListHomesTripadvisorItem(scrapy.Item):
+    name = scrapy.Field()
+    url = scrapy.Field()
+    has_reviews = scrapy.Field()
+    lo = scrapy.Field()
+    lat = scrapy.Field()
+    price = scrapy.Field()
+    rooms = scrapy.Field()
+    bathrooms = scrapy.Field()
+    n_people = scrapy.Field()
+    type = scrapy.Field()
+    score = scrapy.Field()
+    locality = scrapy.Field()
 
 class ListRestaurantsTripadvisorItem(scrapy.Item):
     name = scrapy.Field()
@@ -59,6 +78,14 @@ class ListHotelsBookingItem(scrapy.Item):
     phone = scrapy.Field()
     address = scrapy.Field()
     score = scrapy.Field()
+    stars = scrapy.Field()
+    cleanliness = scrapy.Field()
+    comfort = scrapy.Field()
+    facilities = scrapy.Field()
+    staff = scrapy.Field()
+    value_for_money = scrapy.Field()
+    wifi = scrapy.Field()
+    location = scrapy.Field()
 
 class TripAdvisorReviewItem(scrapy.Item):
     # comento los campos que no se usan para que no salgan en el CSV
