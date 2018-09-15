@@ -17,6 +17,9 @@ attr_fix = {}
 attr_spl = {}
 fs_change = {}
 attr_spl_r = {}
+low_let = []
+attr_spl_s = {}
+attr_spl_r_s = {}
 
 def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, **kwords):
     # Open a workbook
@@ -79,6 +82,28 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
         if kwords["fields_to_change"]:
             global fs_change
             fs_change = kwords["fields_to_change"]
+    except:
+        pass
+
+    try:
+        if kwords["lowercase_letters"]:
+            global low_let
+            low_let = kwords["lowercase_letters"]
+    except:
+        pass
+
+    try:
+        if kwords["attribute_to_split_string"]:
+            global attr_spl_s
+            attr_spl_s = kwords["attribute_to_split_string"]
+    except:
+        pass
+
+    #Are there arguments to split and delete substring?
+    try:
+        if kwords["attribute_to_split_remove_string"]:
+            global attr_spl_r_s
+            attr_spl_r_s = kwords["attribute_to_split_remove_string"]
     except:
         pass
 
@@ -190,15 +215,38 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     item = {}
 
                     item["insert_time"]=datetime.datetime.today()
-                    item[name_items["type_rows"]] = type_rows[i].strip()
-                    item[name_items["subtype_rows"]] = subtype_rows[j].strip()
-                    item[name_items["type_cols"]] = type_cols[m].strip()
-                    item[name_items["subtype_cols"]] = subtype_cols[n].strip()
+                    #If the type is str, it has attribute "strip()" (can be a blank space)
+                    #if the type isn't str, it should transform to str
+                    try:
+                        item[name_items["type_rows"]] = type_rows[i].strip()
+                    except:
+                        item[name_items["type_rows"]] = str(type_rows[i])
+
+                    try:
+                        item[name_items["subtype_rows"]] = subtype_rows[j].strip()
+                    except:
+                        item[name_items["subtype_rows"]] = str(subtype_rows[j])
+
+                    try:
+                        item[name_items["type_cols"]] = type_cols[m].strip()
+                    except:
+                        item[name_items["type_cols"]] = str(type_cols[m])
+
+                    try:
+                        item[name_items["subtype_cols"]] = subtype_cols[n].strip()
+                    except:
+                        item[name_items["subtype_cols"]] = str(subtype_cols[n])
+
 
                     global fs_change
                     #if exist field to change
                     if fs_change:
                         item = generals_functions.change_field_name(item,fs_change)
+
+                    global attr_spl_r_s
+                    #if exist field to change
+                    if attr_spl_r_s:
+                        item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
 
                     #Generate key of this value
                     if type_value != str:
@@ -226,6 +274,8 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                                     tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
                                     tem_attr_fix.update(attr_fix)
                                     tem_attr_fix.update(regions)
+                    else:
+                        tem_attr_fix = attr_fix
 
                     #if there are attributes_to_fixed
                     if tem_attr_fix:
@@ -237,13 +287,20 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     if attr_spl_r:
                         item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
+                    global attr_spl_s
+                    if attr_spl_s:
+                        item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+
 
                     global attr_spl
                     if attr_spl:
                         item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
+                    global low_let
+                    if low_let:
+                        item = generals_functions.getLowercaseWord(item, low_let)
 
-                    if value == '.':               #if there isn't value
+                    if value == '.' or value == '..':               #if there isn't value
                         continue
 
                     item["value"] = generals_functions.getValue_with_type(type_value, value)
@@ -283,14 +340,32 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 item = {}
 
                 item['insert_time']=datetime.datetime.today()
-                item[name_items["type_rows"]] = type_rows[i].strip()
-                item[name_items["type_cols"]] = type_cols[m].strip()
-                item[name_items["subtype_cols"]] = subtype_cols[n].strip()
+                #If the type is str, it has attribute "strip()" (can be a blank space)
+                #if the type isn't str, it should transform to str
+                try:
+                    item[name_items["type_rows"]] = type_rows[i].strip()
+                except:
+                    item[name_items["type_rows"]] = str(type_rows[i])
+
+                try:
+                    item[name_items["type_cols"]] = type_cols[m].strip()
+                except:
+                    item[name_items["type_cols"]] = str(type_cols[m])
+
+                try:
+                    item[name_items["subtype_cols"]] = subtype_cols[n].strip()
+                except:
+                    item[name_items["subtype_cols"]] = str(subtype_cols[n])
 
                 global fs_change
                 #if exist field to change
                 if fs_change:
                     item = generals_functions.change_field_name(item,fs_change)
+
+                global attr_spl_r_s
+                #if exist field to change
+                if attr_spl_r_s:
+                    item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
 
                 #Generate key of this value
                 if type_value != str:
@@ -318,6 +393,8 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                                 tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
                                 tem_attr_fix.update(attr_fix)
                                 tem_attr_fix.update(regions)
+                else:
+                    tem_attr_fix = attr_fix
 
                 #if there are attributes_to_fixed
                 if tem_attr_fix:
@@ -329,11 +406,19 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 if attr_spl_r:
                     item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
+                global attr_spl_s
+                if attr_spl_s:
+                    item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+
                 global attr_spl
                 if attr_spl:
                     item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
-                if value == '.':               #if there isn't value
+                global low_let
+                if low_let:
+                    item = generals_functions.getLowercaseWord(item, low_let)
+
+                if value == '.' or value == '..':               #if there isn't value
                     continue
 
                 item["value"] = generals_functions.getValue_with_type(type_value, value)
@@ -372,14 +457,32 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 item = {}
 
                 item['insert_time']=datetime.datetime.today()
-                item[name_items["type_rows"]] = type_rows[i].strip()
-                item[name_items["type_cols"]] = type_cols[m].strip()
-                item[name_items["subtype_rows"]] = subtype_rows[j].strip()
+                #If the type is str, it has attribute "strip()" (can be a blank space)
+                #if the type isn't str, it should transform to str
+                try:
+                    item[name_items["type_rows"]] = type_rows[i].strip()
+                except:
+                    item[name_items["type_rows"]] = str(type_rows[i])
+
+                try:
+                    item[name_items["type_cols"]] = type_cols[m].strip()
+                except:
+                    item[name_items["type_cols"]] = str(type_cols[m])
+
+                try:
+                    item[name_items["subtype_rows"]] = subtype_rows[j].strip()
+                except:
+                    item[name_items["subtype_rows"]] = str(subtype_rows[j])
 
                 global fs_change
                 #if exist field to change
                 if fs_change:
                     item = generals_functions.change_field_name(item,fs_change)
+
+                global attr_spl_r_s
+                #if exist field to change
+                if attr_spl_r_s:
+                    item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
 
                 #Generate key of this value
                 if type_value != str:
@@ -409,7 +512,8 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                                 tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
                                 tem_attr_fix.update(attr_fix)
                                 tem_attr_fix.update(regions)
-
+                else:
+                    tem_attr_fix = attr_fix
                 #if there are attributes_to_fixed
                 if tem_attr_fix:
                     item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
@@ -420,11 +524,19 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 if attr_spl_r:
                     item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
+                global attr_spl_s
+                if attr_spl_s:
+                    item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+
                 global attr_spl
                 if attr_spl:
                     item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
-                if value == '.':               #if there isn't value
+                global low_let
+                if low_let:
+                    item = generals_functions.getLowercaseWord(item, low_let)
+
+                if value == '.' or value == '..':               #if there isn't value
                      continue
 
                 item["value"] = generals_functions.getValue_with_type(type_value, value)
@@ -462,13 +574,26 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             item = {}
 
             item['insert_time']=datetime.datetime.today()
-            item[name_items["type_rows"]] = type_rows[i].strip()
-            item[name_items["type_cols"]] = type_cols[m].strip()
+            #If the type is str, it has attribute "strip()" (can be a blank space)
+            #if the type isn't str, it should transform to str
+            try:
+                item[name_items["type_rows"]] = type_rows[i].strip()
+            except:
+                item[name_items["type_rows"]] = str(type_rows[i])
+            try:
+                item[name_items["type_cols"]] = type_cols[m].strip()
+            except:
+                item[name_items["type_cols"]] = str(int(type_cols[m]))
 
             global fs_change
             #if exist field to change
             if fs_change:
                 item = generals_functions.change_field_name(item,fs_change)
+
+            global attr_spl_r_s
+            #if exist field to change
+            if attr_spl_r_s:
+                item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
 
             #Generate key of this value
             if type_value != str:
@@ -498,6 +623,8 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
                             tem_attr_fix.update(attr_fix)
                             tem_attr_fix.update(regions)
 
+            else:
+                tem_attr_fix = attr_fix
             #if there are attributes_to_fixed
             if tem_attr_fix:
                 item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
@@ -508,11 +635,19 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             if attr_spl_r:
                 item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
 
+            global attr_spl_s
+            if attr_spl_s:
+                item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+
             global attr_spl
             if attr_spl:
                 item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
 
-            if value == '.':               #if there isn't value
+            global low_let
+            if low_let:
+                item = generals_functions.getLowercaseWord(item, low_let)
+
+            if value == '.' or value == '..':               #if there isn't value
                  continue
 
             item["value"] = generals_functions.getValue_with_type(type_value, value)

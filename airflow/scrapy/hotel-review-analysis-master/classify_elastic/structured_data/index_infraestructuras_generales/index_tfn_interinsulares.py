@@ -11,7 +11,7 @@ type_index = "structured"
 
 name_items = {
     "type_rows" : "place_origin",
-    "type_cols" : "year_month"
+    "type_cols" : "attribute_to_split_0"
 }
 
 
@@ -28,13 +28,30 @@ type_value = int
 
 
 attributes_to_fixed={
-    "airport": "Tenerife Norte"
+    "airport": "Tenerife Norte",
+    "market" : "Vuelos interinsulares"
 }
 
 field_region = ['place_origin']
 
 fields_to_change = {'TOTAL AEROPUERTOS DE ORIGEN' : 'Canarias'}
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, field_region = field_region, fields_to_change = fields_to_change)
+
+attribute_to_split_remove = [{
+    "attributes":["attribute_to_split_0"],         #Attributes to split
+    "attr0":[0],                                   #Words by attribute 0
+    "condition":["TOTAL"],
+    "condition_pos":[1]
+}]
+
+attribute_to_split = [{
+    "attributes":["year","month"],      #Attributes to split
+    "attr0":[0],                        #Words by attribute 0
+    "attr1":[1],                        #Words by attribute 1
+    "exception" : "year",               #If there are fields without two arguments
+    "exclude" : ["Total"]               #For each exclude add the attribute. Elements in array should be in order
+}]
+
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, attribute_to_split = attribute_to_split, attribute_to_split_remove = attribute_to_split_remove, field_region = field_region, fields_to_change = fields_to_change)
 
 

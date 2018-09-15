@@ -22,7 +22,7 @@ table_start_and_end = {
     "start_row": 310,
     "start_col": 0,
     "end_row": 334,
-    "end_col": 173,
+    "end_col": 201,
     "start_value_row": 312,
     "start_value_col": 1
 }
@@ -45,16 +45,15 @@ attribute_to_split = [{
 
 
 
-field_region = ["place_tourist_residence"]
-
 attributes_to_fixed={
     "shop place": "canarias",
     "period":"total"
 }
 
+lowercase_letters = ["place"]
 
 fields_to_change = {'TOTAL PAISES' : 'Total'}
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, attribute_to_split_remove = attribute_to_split_remove, attribute_to_split = attribute_to_split, field_region = field_region, fields_to_change = fields_to_change)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, lowercase_letters = lowercase_letters, attributes_to_fixed = attributes_to_fixed, attribute_to_split_remove = attribute_to_split_remove, attribute_to_split = attribute_to_split, fields_to_change = fields_to_change)
 
 

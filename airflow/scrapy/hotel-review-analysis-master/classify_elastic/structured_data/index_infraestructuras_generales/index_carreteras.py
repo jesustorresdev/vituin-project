@@ -4,32 +4,40 @@ sys.path.append('../')
 
 from structured_data import index_excels_normalTable
 
-excel = "excels_visitantes/recursos.xlsx"
-sheet = "Flora y fauna"
-name_index = "index_especies_amenazadas"
+excel = "excels_infraestructuras_generales/infraestructuras.xlsx"
+sheet = 0
+name_index = "index_carreteras"
 type_index = "structured"
 
+
 table_start_and_end = {
-    "start_row": 3,
-    "start_col": 0,
-    "end_row": 22,
-    "end_col": 4,
-    "start_value_row": 4,
-    "start_value_col": 0
+    "start_row": 4,
+    "start_col": 8,
+    "end_row": 34,
+    "end_col": 17,
+    "start_value_row": 5,
+    "start_value_col": 8
 }
 
 type_items = {
-    "scientific name" : str,
-    "common name" : str,
-    "endemic" : str,
-    "island" : str,
-    "category" : str
+    "road" : str,
+    "kilometre" : float,
+    "access" : str,
+    "estation" : str,
+    "character" : str,
+    "asc" : int,
+    "dec" : int,
+    "average speed" : float,
+    "vehicles total" : int,
+    "vehicles heavy" : int
 }
 
-pos_value_restrictions = []
-name_items = ["scientific name", "common name", "endemic", "island", "category"]
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions)
 
+
+name_items = ["road","kilometre","access", "estation", "character", "asc", "dec", "average speed", "vehicles total", "vehicles heavy"]
+
+
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items)
 
 
 

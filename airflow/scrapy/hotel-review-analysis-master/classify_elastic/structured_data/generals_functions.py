@@ -27,12 +27,46 @@ def getAttributes_Split(item, name_items, attr_spl):
                         for number in attribute["attr"+str(j)]:
                             item[key_item] += value_item[number]            #Set new items
                             item[key_item] += ' '
-                    item[key_item] = item[key_item][:-1]                    #Eliminate last space
+                        item[key_item] = item[key_item][:-1]                #Eliminate last space
                     del item["attribute_to_split_"+str(i)]                  #Delete to the old item
                 else:
                     key_item = attribute["exception"]
                     item[key_item] = value_item[0]
                     del item["attribute_to_split_"+str(i)]                  #Delete to the old item
+
+                    temp_attr = attribute["attributes"][:]                  #copy the list
+                    temp_attr.remove(attribute["exception"])
+                    #For each exclude add value
+                    for j in range(0,len(temp_attr)):
+                        key_item = temp_attr[j]
+                        item[key_item] = attribute["exclude"][j]
+
+
+    return item
+
+def getAttributes_Split_String(item, name_items, attr_spl_s):
+    for k,v in name_items.items():
+        if v[:-2]=="attribute_to_split_string_":                         #if is a attr_split type
+            for i in range(0,len(attr_spl_s)):                           #See how many attr_spl there are. For each one, we'll save new item
+                attribute = attr_spl_s[i]
+                value_item = item["attribute_to_split_string_"+str(i)]   #It's a array with all words for the name of the first item (without split)
+
+                #If not an exception. It can be a field without second value
+                if not "exception" in attribute:
+                    for j in range(0,len(attribute["attributes"])):         #Number of new items than we are going to create
+                        key_item = attribute["attributes"][j]
+                        item[key_item] = ''
+
+                        # for attribute, we get the substring indicate:
+                        attr_n = attribute["attr"+str(j)]
+                        item[key_item] = value_item[attr_n[0]:attr_n[1]]    #Set new items
+
+                    del item["attribute_to_split_string_"+str(i)]           #Delete to the old item
+                else:
+                    key_item = attribute["exception"]
+                    attr_exception = attribute["attr_exception"]
+                    item[key_item] = value_item[attr_exception[0]:attr_exception[1]]
+                    del item["attribute_to_split_string_"+str(i)]           #Delete to the old item
 
                     temp_attr = attribute["attributes"][:]                  #copy the list
                     temp_attr.remove(attribute["exception"])
@@ -72,14 +106,49 @@ def getAttributes_Split_Remove(item, name_items, attr_spl_r):
                         item[v] = item[v][:-1]                                              #Eliminate last space
     return item
 
+def getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s):
+
+    list_items = []
+    if isinstance(name_items,list) is False:
+        for k,v in name_items.items():
+            list_items.append(v)
+    else:
+        list_items = name_items
+
+    for element in attr_spl_r_s:
+        for i in range(0,len(element["attributes"])):                                  #All elements to split
+            for v in list_items:
+                if v == element["attributes"][i]:                                      #if is the element
+
+                    old_string = item[v]
+                    pos_start = True if element["attr"+str(i)][0] is 'start' else False
+                    pos_final = True if element["attr"+str(i)][1] is 'final' else False
+
+                    if not pos_start:
+                        new_string_0 = old_string[:element["attr"+str(i)][0]]
+                    else:
+                        new_string_0 = ''
+
+                    if not pos_final:
+                        new_string_1 = old_string[element["attr"+str(i)][1]:]
+                    else:
+                        new_string_1 = ''
+
+                    new_string = new_string_0 + new_string_1
+                    item[v] = new_string
+    return item
+
 
 def change_field_name(item, fs_change):
 
     for element in item:
         #if the name of item is a field that should to change
-        if item[element] in fs_change:
-            item[element] = fs_change[item[element]].decode('UTF-8')
-
+        try:
+            if item[element].encode('UTF-8') in fs_change:
+                item[element] = fs_change[item[element].encode('UTF-8')].decode('UTF-8')
+        except:
+            if item[element] in fs_change:
+                item[element] = fs_change[item[element]].decode('UTF-8')
     return item
 
 def getValue_with_type(type_value, value):
@@ -129,3 +198,57 @@ def getCoordinates(coordinates,item):
     result_coordinates['lat']=lat
     result_coordinates['lng']=lng
     return result_coordinates
+
+
+def getLowercaseWord(item, fields):
+
+    for field in fields:
+        item[field] = item[field].upper()[0] + item[field].lower()[1:]
+    return item
+
+
+def fix_fields_in_only_one(field,fields_to_fix_elements,elements_to_fix_in_one,element, **kwords):
+    fs_change = {}
+    if 'fs_change' in kwords:
+        fs_change = kwords['fs_change']
+
+    items_to_fix = []
+    for element_to_fix in elements_to_fix_in_one[fields_to_fix_elements.index(field)]:
+        # print 'element_to_fix-->', element_to_fix
+        tmp_item = {}
+        #If field to change in value o field
+        if element[element_to_fix] in fs_change:
+            value = change_field_name_json(element[field],fs_change)
+        else:
+            value = element[element_to_fix]
+        if element_to_fix in fs_change:
+            element_to_fix = change_field_name_json(field,fs_change)
+
+        #Save the item: first field and after the value
+        try:
+            tmp_item[field] = str(element_to_fix.decode('UTF-8'))
+        except:
+            tmp_item[field] = element_to_fix
+
+        tmp_item['value'] = value
+        #Save the item
+        try:
+            tmp_item['value'] = str(value.decode('UTF-8'))
+        except:
+            tmp_item['value'] = value
+
+        items_to_fix.append(tmp_item)
+
+    return items_to_fix
+
+def change_months(item, fields_month):
+    months_str = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', \
+             'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+
+    for field in fields_month:
+        month = months_str[int(item[field])-1]
+        del item[field]
+        item.update({field:month})
+
+    return item
+

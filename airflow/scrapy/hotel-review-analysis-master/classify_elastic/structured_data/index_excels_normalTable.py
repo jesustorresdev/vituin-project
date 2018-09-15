@@ -54,6 +54,16 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     else:
         field_region = []
 
+    if 'lowercase_letters' in kwords:
+        lowercase_letters = kwords["lowercase_letters"]
+    else:
+        lowercase_letters = []
+
+    if 'change_months' in kwords:
+        change_months = kwords["change_months"]
+    else:
+        change_months = []
+
 
     #Get all values of the sheet
     for i in range(t_se["start_value_row"],t_se["end_row"]+1):
@@ -93,6 +103,9 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
             item['lat']=coor['lat']
             item['lng']=coor['lng']
 
+        if lowercase_letters:
+            item = generals_functions.getLowercaseWord(item, lowercase_letters)
+
         if restriction:
             for restr in name_pos_restrictions:
 
@@ -111,6 +124,9 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
                     if field_region:
                         item = loopRegion(item, field_region)
 
+                    if change_months:
+                        item = generals_functions.change_months(item, change_months)
+
                     item["key"]=getKey(item)
                     actions = getActions(actions, es, item, name_index, type_index, index_elastic)
 
@@ -118,16 +134,18 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
             if field_region:
                 item = loopRegion(item, field_region)
 
+            if change_months:
+                item = generals_functions.change_months(item, change_months)
+
             item["key"]=getKey(item)
             actions = getActions(actions, es, item, name_index, type_index, index_elastic)
-
 
     if count > 0:
         helpers.bulk(es, actions)
         end_cont_id = cont_id
         count_indexed = end_cont_id - init_cont_id
         print "leftovers"
-        print "indexed %d" %count_indexed
+        print "indexed", str(count), ",", name_index
         print "last id %d" %cont_id
     else:
         print "Not indexed"
@@ -220,11 +238,14 @@ def getKey(item):
 def getAllItems(item, row, type_items, name_items):
 
     for j in range(0,len(row)):
-        print type_items[name_items[j]], row[j].value
+        # print item
         if(type_items[name_items[j]] is str):
             item[name_items[j]] = row[j].value                            #If is str it is going to be a unicode type
         else:
-            item[name_items[j]] = type_items[name_items[j]](row[j].value) #If it is other type, like int or float, it is going to this type
+            if row[j].value == '' or row[j].value == '.' or row[j].value == '..' :
+                item[name_items[j]] = 0
+            else:
+                item[name_items[j]] = type_items[name_items[j]](row[j].value) #If it is other type, like int or float, it is going to this type
     return item
 
 #There are cols that are only one
@@ -236,13 +257,15 @@ def getSomeItems(item, pos_restrictions, row, type_items, name_items):
             if(type_items[name_items[i]] is str):                      #If it is str it is going to be a unicode type
                if type(row[i]) is float:                                            #If it was a number before, like years
                    if int(row[i]) == row[i]:                                               #If it was a int
-                       item[name_items[i]] =unicode(int(row[i]))
+                       item[name_items[i]] =unicode(int(row[i].value))
                    else:
-                       item[name_items[i]] = unicode(row[i])
+                       item[name_items[i]] = unicode(row[i].value)
                else:                                                                #If it has ever been a str or it was a float
-                   item[name_items[i]] = unicode(row[i])
+                   item[name_items[i]] = unicode(row[i].value)
             else:
-               item[name_items[i]] = type_items[name_items[i]](row[i]) #If it is other type, like int or float, it is going to this type
+               # print row
+               item[name_items[i]] = type_items[name_items[i]](row[i].value) #If it is other type, like int or float, it is going to this type
+               # print name_items[i], '---', type_items[name_items[i]],'---', row[i], '---', item[name_items[i]], '---', i
     return item
 
 #return all position with restrictions

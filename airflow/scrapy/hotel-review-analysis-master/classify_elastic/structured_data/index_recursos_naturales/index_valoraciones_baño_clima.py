@@ -36,10 +36,12 @@ attribute_to_split= [{
         "exclude" : ["Total"]               #For each exclude add the attribute. Elements in array should be in order
     }]
 
+fields_to_change = {'TOTAL PAÍSES' : 'Total'}
 
-type_value = int
+
+type_value = float
 
 field_region = ["place_origin"]
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed=attributes_to_fixed, attribute_to_split=attribute_to_split, field_region = field_region)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed=attributes_to_fixed, attribute_to_split=attribute_to_split, field_region = field_region, fields_to_change = fields_to_change)
 

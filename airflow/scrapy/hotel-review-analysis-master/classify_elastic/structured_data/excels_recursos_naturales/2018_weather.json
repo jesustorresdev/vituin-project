@@ -143,28 +143,4 @@
   "tm_max" : "22.7",
   "q_min" : "1013.1(06)",
   "np_010" : "3.0"
-}, {
-  "fecha" : "2018-6",
-  "indicativo" : "C459Z"
-}, {
-  "fecha" : "2018-7",
-  "indicativo" : "C459Z"
-}, {
-  "fecha" : "2018-8",
-  "indicativo" : "C459Z"
-}, {
-  "fecha" : "2018-9",
-  "indicativo" : "C459Z"
-}, {
-  "fecha" : "2018-10",
-  "indicativo" : "C459Z"
-}, {
-  "fecha" : "2018-11",
-  "indicativo" : "C459Z"
-}, {
-  "fecha" : "2018-12",
-  "indicativo" : "C459Z"
-}, {
-  "fecha" : "2018-13",
-  "indicativo" : "C459Z"
-} ]
+}]

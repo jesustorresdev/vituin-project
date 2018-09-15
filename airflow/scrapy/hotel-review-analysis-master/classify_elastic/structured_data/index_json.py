@@ -4,6 +4,7 @@ import hashlib
 import generals_functions
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
+import generals_functions
 es = Elasticsearch(
     [
         'elasticsearch:9200/'
@@ -11,6 +12,9 @@ es = Elasticsearch(
 )
 
 fs_change = {}
+attr_spl_r_s = {}
+fix_fields_in_one = {}
+attr_fix = {}
 
 def call_elastic(name_index,es):
 
@@ -47,13 +51,14 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
     index_elastic=call_elastic(name_index,es)
     cont_id = index_elastic["cont_id"]
 
-    # #Are there attributes_to_fixed?
-    # try:
-    #     if kwords["attributes_to_fixed"]:
-    #         global attr_fix
-    #         attr_fix = kwords["attributes_to_fixed"]
-    # except:
-    #     pass
+
+    attr_fix = {}
+    #Are there attributes_to_fixed?
+    try:
+        if kwords["attributes_to_fixed"]:
+            attr_fix = kwords["attributes_to_fixed"]
+    except:
+        pass
     #
     # #Are there arguments to split?
     # try:
@@ -70,6 +75,23 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
     #         field_region = kwords["field_region"]
     # except:
     #     pass
+    #
+
+    attr_spl_r_s = {}
+    #Are there arguments to split and delete substring?
+    try:
+        if kwords["attribute_to_split_remove_string"]:
+            attr_spl_r_s = kwords["attribute_to_split_remove_string"]
+    except:
+        pass
+
+    fix_fields_in_one = {}
+    #Are there arguments with fix fields in only one?
+    try:
+        if kwords["fix_fields_in_one"]:
+            fix_fields_in_one = kwords["fix_fields_in_one"]
+    except:
+        pass
 
     #Are name fields to change?
     global fs_change
@@ -79,57 +101,106 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
     except:
         pass
 
+    #Are month to change?
+    global change_months
+    try:
+        if kwords["change_months"]:
+            change_months = kwords["change_months"]
+    except:
+        pass
+
     elements = get_path(path_to_start,metadata)
     count = 0
     actions = []
+
+    #Fields to get
+    if fields_to_get:
+        fields = fields_to_get
+    #if fields_to_get is empty we're going to get all fields
+    else:
+        fields = get_all_fields(elements[0])
+
+    elements_to_fix_in_one=[]
+    fields_to_fix_elements=[]
+    for field in fix_fields_in_one:
+        fields_to_fix_elements.append(field['name'])
+        elements_to_fix_in_one.append(field['names_items_to_fix_in_one'])
+    # if fix_fields_in_one:
+    #     elements_to_fix_in_one = fix_fields_in_one['names_items_to_fix_in_one']
 
 
     for element in elements:
 
         item = {}
         str_key = ''
-        item["insert_time"]=datetime.datetime.today()
+        items_to_fix = []
 
-        if fields_to_get:
-            for field in fields_to_get:
-                #if exist field to change
+        for field in fields:
+            #Fix all fields_to_fix_elements in onlye one field
+            if field in fields_to_fix_elements:
+                items_to_fix.extend(generals_functions.fix_fields_in_only_one(field,fields_to_fix_elements,elements_to_fix_in_one,element,fs_change = fs_change))
+
+
+            #There aren't fields to fix in one
+            else:
                 if element[field] in fs_change:
-                    value = generals_functions.change_field_name_json(element[field],fs_change)
+                    field_value = generals_functions.change_field_name_json(element[field],fs_change)
                 else:
-                    value = element[field]
+                    field_value = element[field]
 
-                item[field] = value
-                str_key += item[field]
+                #Save the item
+                try:
+                    item[field] = str(field_value.decode('UTF-8'))
+                except:
+                    item[field] = field_value
 
-        #if fields_to_get is empty we're going to get all fields
-        else:
-            for field in element:
-                #if exist field to change
-                if element[field] in fs_change:
-                    value = generals_functions.change_field_name_json(element[field],fs_change)
-                else:
-                    value = element[field]
+                item[field] = field_value
 
-                item[field] = value
-                str_key += item[field]
 
-        key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
-        item["key"] = key
-        # print item
+        for item_to_fix in items_to_fix:
+            tmp_item = {}
+            tmp_item.update(item)
+            tmp_item.update(item_to_fix)
 
-        action = {
-            "_index": name_index,
-            "_type": type_index,
-            "_id": int(cont_id),
-            "_source": item
-        }
+            # print 'fecha--->', item['fecha']
+            #if exist field to remove substring
+            if attr_spl_r_s:
+                tmp_item = generals_functions.getAttributes_Split_Remove_String(tmp_item,fields, attr_spl_r_s)
+            if attr_fix:
+                tmp_item=generals_functions.getAttribute_Fixed(tmp_item,attr_fix)
 
-        acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
+            #If there are fields with months to change
+            if change_months:
+                tmp_item = generals_functions.change_months(tmp_item, change_months)
 
-        if acts:                       #if actions was append
-            actions = acts
-            cont_id += 1
-            count += 1
+            #Generate key
+            for field in tmp_item:
+                try:
+                    str_key += str(tmp_item[field])
+                except:
+                    str_key += tmp_item[field]
+
+
+            key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
+            tmp_item["key"] = key
+
+
+
+            tmp_item["insert_time"]=datetime.datetime.today()
+
+            action = {
+                "_index": name_index,
+                "_type": type_index,
+                "_id": int(cont_id),
+                "_source": tmp_item
+            }
+
+            acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
+
+            if acts:                       #if actions was append
+                actions = acts
+                cont_id += 1
+                count += 1
 
 
     if count > 0:
@@ -165,3 +236,6 @@ def append_Action(exist_index, key, name_index, action, actions):
     else:
         actions.append(action)
         return actions
+
+def get_all_fields(element):
+    return [field for field in element]
