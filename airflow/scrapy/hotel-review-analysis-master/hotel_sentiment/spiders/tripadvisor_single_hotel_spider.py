@@ -9,6 +9,7 @@ from elasticsearch import Elasticsearch
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+
 exceptionErrorItem=False
 
 #TODO use loaders
@@ -208,7 +209,7 @@ class TripadvisorSpider(scrapy.Spider):
 
         #Use selenium for extract to next page
         #open webdriver
-        driver = webdriver.Firefox()
+        driver = webdriver.Chrome()
         driver.get(response.url)
 
         try:

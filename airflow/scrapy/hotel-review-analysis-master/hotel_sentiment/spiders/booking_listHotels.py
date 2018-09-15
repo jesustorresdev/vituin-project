@@ -31,25 +31,29 @@ class BookingSpider(scrapy.Spider):
 
         for hotelurl in response.xpath('//a[@class="hotel_name_link url"]/@href'):
             url = response.urljoin(hotelurl.extract())
-            request = scrapy.Request(url, callback=self.parse_hotel)
+            url2 = 'https://www.booking.com/' + hotelurl.extract()[1:]
+            request = scrapy.Request(url2, self.parse_hotel)
+            try:
+                res = es.search(index="index_booking_hotels_establishments", doc_type="unstructured",body={
+                    "query": {
+                            "match_phrase": {
+                                    "url": url
+                                    }
+                            }
+                    })
+                repeat=''
+                for hit in res['hits']['hits']:
+                    repeat = hit["_source"]
+                #If the hotel doesnt have in the list, it will extract its data
+                if repeat == '':
+                    yield request
 
-            res = es.search(index="index_listhotels_booking", doc_type="hotels_unit",body={
-                "query": {
-                        "match_phrase": {
-                                "url": url
-                                }
-                        }
-                })
-            repeat=''
-            for hit in res['hits']['hits']:
-                repeat = hit["_source"]
-            #If the hotel doesnt have in the list, it will extract its data
-            if repeat == '':
+            #if not exists index
+            except:
                 yield request
-
             parse_is_ok = 1
 
-        next_page = response.xpath('//a[starts-with(@class,"paging-next")]/@href')
+        next_page = response.xpath('//a[contains(@class,"paging-next")]/@href')
         if next_page:
             url = response.urljoin(next_page[0].extract())
             yield scrapy.Request(url, self.parse)
@@ -67,18 +71,18 @@ class BookingSpider(scrapy.Spider):
         item = ListHotelsBookingItem()
         listErrors=[] #Bugs list, if it exists
 
+        # url = response.urljoin(reviewsurl[0].extract())
+        item['url']=response.url
 
-        url = response.urljoin(reviewsurl[0].extract())
-        item['url']=url
-
+        # url = "https://www.booking.com/" + response.urljoin(reviewsurl[0].extract())
         name = response.xpath('//div[@class="hp__hotel-title"]/h2/text()')
         if name:
             item['name']=name.extract()[0]
         else:
-           listErrors=listErrors + ['name']
+            listErrors=listErrors + ['name']
 
 
-        address = response.xpath('//span[@class="hp_address_subtitle jq_tooltip"]/text()')
+        address = response.xpath('//span[contains(@class,"hp_address_subtitle")]/text()')
         if address:
           item['address']=address.extract()[0]
         else:
@@ -88,17 +92,63 @@ class BookingSpider(scrapy.Spider):
         if score:
           item['score']=score.extract()[0]
         else:
-           listErrors=listErrors + ['score']
+            item['score']="no score"
+
+        stars = response.xpath('//span[@class="hp__hotel_ratings__stars nowrap"]/i/@title')
+        if stars:
+            item['stars']=stars.extract()[0]
+        else:
+            item['stars']= 'no stars'
+
+        #Its fields isn't ever.
+        score_cleanliness = response.xpath('//li[@data-question="hotel_clean"]/p[@class="review_score_value"]/text()')
+        if score_cleanliness:
+          item['cleanliness']=score_cleanliness.extract()[0]
+
+        score_comfort = response.xpath('//li[@data-question="hotel_comfort"]/p[@class="review_score_value"]/text()')
+        if score_comfort:
+          item['comfort']=score_comfort.extract()[0]
+
+        score_facilities = response.xpath('//li[@data-question="hotel_services"]/p[@class="review_score_value"]/text()')
+        if score_facilities:
+          item['facilities']=score_facilities.extract()[0]
+
+        score_staff = response.xpath('//li[@data-question="hotel_staff"]/p[@class="review_score_value"]/text()')
+        if score_staff:
+            item['staff']=score_staff.extract()[0]
+
+        score_value_for_money = response.xpath('//li[@data-question="hotel_value"]/p[@class="review_score_value"]/text()')
+        if score_value_for_money:
+          item['value_for_money']=score_value_for_money.extract()[0]
+
+        score_wifi = response.xpath('//li[@data-question="hotel_wifi"]/p[@class="review_score_value"]/text()')
+        if score_wifi:
+          item['wifi']=score_wifi.extract()[0]
+
+        score_location = response.xpath('//li[@data-question="hotel_location"]/p[@class="review_score_value"]/text()')
+        if score_location:
+          item['location']=score_location.extract()[0]
+
+
 
         if reviewsurl:
           item['has_reviews'] = 1
         else:
           item['has_reviews'] = 0
 
+
         self.pageNumber = 1
 
         if len(listErrors)>0:
 
+          print ""
+          print ""
+          print ""
+          print ""
+          print "ERROR"
+          print item["name"]
+          print item["url"]
+          print listErrors
           #self.send_email(listErrors)
           raise CloseSpider('Error spider Parse Hotel')
 

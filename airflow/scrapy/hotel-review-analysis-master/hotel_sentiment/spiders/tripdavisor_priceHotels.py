@@ -6,6 +6,7 @@ from scrapy.exceptions import CloseSpider
 from hotel_sentiment.items import ListPriceHotelsItem
 from elasticsearch import Elasticsearch
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from datetime import datetime
 import time
 from dateutil.relativedelta import relativedelta
