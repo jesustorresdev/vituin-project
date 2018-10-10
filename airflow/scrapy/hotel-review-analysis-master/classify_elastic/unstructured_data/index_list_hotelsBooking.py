@@ -13,26 +13,33 @@ from elasticsearch import helpers
 #IMPORTANT: before indexing opinion units you must index the parent reviews
 
 filename =  sys.argv[1]
+place_type = ["Puerto de la Cruz", "Tenerife","Canarias", "Fuerteventura"]
+place = place_type[int(sys.argv[2])]
 
 f = open(filename)
-reference = ["value_for_money",
-             "wifi",
-             "name",
-             "phone",
-             "cleanliness",
-             "has_reviews",
-             "comfort",
-             "facilities",
-             "score",
-             "location",
-             "stars",
-             "address",
-             "url",
-             "staff",
-             "lat",
+reference = ["value_for_money_rating",
+             "facilities_rating",
+             "comfort_rating",
              "lng",
-             "key"
-            ]
+             "review_count",
+             "staff_rating",
+             "price_min",
+             "type_establishment",
+             "score",
+             "id_booking",
+             "stars",
+             "postalCode",
+             "cleanliness_rating",
+             "location_rating",
+             "description",
+             "phone",
+             "wifi_rating",
+             "address",
+             "lat",
+             "name",
+             "url",
+             "region"
+             ]
 
 es = Elasticsearch(
    [
@@ -50,8 +57,9 @@ doc = {
              'match_all' : {}
          }
        }
+res = []
 try:
-    res = es.search(index='index_booking_hotels_establishments', body=doc, size=0)
+    res = es.search(index='index_list_homes_booking', body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -68,18 +76,45 @@ for row in csv.reader(f):
 
         for i in range(len(reference)):
             item[reference[i]] = row[i]
-            item['upload_date']=datetime.datetime.today()
 
-        action = {
-        	"_index": "index_booking_hotels_establishments",
+
+        item['upload_date']=datetime.datetime.today()
+        item['place']=place
+
+        if not res or res['hits']['hits'] == []: #If there isn't result
+
+            action = {
+                "_index": "index_list_homes_booking",
                 "_type": "unstructured",
-            	"_id": cont_id,
-           	"_source": item
-            	}
+                "_id": cont_id,
+                "_source": item
+            }
 
-        actions.append(action)
+            actions.append(action)
 
-        cont_id += 1
+            cont_id += 1
+        else:
+            print 'repeat ', count
+            same = False
+            for element in res['hits']['hits']['_source']:
+                if item[element] == res['hits']['hits']['_source'][element]:
+                    same = True
+
+            if same is False:
+
+                action = {
+                    "_index": "index_list_homes_booking",
+                    "_type": "unstructured",
+                    "_id": cont_id,
+                    "_source": item
+                }
+
+                actions.append(action)
+
+                cont_id += 1
+
+
+
 
     count += 1
 

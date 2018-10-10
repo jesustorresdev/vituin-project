@@ -21,6 +21,8 @@ low_let = []
 attr_spl_s = {}
 attr_spl_r_s = {}
 
+names_item_final = []
+
 def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end, type_value, **kwords):
     # Open a workbook
     wb = xlrd.open_workbook(excel)
@@ -162,7 +164,12 @@ def update_elastic(sheet, n_cols, n_rows, name_index, type_index, name_items, st
 
     print count
     if count > 0:
-        helpers.bulk(es, actions)
+        if index_elastic['exist_index'] is 0:
+            global names_item_final
+            es_new = set_properties(names_item_final, type_index, name_index)
+            helpers.bulk(es_new, actions)
+        else:
+            helpers.bulk(es, actions)
         print "leftovers"
         print "indexed", str(count), ",", name_index
     else:
@@ -204,6 +211,7 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
     count = 0
     actions = []
+    first_iteration = True
 
     for i in range(0,len(type_rows)):
         for j in range(0,len(subtype_rows)):
@@ -308,6 +316,11 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                     item["key"] = key
 
+                    if first_iteration:
+                        global names_item_final
+                        names_item_final = get_names_item_final(item)
+                        first_iteration=False
+
                     action = {
                         "_index": name_index,
                         "_type": type_index,
@@ -329,6 +342,7 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
 
     count = 0
     actions = []
+    first_iteration = True
 
     #Get all values of the sheet
     for i in range(0,len(type_rows)):
@@ -426,6 +440,11 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                 item["key"] = key
 
+                if first_iteration:
+                    global names_item_final
+                    names_item_final = get_names_item_final(item)
+                    first_iteration=False
+
                 action = {
                   "_index": name_index,
                   "_type": type_index,
@@ -447,6 +466,7 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
 
     count = 0
     actions = []
+    first_iteration = True
 
     for i in range(0,len(type_rows)):
         for j in range(0,len(subtype_rows)):
@@ -544,6 +564,11 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                 item["key"] = key
 
+                if first_iteration:
+                    global names_item_final
+                    names_item_final = get_names_item_final(item)
+                    first_iteration=False
+
                 action = {
                     "_index": name_index,
                     "_type": type_index,
@@ -565,6 +590,7 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
 
     count = 0
     actions = []
+    first_iteration = True
 
     for i in range(0,len(type_rows)):
         for m in range(0,len(type_cols)):
@@ -654,6 +680,11 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
 
             key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
             item["key"] = key
+
+            if first_iteration:
+                global names_item_final
+                names_item_final = get_names_item_final(item)
+                first_iteration=False
 
             action = {
                 "_index": name_index,
@@ -781,3 +812,30 @@ def subtype_row(sheet, n_rows, t_se):
 
     return array_rows
 
+
+def set_properties(name_items, type_index, name_index):
+
+    es_new = Elasticsearch(
+        [
+            'elasticsearch:9200/'
+        ]
+    )
+    indexSettings = {
+        "mappings": {
+            type_index: {
+                "properties":
+                    {value:{"type": "keyword"} for value in name_items}
+            }
+        }
+    }
+    print 'indexSettings-->', indexSettings
+    es_new.indices.create(index=name_index, body=indexSettings)
+    return es_new
+
+def get_names_item_final(item):
+    name_items = []
+    for key in item.keys():
+        if key != 'value' and key != 'insert_time':
+            name_items.append(key)
+
+    return name_items

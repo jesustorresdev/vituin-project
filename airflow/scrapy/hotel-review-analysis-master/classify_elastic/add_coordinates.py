@@ -14,7 +14,6 @@ review_date_position=0
 # key_position=len(samples[0])-1
 
 coordinates_fields = sys.argv[2]
-
 for i in range(1,len(samples)):
 
     coordinates={'name':[],'lat':[],'lng':[]}

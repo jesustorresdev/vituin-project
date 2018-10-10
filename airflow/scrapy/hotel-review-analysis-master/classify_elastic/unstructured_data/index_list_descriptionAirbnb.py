@@ -34,7 +34,7 @@ reference = ["id_airbnb",
              "n_people",
              "rooms",
              "beds",
-             "bathrooms"
+             "bathrooms",
              ]
 
 es = Elasticsearch(
