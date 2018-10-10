@@ -22,13 +22,30 @@ class BookingSpider(scrapy.Spider):
          'elastic:vituinproject@elasticsearch:9200/',
        ]
     )
-    res = es.search(index="index_booking_hotels_establishments")
+
+    doc = {
+        'size' : 10000,
+        'query': {
+            'match_all' : {}
+        }
+    }
+    res = []
+    try:
+        res = es.search(index='index_list_homes_booking', body=doc, scroll='1m')
+    except:
+        pass
+
 
     #create list of URLs
-    for hit in res['hits']['hits']:
+    if res:
+        for hit in res['hits']['hits']:
             start_urls=start_urls + [hit["_source"]["url"]]
 
-            
+    print 'start_urls--->',len(start_urls)
+    print ''
+    print ''
+    print ''
+    print ''
     #pageNumber = 1
 
     def parse(self, response):
@@ -41,7 +58,7 @@ class BookingSpider(scrapy.Spider):
         )
         request = scrapy.Request(response.url, callback=self.parse_review)
 
-        res = es.search(index="index_booking_hotels_establishments", doc_type="hotels",body={
+        res = es.search(index="index_list_homes_booking", doc_type="unstructured",body={
             "query": {
                     "match_phrase": {
                             "url": response.url
@@ -64,6 +81,7 @@ class BookingSpider(scrapy.Spider):
                 score = hit["_source"]["score"]
                 phone = hit["_source"]["phone"]
 
+
         #save some fields that we will send
         request.meta['hotel_name']=hotel
         #this fields are optionals
@@ -74,12 +92,11 @@ class BookingSpider(scrapy.Spider):
 
         #if there are comment
         if has_review:
-        	yield request
+            yield request
 
 
     #Parse the reviews
     def parse_review(self, response):
-
         now = datetime.datetime.combine(datetime.datetime.today(), datetime.time(0, 0))
         listErrors=[]
 
@@ -128,7 +145,15 @@ class BookingSpider(scrapy.Spider):
                     if reviewer_location:
                         item['reviewer_location'] = reviewer_location.extract()
 
-
+                    print ''
+                    print ''
+                    print ''
+                    print ''
+                    print 'item-->', item
+                    print ''
+                    print ''
+                    print ''
+                    print ''
                     if len(listErrors)>0:
                         #self.send_email(listErrors)
                         raise CloseSpider('Error spider')

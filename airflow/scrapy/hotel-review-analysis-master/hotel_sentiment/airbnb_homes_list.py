@@ -103,7 +103,7 @@ os.system("pkill -f chromedriver")
 
 print('--------------')
 print(samples_homes[0])
-print('Write ' + str(index_homes-1) + ' airbnb homes')
+print('Write ' + str(index_homes-1) + ' homeway homes')
 
 
 #It writes the comments and posts files

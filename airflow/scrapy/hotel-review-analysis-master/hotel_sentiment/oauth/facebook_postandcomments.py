@@ -5,7 +5,7 @@ from functions_facebook_posts import getPosts
 
 
 params = {'access_token': \
-'EAACEdEose0cBAGZCoXSQfuKRxaZAbOQNhNZBkMTXfcfm1hQnHuRcjZBQVXSyoKtqj0RJdVbI1Az74rrAnxBRleGHbWcMX1PioZCK4i1lvmHG97FG3AHaxUyd60vfO07b0dPSxDbdLxrY6yVZAnweBw9UpZCcy2PyQQhWp7aPDZA7S1qpy0QdTwAedyWfZBccmrf22Gn7ZC6AB2ZCAZDZD' \
+'EAAaAhTnkdXgBAC40WERZA8cXeGj0fLVpsiTDiwNUVN79VHlTXN2bL8phFgEHrL0BuqLVGMjBsRBlZAc9ORphkvlBccIXtMZAP8F0pkPgciSSRAS0AsNJKGpNMolss4i5Q2bsZALZALihanQ7eNAeffAvh0FXwcUAacVifvqohboAZAVXKxNpPOLtwG8hXDeqKiDOs1UPunXAZDZD'
 }
 
 page_url = 'https://graph.facebook.com/v2.10/VisitPuertodelaCruz/feed'
@@ -13,12 +13,12 @@ page_url = 'https://graph.facebook.com/v2.10/VisitPuertodelaCruz/feed'
 
 result = requests.get(page_url, params = params)
 data = result.json()
-
+print 'data-->',data
 
 #Fields where data will be write
-posts_files='posts.csv'
-comments_files='comments.csv'
-hashtags_files='hashtagsInstagram.csv'
+posts_files='posts19_09.csv'
+comments_files='comments19_09.csv'
+hashtags_files='hashtags19_09.csv'
 CSVdir='/usr/local/airflow/scrapy-hotels/hotel-review-analysis-master/classify_elastic'
 posts_files = os.path.join(CSVdir, posts_files)
 comments_files = os.path.join(CSVdir, comments_files)

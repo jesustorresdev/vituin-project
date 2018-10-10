@@ -27,7 +27,7 @@ user = 'SerDiaz_'
 
 #Arrays will be save the dada
 sample_tweets=[]
-sample_tweets.extend([["id", "text", "user_searched", "replies", "retweets","favorites","parent", "creation_time", "extraction_time"]])
+sample_tweets.extend([["id", "text", "user", "n_replies", "n_retweets","n_favorites", "has_parent", "id_parent", "id_first_parent", "creation_time", "extraction_time", "key"]])
 
 
 sample_hashtags=[]
