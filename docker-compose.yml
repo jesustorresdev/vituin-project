@@ -40,7 +40,7 @@ services:
   airflow:
       build: airflow/
       volumes:
-      - /home/sdiaz/vituin_project/airflow/scrapy:/usr/local/airflow/scrapy-hotels
+      - /home/sdiaz/vituin_project/airflow/data_analysis:/usr/local/airflow/data_analysis
       - /home/sdiaz/vituin_project/airflow/dags:/usr/local/airflow/dags
       restart: always
       depends_on:
