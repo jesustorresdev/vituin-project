@@ -8,6 +8,7 @@ services:
       context: elasticsearch/
     volumes:
       - /home/sdiaz/vituin_project/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - /home/sdiaz/vituin_project/elasticsearch/data/:/usr/share/elasticsearch/data/
     ports:
       - "9200:9200"
       - "9300:9300"
