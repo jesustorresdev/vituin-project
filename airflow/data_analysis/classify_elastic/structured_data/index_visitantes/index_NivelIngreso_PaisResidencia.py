@@ -4,25 +4,24 @@ sys.path.append('../')
 
 from structured_data import index_excels_Istac
 
-excel = "excels_visitantes/visitantes.xlsx"
+excel = "excels_visitantes/actividadEco_paisResidencia.xlsx"
 sheet = 0
-name_index = "index_perfil_turistico"
+name_index = "index_actividad_economica_por_pais_residencia"
 type_index = "structured"
 
 name_items = {
-    "type_rows" : "gender",
+    "type_rows" : "income",
     "type_cols" : "attribute_to_split_0",
     "subtype_rows" : "place_tourist_residence",
-    "subtype_cols" :"age"
 }
 
 
 table_start_and_end = {
-    "start_row": 2,
+    "start_row": 7,
     "start_col": 0,
-    "end_row": 16,
-    "end_col": 134 ,
-    "start_value_row": 4,
+    "end_row": 98,
+    "end_col": 40 ,
+    "start_value_row": 2,
     "start_value_col": 1
 }
 
@@ -34,7 +33,7 @@ attribute_to_split= [{
     "exclude" : ["Total"]               #For each exclude add the attribute. Elements in array should be in order
 }]
 
-fields_to_change = {'TOTAL PAÍSES' : 'Total'}
+fields_to_change = {'TOTAL PAÍSES' : 'Total', 'TOTAL NIVELES DE INGRESOS' : 'Total'}
 
 type_value = int
 

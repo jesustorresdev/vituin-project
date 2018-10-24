@@ -13,22 +13,24 @@ from elasticsearch import helpers
 #IMPORTANT: before indexing opinion units you must index the parent reviews
 
 filename =  sys.argv[1]
+filename_con =  sys.argv[2]
 
 
 f = open(filename)
-reference = ["id_only_apartments",
-             "title",
+f_con = open(filename_con)
+reference = ["id_homeway",
+             "type_residence",
              "price",
              "numberReviews",
              "mainBubbles",
-             "bathrooms",
              "capacity",
-             "beds",
+             "rooms",
+             "bathrooms",
              "m2",
-             "day_price",
-             "stay",
-             "lat",
+             "min_stay",
              "lng",
+             "lat",
+             "place"
              ]
 
 es = Elasticsearch(
@@ -48,7 +50,7 @@ doc = {
     }
 }
 try:
-    res = es.search(index='index_list_description_only_apartments', body=doc, size=0)
+    res = es.search(index='index_list_description_homeway', body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -64,17 +66,34 @@ for row in csv.reader(f):
         item = {}
 
         try:
+            tmp_row = None
+            for row_con in csv.reader(f_con):
+                print row[0], ',', row_con[0]
+                if row[0] == row_con[0]:
+                    tmp_row = row_con[0]
+                    break
+            print 'tmp_row-->', tmp_row
+            if tmp_row is None:
+                break
+
             for i in range(len(reference)):
-                item[reference[i]] = row[i]
+                if reference[i] == 'lat':
+                    item['lat'] = tmp_row['lat']
+                elif reference[i] == 'lng':
+                    item['lng'] = tmp_row['lng']
+                else:
+                    item[reference[i]] = row[i]
 
             item['upload_date']=datetime.datetime.today()
-
+            print 'item-->', item
+            import sys
+            sys.exit()
             res ={}
             try:
-                res = es.search(index="index_list_description_only_apartments", body={
+                res = es.search(index="index_list_description_homeway", body={
                     "query": {
                         "match_phrase": {
-                            "id_only_apartments": item['id_only_apartments'] #Use the key to compare
+                            "id_homeway": item['id_homeway'] #Use the key to compare
                         }
                     }
                 })
@@ -84,7 +103,7 @@ for row in csv.reader(f):
             if not res or res['hits']['hits'] == []: #If there isn't result
 
                 action = {
-                    "_index": "index_list_description_only_apartments",
+                    "_index": "index_list_description_homeway",
                     "_type": "unstructured",
                     "_id": cont_id,
                     "_source": item
@@ -102,7 +121,7 @@ for row in csv.reader(f):
                 if same is False:
 
                     action = {
-                        "_index": "index_list_description_only_apartments",
+                        "_index": "index_list_description_homeway",
                         "_type": "unstructured",
                         "_id": cont_id,
                         "_source": item
@@ -121,8 +140,8 @@ for row in csv.reader(f):
 
 
 
-if count > 0:
-    helpers.bulk(es, actions)
-    print "leftovers"
-    print "indexed %d" %cont_id
+# if count > 0:
+#     helpers.bulk(es, actions)
+#     print "leftovers"
+#     print "indexed %d" %cont_id
 

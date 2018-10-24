@@ -13,7 +13,7 @@ type_index = "structured"
 table_start_and_end = {
     "start_row": 0,
     "start_col": 0,
-    "end_row": 2457,
+    "end_row": 2625,
     "end_col": 8,
     "start_value_row": 1,
     "start_value_col": 0

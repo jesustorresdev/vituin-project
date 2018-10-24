@@ -18,7 +18,7 @@ name_items = {
 table_start_and_end = {
     "start_row": 21,
     "start_col": 0,
-    "end_row": 118,
+    "end_row": 125,
     "end_col": 3,
     "start_value_row": 22,
     "start_value_col": 1

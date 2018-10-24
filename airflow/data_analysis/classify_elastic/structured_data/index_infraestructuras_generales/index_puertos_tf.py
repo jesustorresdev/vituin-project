@@ -21,7 +21,7 @@ table_start_and_end = {
     "start_row": 334,
     "start_col": 0,
     "end_row": 342,
-    "end_col": 104,
+    "end_col": 112,
     "start_value_row": 335,
     "start_value_col": 1
 }

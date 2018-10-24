@@ -50,6 +50,7 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
 
     index_elastic=call_elastic(name_index,es)
     cont_id = index_elastic["cont_id"]
+    first_iteration = True
 
 
     attr_fix = {}
@@ -188,6 +189,11 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
 
             tmp_item["insert_time"]=datetime.datetime.today()
 
+            if first_iteration:
+                global names_item_final
+                names_item_final = generals_functions.get_names_item_final(item)
+                first_iteration=False
+
             action = {
                 "_index": name_index,
                 "_type": type_index,
@@ -204,7 +210,12 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
 
 
     if count > 0:
-        helpers.bulk(es, actions)
+        if index_elastic['exist_index'] is 0:
+            global names_item_final
+            es_new = generals_functions.set_properties(names_item_final, type_index, name_index)
+            helpers.bulk(es_new, actions)
+        else:
+            helpers.bulk(es, actions)
         print "leftovers"
         print "indexed %d" %count
     else:

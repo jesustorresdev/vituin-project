@@ -1,0 +1,9 @@
+*.csv
+*.pyc
+*.ipynb_checkpoints
+*.log
+*only_selenium/airbnb.py
+*.xls
+*.cfg
+venv/
+.idea/

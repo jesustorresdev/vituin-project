@@ -4,25 +4,24 @@ sys.path.append('../')
 
 from structured_data import index_excels_Istac
 
-excel = "excels_visitantes/visitantes.xlsx"
+excel = "excels_visitantes/nivelIngreso_tipoAlojamiento.xlsx"
 sheet = 0
-name_index = "index_perfil_turistico"
+name_index = "index_nivel_ingreso_por_tipo_alojamiento"
 type_index = "structured"
 
 name_items = {
-    "type_rows" : "gender",
+    "type_rows" : "income",
     "type_cols" : "attribute_to_split_0",
-    "subtype_rows" : "place_tourist_residence",
-    "subtype_cols" :"age"
+    "subtype_rows" : "accommodation",
 }
 
 
 table_start_and_end = {
-    "start_row": 2,
+    "start_row": 7,
     "start_col": 0,
-    "end_row": 16,
-    "end_col": 134 ,
-    "start_value_row": 4,
+    "end_row": 79,
+    "end_col": 40 ,
+    "start_value_row": 2,
     "start_value_col": 1
 }
 
@@ -34,10 +33,9 @@ attribute_to_split= [{
     "exclude" : ["Total"]               #For each exclude add the attribute. Elements in array should be in order
 }]
 
-fields_to_change = {'TOTAL PAÍSES' : 'Total'}
+
+fields_to_change = {'TOTAL NIVELES DE INGRESOS' : 'Total', 'TOTAL ALOJAMIENTOS' : 'Total'}
 
 type_value = int
 
-field_region = ["place_tourist_residence"]
-
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, field_region = field_region, attribute_to_split=attribute_to_split, fields_to_change = fields_to_change)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attribute_to_split=attribute_to_split, fields_to_change = fields_to_change)

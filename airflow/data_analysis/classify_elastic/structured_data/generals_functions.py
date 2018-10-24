@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from googlemaps import Client as GoogleMaps
+from elasticsearch import Elasticsearch
 
 def change_field_name_json(field, fs_change):
     return fs_change[field].decode('UTF-8')
@@ -252,3 +253,29 @@ def change_months(item, fields_month):
 
     return item
 
+def set_properties(name_items, type_index, name_index):
+
+    es_new = Elasticsearch(
+        [
+            'elasticsearch:9200/'
+        ]
+    )
+    indexSettings = {
+        "mappings": {
+            type_index: {
+                "properties":
+                    {value:{"type": "keyword"} for value in name_items}
+            }
+        }
+    }
+    print 'indexSettings-->', indexSettings
+    es_new.indices.create(index=name_index, body=indexSettings)
+    return es_new
+
+def get_names_item_final(item):
+    name_items = []
+    for key in item.keys():
+        if key != 'value' and key != 'insert_time':
+            name_items.append(key)
+
+    return name_items

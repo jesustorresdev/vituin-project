@@ -20,7 +20,7 @@ table_start_and_end = {
     "start_row": 61,
     "start_col": 0,
     "end_row": 74,
-    "end_col": 107,
+    "end_col": 113,
     "start_value_row": 62,
     "start_value_col": 1
 }

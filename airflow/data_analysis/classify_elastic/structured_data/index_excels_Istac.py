@@ -166,7 +166,7 @@ def update_elastic(sheet, n_cols, n_rows, name_index, type_index, name_items, st
     if count > 0:
         if index_elastic['exist_index'] is 0:
             global names_item_final
-            es_new = set_properties(names_item_final, type_index, name_index)
+            es_new = generals_functions.set_properties(names_item_final, type_index, name_index)
             helpers.bulk(es_new, actions)
         else:
             helpers.bulk(es, actions)
@@ -318,7 +318,7 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
                     if first_iteration:
                         global names_item_final
-                        names_item_final = get_names_item_final(item)
+                        names_item_final = generals_functions.get_names_item_final(item)
                         first_iteration=False
 
                     action = {
@@ -442,7 +442,7 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
 
                 if first_iteration:
                     global names_item_final
-                    names_item_final = get_names_item_final(item)
+                    names_item_final = generals_functions.get_names_item_final(item)
                     first_iteration=False
 
                 action = {
@@ -566,7 +566,7 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
 
                 if first_iteration:
                     global names_item_final
-                    names_item_final = get_names_item_final(item)
+                    names_item_final = generals_functions.get_names_item_final(item)
                     first_iteration=False
 
                 action = {
@@ -683,7 +683,7 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
 
             if first_iteration:
                 global names_item_final
-                names_item_final = get_names_item_final(item)
+                names_item_final = generals_functions.get_names_item_final(item)
                 first_iteration=False
 
             action = {
@@ -813,29 +813,3 @@ def subtype_row(sheet, n_rows, t_se):
     return array_rows
 
 
-def set_properties(name_items, type_index, name_index):
-
-    es_new = Elasticsearch(
-        [
-            'elasticsearch:9200/'
-        ]
-    )
-    indexSettings = {
-        "mappings": {
-            type_index: {
-                "properties":
-                    {value:{"type": "keyword"} for value in name_items}
-            }
-        }
-    }
-    print 'indexSettings-->', indexSettings
-    es_new.indices.create(index=name_index, body=indexSettings)
-    return es_new
-
-def get_names_item_final(item):
-    name_items = []
-    for key in item.keys():
-        if key != 'value' and key != 'insert_time':
-            name_items.append(key)
-
-    return name_items

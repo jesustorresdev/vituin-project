@@ -27,6 +27,8 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
        ]
     )
 
+    global first_iteration
+    first_iteration = True
     global count
     global cont_id
 
@@ -141,7 +143,13 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
             actions = getActions(actions, es, item, name_index, type_index, index_elastic)
 
     if count > 0:
-        helpers.bulk(es, actions)
+
+        if index_elastic['exist_index'] is 0:
+            global names_item_final
+            es_new = generals_functions.set_properties(names_item_final, type_index, name_index)
+            helpers.bulk(es_new, actions)
+        else:
+            helpers.bulk(es, actions)
         end_cont_id = cont_id
         count_indexed = end_cont_id - init_cont_id
         print "leftovers"
@@ -154,7 +162,11 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 def getActions(actions, es, item, name_index, type_index, index_elastic):
         global cont_id
         global count
-
+        global first_iteration
+        if first_iteration:
+            global names_item_final
+            names_item_final = generals_functions.get_names_item_final(item)
+            first_iteration=False
 
         item['insert_time']=datetime.datetime.today()
 
@@ -307,3 +319,4 @@ def loopRegion(item, field_region):
     if tem_attr_fix:
         item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
     return item
+
