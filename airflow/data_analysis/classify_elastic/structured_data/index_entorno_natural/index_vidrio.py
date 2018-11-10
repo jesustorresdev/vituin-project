@@ -5,7 +5,7 @@ sys.path.append('../')
 from structured_data import index_excels_Istac
 
 excel = "excels_entorno_natural/Entorno natural.xlsx"
-sheet = 2
+sheet = 1
 name_index = "index_vidrio"
 type_index = "structured"
 
@@ -18,8 +18,8 @@ name_items = {
 table_start_and_end = {
     "start_row": 72,
     "start_col": 0,
-    "end_row": 109,
-    "end_col": 28,
+    "end_row": 105,
+    "end_col": 32,
     "start_value_row": 74,
     "start_value_col": 1
 }

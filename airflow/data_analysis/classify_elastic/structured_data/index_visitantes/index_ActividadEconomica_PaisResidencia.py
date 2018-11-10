@@ -4,7 +4,7 @@ sys.path.append('../')
 
 from structured_data import index_excels_Istac
 
-excel = "excels_visitantes/actividadEco_paisResidencia.xlsx"
+excel = "excels_visitantes/actividadEco_paisResidencia.xls"
 sheet = 0
 name_index = "index_actividad_economica_por_pais_residencia"
 type_index = "structured"
@@ -21,7 +21,7 @@ table_start_and_end = {
     "start_col": 0,
     "end_row": 98,
     "end_col": 40 ,
-    "start_value_row": 2,
+    "start_value_row": 8,
     "start_value_col": 1
 }
 

@@ -16,7 +16,7 @@ type_index = "structured"
 path_to_start = []
 #if fields_to_get is empty we're going to get all fields
 fields_to_get = ['fecha', 'indicativo', 'type']
-fields_to_change = {'2018-13' : 'Total'}
+fields_to_change = {'2018-13' : ['fecha','Total']}
 
 
 

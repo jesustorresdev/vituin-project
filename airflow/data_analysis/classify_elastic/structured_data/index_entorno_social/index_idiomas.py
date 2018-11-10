@@ -24,7 +24,7 @@ table_start_and_end = {
 }
 
 
-fields_to_change = {'TOTAL' : 'España'}
+fields_to_change = {'TOTAL' : ['place','España']}
 
 type_value = int
 

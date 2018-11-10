@@ -15,7 +15,7 @@ table_start_and_end = {
     "end_row": 4,
     "end_col": 4,
     "start_value_row": 2,
-    "start_value_col": 1
+    "start_value_col": 0
 }
 
 type_items = {

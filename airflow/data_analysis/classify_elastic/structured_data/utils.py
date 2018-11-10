@@ -149,14 +149,15 @@ def getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s):
 
 def change_field_name(item, fs_change):
 
-    for element in item:
+    for element in fs_change:
         #if the name of item is a field that should to change
+        field = fs_change[element][0]
         try:
-            if item[element].encode('UTF-8') in fs_change:
-                item[element] = fs_change[item[element].encode('UTF-8')].decode('UTF-8')
+            if item[field].encode('UTF-8') == element:
+                item[field] = fs_change[element][1].decode('UTF-8')
         except:
-            if item[element] in fs_change:
-                item[element] = fs_change[item[element]].decode('UTF-8')
+            if item[field] == element:
+                item[field] = fs_change[element][1].decode('UTF-8')
     return item
 
 def getValue_with_type(type_value, value):

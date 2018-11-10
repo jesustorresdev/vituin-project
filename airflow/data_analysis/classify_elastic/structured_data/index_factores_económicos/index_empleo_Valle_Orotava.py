@@ -35,7 +35,7 @@ attribute_to_split = [{
 
 lowercase_letters = ["sector"]
 
-fields_to_change = {'Tenerife - Valle de la Orotava' : 'Valle de la Orotava'}
+fields_to_change = {'Tenerife - Valle de la Orotava':['place','Valle de la Orotava']}
 
 index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value,   attribute_to_split = attribute_to_split, lowercase_letters = lowercase_letters, fields_to_change = fields_to_change)
 

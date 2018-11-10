@@ -35,7 +35,7 @@ pos_value_restrictions = [
 ]
 
 
-name_items = ["activity", "code", "Tenerife", "El Hierro", "Fuerteventura", "Gran Canaria", "La Gomera", "La Palma", "Lanzarote", "total"]
+name_items = ["activity", "code", "Tenerife", "El Hierro", "Fuerteventura", "Gran Canaria", "La Gomera", "La Palma", "Lanzarote", "Canarias"]
 
 
 index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions = pos_value_restrictions)

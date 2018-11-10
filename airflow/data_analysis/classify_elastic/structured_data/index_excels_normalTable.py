@@ -4,7 +4,7 @@ import datetime
 import hashlib
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-import generals_functions
+import utils
 import countries_region
 
 count = 0
@@ -70,6 +70,11 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     else:
         change_months = []
 
+    if 'fields_to_change' in kwords:
+        change_fields = kwords["fields_to_change"]
+    else:
+        change_fields = []
+
 
 
     #Get all values of the sheet
@@ -103,15 +108,15 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
         #If there are fixed attributes
         if attributes_to_fixed:
-            item = generals_functions.getAttribute_Fixed(item, attributes_to_fixed)
+            item = utils.getAttribute_Fixed(item, attributes_to_fixed)
 
         if coordinates:
-            coor=generals_functions.getCoordinates(coordinates, item)
+            coor=utils.getCoordinates(coordinates, item)
             item['lat']=coor['lat']
             item['lng']=coor['lng']
 
         if lowercase_letters:
-            item = generals_functions.getLowercaseWord(item, lowercase_letters)
+            item = utils.getLowercaseWord(item, lowercase_letters)
 
         if restriction:
             n=0
@@ -134,10 +139,13 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
                         item_tmp = loopRegion(item_tmp, field_region)
 
                     if change_months:
-                        item_tmp = generals_functions.change_months(item_tmp, change_months)
+                        item_tmp = utils.change_months(item_tmp, change_months)
 
                     if attributes_to_fixed_to_restriction:
-                        item_tmp = generals_functions.getRestrictionAttribute_Fixed(item_tmp, attributes_to_fixed_to_restriction, n)
+                        item_tmp = utils.getRestrictionAttribute_Fixed(item_tmp, attributes_to_fixed_to_restriction, n)
+
+                    if change_fields:
+                        item_tmp = utils.change_field_name(item_tmp,change_fields)
 
                     item_tmp["key"]=getKey(item_tmp)
                     actions = getActions(actions, es, item_tmp, name_index, type_index, index_elastic)
@@ -149,7 +157,7 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
                 item = loopRegion(item, field_region)
 
             if change_months:
-                item = generals_functions.change_months(item, change_months)
+                item = utils.change_months(item, change_months)
 
             item["key"]=getKey(item)
             actions = getActions(actions, es, item, name_index, type_index, index_elastic)
@@ -158,7 +166,7 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
         if index_elastic['exist_index'] is 0:
             global names_item_final
-            es_new = generals_functions.set_properties(names_item_final, type_index, name_index)
+            es_new = utils.set_properties(names_item_final, type_index, name_index)
             helpers.bulk(es_new, actions)
         else:
             helpers.bulk(es, actions)
@@ -177,14 +185,11 @@ def getActions(actions, es, item, name_index, type_index, index_elastic):
         global first_iteration
         if first_iteration:
             global names_item_final
-            names_item_final = generals_functions.get_names_item_final(item)
+            names_item_final = utils.get_names_item_final(item)
             first_iteration=False
 
         item['insert_time']=datetime.datetime.today()
 
-        # print item
-        # import sys
-        # sys.exit()
         action = {
                 "_index": name_index,
                 "_type": type_index,
@@ -265,7 +270,6 @@ def getKey(item):
 def getAllItems(item, row, type_items, name_items):
 
     for j in range(0,len(row)):
-        # print item
         if(type_items[name_items[j]] is str):
             item[name_items[j]] = row[j].value                            #If is str it is going to be a unicode type
         else:
@@ -288,11 +292,9 @@ def getSomeItems(item, pos_restrictions, row, type_items, name_items):
                    else:
                        item[name_items[i]] = unicode(row[i].value)
                else:                                                                #If it has ever been a str or it was a float
-                   item[name_items[i]] = unicode(row[i].value)
+                   item[name_items[i]] = unicode(row[i].value)[:-2] if unicode(row[i].value)[-2:] == '.0' else unicode(row[i].value)
             else:
-               # print row
                item[name_items[i]] = type_items[name_items[i]](row[i].value) #If it is other type, like int or float, it is going to this type
-               # print name_items[i], '---', type_items[name_items[i]],'---', row[i], '---', item[name_items[i]], '---', i
     return item
 
 #return all position with restrictions
@@ -332,6 +334,6 @@ def loopRegion(item, field_region):
 
     #if there are attributes_to_fixed
     if tem_attr_fix:
-        item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
+        item=utils.getAttribute_Fixed(item, tem_attr_fix)
     return item
 

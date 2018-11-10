@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
 import hashlib
-import generals_functions
+import utils
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-import generals_functions
+import utils
 es = Elasticsearch(
     [
         'elasticsearch:9200/'
@@ -141,13 +141,13 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
         for field in fields:
             #Fix all fields_to_fix_elements in onlye one field
             if field in fields_to_fix_elements:
-                items_to_fix.extend(generals_functions.fix_fields_in_only_one(field,fields_to_fix_elements,elements_to_fix_in_one,element,fs_change = fs_change))
+                items_to_fix.extend(utils.fix_fields_in_only_one(field, fields_to_fix_elements, elements_to_fix_in_one, element, fs_change = fs_change))
 
 
             #There aren't fields to fix in one
             else:
                 if element[field] in fs_change:
-                    field_value = generals_functions.change_field_name_json(element[field],fs_change)
+                    field_value = utils.change_field_name_json(element[field], fs_change)
                 else:
                     field_value = element[field]
 
@@ -168,13 +168,13 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
             # print 'fecha--->', item['fecha']
             #if exist field to remove substring
             if attr_spl_r_s:
-                tmp_item = generals_functions.getAttributes_Split_Remove_String(tmp_item,fields, attr_spl_r_s)
+                tmp_item = utils.getAttributes_Split_Remove_String(tmp_item, fields, attr_spl_r_s)
             if attr_fix:
-                tmp_item=generals_functions.getAttribute_Fixed(tmp_item,attr_fix)
+                tmp_item=utils.getAttribute_Fixed(tmp_item, attr_fix)
 
             #If there are fields with months to change
             if change_months:
-                tmp_item = generals_functions.change_months(tmp_item, change_months)
+                tmp_item = utils.change_months(tmp_item, change_months)
 
             #Generate key
             for field in tmp_item:
@@ -193,7 +193,7 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
 
             if first_iteration:
                 global names_item_final
-                names_item_final = generals_functions.get_names_item_final(tmp_item)
+                names_item_final = utils.get_names_item_final(tmp_item)
                 first_iteration=False
 
             action = {
@@ -214,7 +214,7 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
     if count > 0:
         if index_elastic['exist_index'] is 0:
             global names_item_final
-            es_new = generals_functions.set_properties(names_item_final, type_index, name_index)
+            es_new = utils.set_properties(names_item_final, type_index, name_index)
             helpers.bulk(es_new, actions)
         else:
             helpers.bulk(es, actions)

@@ -6,7 +6,7 @@ from structured_data import index_excels_Istac
 
 excel = "excels_infraestructuras_turísticas/Infraestructuras turísticas.xlsx"
 sheet = 2
-name_index = "index_turidata_number_restaurants"
+name_index = "index_numero_restaurantes_turidata"
 type_index = "structured"
 
 name_items = {

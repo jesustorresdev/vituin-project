@@ -5,7 +5,7 @@ sys.path.append('../')
 from structured_data import index_excels_Istac
 
 excel = "excels_entorno_natural/Entorno natural.xlsx"
-sheet = 2
+sheet = 1
 name_index = "index_residuos_urbanos"
 type_index = "structured"
 

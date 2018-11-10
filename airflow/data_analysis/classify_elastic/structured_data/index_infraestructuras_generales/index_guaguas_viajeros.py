@@ -23,7 +23,7 @@ table_start_and_end = {
     "start_value_row": 22,
     "start_value_col": 1
 }
-type_value = int
+type_value = float
 
 attribute_to_split = [{
     "attributes":["year","month"],      #Attributes to split

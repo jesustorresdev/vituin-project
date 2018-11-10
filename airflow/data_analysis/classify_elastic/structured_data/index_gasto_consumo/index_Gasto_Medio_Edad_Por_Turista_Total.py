@@ -18,11 +18,11 @@ name_items = {
 
 
 table_start_and_end = {
-    "start_row": 357,
+    "start_row": 404,
     "start_col": 0,
-    "end_row": 381,
+    "end_row": 428,
     "end_col": 105,
-    "start_value_row": 359,
+    "start_value_row": 406,
     "start_value_col": 1
 }
 type_value = float
@@ -46,10 +46,10 @@ attribute_to_split = [{
 
 
 attributes_to_fixed={
-    "period":"total"
+    "period":"Total"
 }
 
 
-fields_to_change = {'TOTAL GRUPO' : 'Total'}
+fields_to_change = {'TOTAL GRUPO' : ['age','Total']}
 
 index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, attribute_to_split_remove = attribute_to_split_remove, attribute_to_split = attribute_to_split, fields_to_change = fields_to_change)

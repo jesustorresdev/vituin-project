@@ -2,7 +2,7 @@
 import xlrd
 import datetime
 import hashlib
-import generals_functions
+import utils
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from countries_region import get_region
@@ -166,7 +166,7 @@ def update_elastic(sheet, n_cols, n_rows, name_index, type_index, name_items, st
     if count > 0:
         if index_elastic['exist_index'] is 0:
             global names_item_final
-            es_new = generals_functions.set_properties(names_item_final, type_index, name_index)
+            es_new = utils.set_properties(names_item_final, type_index, name_index)
             helpers.bulk(es_new, actions)
         else:
             helpers.bulk(es, actions)
@@ -249,12 +249,12 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     global fs_change
                     #if exist field to change
                     if fs_change:
-                        item = generals_functions.change_field_name(item,fs_change)
+                        item = utils.change_field_name(item, fs_change)
 
                     global attr_spl_r_s
                     #if exist field to change
                     if attr_spl_r_s:
-                        item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
+                        item = utils.getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s)
 
                     #Generate key of this value
                     if type_value != str:
@@ -287,38 +287,38 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
                     #if there are attributes_to_fixed
                     if tem_attr_fix:
-                        item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
+                        item=utils.getAttribute_Fixed(item, tem_attr_fix)
                         for element in tem_attr_fix:
                             str_key += tem_attr_fix[element]
 
                     global attr_spl_r
                     if attr_spl_r:
-                        item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+                        item=utils.getAttributes_Split_Remove(item, name_items, attr_spl_r)
 
                     global attr_spl_s
                     if attr_spl_s:
-                        item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+                        item=utils.getAttributes_Split_String(item, name_items, attr_spl_s)
 
 
                     global attr_spl
                     if attr_spl:
-                        item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
+                        item=utils.getAttributes_Split(item, name_items, attr_spl)
 
                     global low_let
                     if low_let:
-                        item = generals_functions.getLowercaseWord(item, low_let)
+                        item = utils.getLowercaseWord(item, low_let)
 
                     if value == '.' or value == '..':               #if there isn't value
                         continue
 
-                    item["value"] = generals_functions.getValue_with_type(type_value, value)
+                    item["value"] = utils.getValue_with_type(type_value, value)
 
                     key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                     item["key"] = key
 
                     if first_iteration:
                         global names_item_final
-                        names_item_final = generals_functions.get_names_item_final(item)
+                        names_item_final = utils.get_names_item_final(item)
                         first_iteration=False
 
                     action = {
@@ -374,12 +374,12 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 global fs_change
                 #if exist field to change
                 if fs_change:
-                    item = generals_functions.change_field_name(item,fs_change)
+                    item = utils.change_field_name(item, fs_change)
 
                 global attr_spl_r_s
                 #if exist field to change
                 if attr_spl_r_s:
-                    item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
+                    item = utils.getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s)
 
                 #Generate key of this value
                 if type_value != str:
@@ -412,37 +412,37 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
 
                 #if there are attributes_to_fixed
                 if tem_attr_fix:
-                    item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
+                    item=utils.getAttribute_Fixed(item, tem_attr_fix)
                     for element in tem_attr_fix:
                         str_key += tem_attr_fix[element]
 
                 global attr_spl_r
                 if attr_spl_r:
-                    item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+                    item=utils.getAttributes_Split_Remove(item, name_items, attr_spl_r)
 
                 global attr_spl_s
                 if attr_spl_s:
-                    item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+                    item=utils.getAttributes_Split_String(item, name_items, attr_spl_s)
 
                 global attr_spl
                 if attr_spl:
-                    item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
+                    item=utils.getAttributes_Split(item, name_items, attr_spl)
 
                 global low_let
                 if low_let:
-                    item = generals_functions.getLowercaseWord(item, low_let)
+                    item = utils.getLowercaseWord(item, low_let)
 
                 if value == '.' or value == '..':               #if there isn't value
                     continue
 
-                item["value"] = generals_functions.getValue_with_type(type_value, value)
+                item["value"] = utils.getValue_with_type(type_value, value)
 
                 key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                 item["key"] = key
 
                 if first_iteration:
                     global names_item_final
-                    names_item_final = generals_functions.get_names_item_final(item)
+                    names_item_final = utils.get_names_item_final(item)
                     first_iteration=False
 
                 action = {
@@ -497,12 +497,12 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 global fs_change
                 #if exist field to change
                 if fs_change:
-                    item = generals_functions.change_field_name(item,fs_change)
+                    item = utils.change_field_name(item, fs_change)
 
                 global attr_spl_r_s
                 #if exist field to change
                 if attr_spl_r_s:
-                    item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
+                    item = utils.getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s)
 
                 #Generate key of this value
                 if type_value != str:
@@ -536,37 +536,37 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                     tem_attr_fix = attr_fix
                 #if there are attributes_to_fixed
                 if tem_attr_fix:
-                    item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
+                    item=utils.getAttribute_Fixed(item, tem_attr_fix)
                     for element in tem_attr_fix:
                         str_key += tem_attr_fix[element]
 
                 global attr_spl_r
                 if attr_spl_r:
-                    item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+                    item=utils.getAttributes_Split_Remove(item, name_items, attr_spl_r)
 
                 global attr_spl_s
                 if attr_spl_s:
-                    item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+                    item=utils.getAttributes_Split_String(item, name_items, attr_spl_s)
 
                 global attr_spl
                 if attr_spl:
-                    item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
+                    item=utils.getAttributes_Split(item, name_items, attr_spl)
 
                 global low_let
                 if low_let:
-                    item = generals_functions.getLowercaseWord(item, low_let)
+                    item = utils.getLowercaseWord(item, low_let)
 
                 if value == '.' or value == '..':               #if there isn't value
                      continue
 
-                item["value"] = generals_functions.getValue_with_type(type_value, value)
+                item["value"] = utils.getValue_with_type(type_value, value)
 
                 key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                 item["key"] = key
 
                 if first_iteration:
                     global names_item_final
-                    names_item_final = generals_functions.get_names_item_final(item)
+                    names_item_final = utils.get_names_item_final(item)
                     first_iteration=False
 
                 action = {
@@ -614,12 +614,12 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             global fs_change
             #if exist field to change
             if fs_change:
-                item = generals_functions.change_field_name(item,fs_change)
+                item = utils.change_field_name(item, fs_change)
 
             global attr_spl_r_s
             #if exist field to change
             if attr_spl_r_s:
-                item = generals_functions.getAttributes_Split_Remove_String(item,name_items, attr_spl_r_s)
+                item = utils.getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s)
 
             #Generate key of this value
             if type_value != str:
@@ -653,37 +653,37 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
                 tem_attr_fix = attr_fix
             #if there are attributes_to_fixed
             if tem_attr_fix:
-                item=generals_functions.getAttribute_Fixed(item,tem_attr_fix)
+                item=utils.getAttribute_Fixed(item, tem_attr_fix)
                 for element in tem_attr_fix:
                     str_key += tem_attr_fix[element]
 
             global attr_spl_r
             if attr_spl_r:
-                item=generals_functions.getAttributes_Split_Remove(item,name_items, attr_spl_r)
+                item=utils.getAttributes_Split_Remove(item, name_items, attr_spl_r)
 
             global attr_spl_s
             if attr_spl_s:
-                item=generals_functions.getAttributes_Split_String(item,name_items, attr_spl_s)
+                item=utils.getAttributes_Split_String(item, name_items, attr_spl_s)
 
             global attr_spl
             if attr_spl:
-                item=generals_functions.getAttributes_Split(item,name_items, attr_spl)
+                item=utils.getAttributes_Split(item, name_items, attr_spl)
 
             global low_let
             if low_let:
-                item = generals_functions.getLowercaseWord(item, low_let)
+                item = utils.getLowercaseWord(item, low_let)
 
             if value == '.' or value == '..':               #if there isn't value
                  continue
 
-            item["value"] = generals_functions.getValue_with_type(type_value, value)
+            item["value"] = utils.getValue_with_type(type_value, value)
 
             key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
             item["key"] = key
 
             if first_iteration:
                 global names_item_final
-                names_item_final = generals_functions.get_names_item_final(item)
+                names_item_final = utils.get_names_item_final(item)
                 first_iteration=False
 
             action = {

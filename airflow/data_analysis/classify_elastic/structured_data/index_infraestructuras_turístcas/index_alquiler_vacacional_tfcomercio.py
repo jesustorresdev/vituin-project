@@ -6,7 +6,7 @@ from structured_data import index_excels_normalTable
 
 excel = "excels_infraestructuras_turísticas/Alquiler vacacional.xlsx"
 sheet = 0
-name_index = "index_alquiler_vacacional_reglado"
+name_index = "index_alquiler_vacacional_tfcomercio"
 type_index = "structured"
 
 
@@ -16,21 +16,22 @@ table_start_and_end = {
     "end_row": 2471,
     "end_col": 2,
     "start_value_row": 2,
-    "start_value_col": 1
+    "start_value_col": 0
 }
 
 type_items = {
     "name" : str,
     "address" : str,
-    "city" : str,
+    "place" : str,
 }
 
 
 
-name_items = ["name", "address", "city"]
+name_items = ["name", "address", "place"]
 
+coordinates = ["address", "place"]
 
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, coordinates = coordinates)
 
 
 

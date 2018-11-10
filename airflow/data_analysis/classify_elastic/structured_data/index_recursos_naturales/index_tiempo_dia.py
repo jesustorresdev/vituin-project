@@ -52,5 +52,5 @@ attribute_to_split_remove_string = [{
     "attr0":['start',8],   #String pos to delete
 }]
 
-index_json.indexed(name_index,type_index, path_to_start, text, fields_to_get, attributes_to_fixed = attributes_to_fixed, fix_fields_in_one = fix_fields_in_one, attribute_to_split_remove_string = attribute_to_split_remove_string, change_months = change_months)
+index_json.indexed(name_index,type_index, path_to_start, text, fields_to_get, attributes_to_fixed = attributes_to_fixed, fix_fields_in_one = fix_fields_in_one, attribute_to_split_remove_string = attribute_to_split_remove_string)
 

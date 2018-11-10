@@ -11,11 +11,11 @@ type_index = "structured"
 
 
 table_start_and_end = {
-    "start_row": 128,
+    "start_row": 135,
     "start_col": 0,
-    "end_row": 140,
+    "end_row": 147,
     "end_col": 2,
-    "start_value_row": 129,
+    "start_value_row": 136,
     "start_value_col": 0
 }
 

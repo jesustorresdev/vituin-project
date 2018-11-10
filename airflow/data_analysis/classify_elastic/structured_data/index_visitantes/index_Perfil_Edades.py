@@ -34,7 +34,7 @@ attribute_to_split= [{
     "exclude" : ["Total"]               #For each exclude add the attribute. Elements in array should be in order
 }]
 
-fields_to_change = {'TOTAL PAÍSES' : 'Total'}
+fields_to_change = {'TOTAL PAÍSES':['place_tourist_residence','Total']}
 
 type_value = int
 

@@ -24,9 +24,7 @@ table_start_and_end = {
 }
 
 
-fields_to_change = {'TOTAL' : 'España'}
-
 type_value = int
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, fields_to_change = fields_to_change)
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value)
 

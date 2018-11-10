@@ -20,8 +20,8 @@ table_start_and_end = {
 }
 
 type_items = {
-    "year" : str,
-    "month" : str,
+    "year" : int,
+    "month" : int,
     "country" : str,
     "type" : str,
     "value" : int
@@ -39,11 +39,13 @@ pos_value_restrictions = [
      }
 ]
 
+change_months = 'month'
+
 name_items = ["year","month","country","4 y 5 stars", "3 stars", "1 y 2 stars", "hoteliers","non-hoteliers","total"]
 
 field_region = ["country"]
 
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions = pos_value_restrictions, attributes_to_fixed =attributes_to_fixed,  field_region = field_region)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions = pos_value_restrictions, attributes_to_fixed =attributes_to_fixed,  field_region = field_region, change_months=change_months)
 
 
 
