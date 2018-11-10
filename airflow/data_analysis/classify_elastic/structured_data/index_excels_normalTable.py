@@ -46,6 +46,10 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
         pos_value_restrictions = kwords['pos_value_restrictions']
     else:
         pos_value_restrictions = []
+    if 'attributes_to_fixed_to_restriction' in kwords:                           #If it exits, we're going to add a extra field
+        attributes_to_fixed_to_restriction = kwords['attributes_to_fixed_to_restriction']
+    else:
+        attributes_to_fixed_to_restriction = {}                                  #If it exists, we're going to join some fields in only one
     if 'coordinates' in kwords:                                    #If it exists, we're going to search and fix the coordinates
         coordinates = kwords['coordinates']
     else:
@@ -65,6 +69,7 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
         change_months = kwords["change_months"]
     else:
         change_months = []
+
 
 
     #Get all values of the sheet
@@ -109,28 +114,35 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
             item = generals_functions.getLowercaseWord(item, lowercase_letters)
 
         if restriction:
+            n=0
             for restr in name_pos_restrictions:
-
                 for j in restr['pos']:
 
-                    item = item.copy() #It ins't actions point to the same item and modified action append before
+                    item_tmp = item.copy() #It ins't actions point to the same item and modified action append before
 
                     if(type_items["value"] is str):
-                       item["value"] = row[j].value                      #If is str it is going to be a unicode type
+                        item_tmp["value"] = row[j].value                      #If is str it is going to be a unicode type
                     else:
-                       item["value"] = type_items["value"](row[j].value) #If it is other type, like int or float, it is going to this type
+                        try:
+                            item_tmp["value"] = type_items["value"](row[j].value) #If it is other type, like int or float, it is going to this type
+                        except:
+                            item_tmp["value"] = 0
 
-
-                    item[restr['name']] = type_items[restr['name']](name_items[j]) #It is going to be str ever
+                    item_tmp[restr['name']] = type_items[restr['name']](name_items[j]) #It is going to be str ever
 
                     if field_region:
-                        item = loopRegion(item, field_region)
+                        item_tmp = loopRegion(item_tmp, field_region)
 
                     if change_months:
-                        item = generals_functions.change_months(item, change_months)
+                        item_tmp = generals_functions.change_months(item_tmp, change_months)
 
-                    item["key"]=getKey(item)
-                    actions = getActions(actions, es, item, name_index, type_index, index_elastic)
+                    if attributes_to_fixed_to_restriction:
+                        item_tmp = generals_functions.getRestrictionAttribute_Fixed(item_tmp, attributes_to_fixed_to_restriction, n)
+
+                    item_tmp["key"]=getKey(item_tmp)
+                    actions = getActions(actions, es, item_tmp, name_index, type_index, index_elastic)
+
+                n+=1
 
         else:
             if field_region:
@@ -170,6 +182,9 @@ def getActions(actions, es, item, name_index, type_index, index_elastic):
 
         item['insert_time']=datetime.datetime.today()
 
+        # print item
+        # import sys
+        # sys.exit()
         action = {
                 "_index": name_index,
                 "_type": type_index,
