@@ -96,6 +96,7 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
 
     #Are name fields to change?
     global fs_change
+    fs_change = []
     try:
         if kwords["fields_to_change"]:
             fs_change = kwords["fields_to_change"]
@@ -104,6 +105,7 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
 
     #Are month to change?
     global change_months
+    change_months = []
     try:
         if kwords["change_months"]:
             change_months = kwords["change_months"]
@@ -191,7 +193,7 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
 
             if first_iteration:
                 global names_item_final
-                names_item_final = generals_functions.get_names_item_final(item)
+                names_item_final = generals_functions.get_names_item_final(tmp_item)
                 first_iteration=False
 
             action = {

@@ -8,7 +8,14 @@ def change_field_name_json(field, fs_change):
 def getAttribute_Fixed(item, attr_fix):
 
     for k,v in attr_fix.items():
-        item[k]=v
+        item[k]=v.decode('UTF-8')
+
+    return item
+
+def getRestrictionAttribute_Fixed(item, attr_rest_fix, n):
+
+    for k,v in attr_rest_fix[n].items():
+        item[k]=v.decode('UTF-8')
 
     return item
 
@@ -182,19 +189,39 @@ def getCoordinates(coordinates,item):
         if field in item:
             place += str(item[field].encode('UTF-8'))                   #The place searched is the composed to the fields to get the coordinates
             place += ' '
+    print item['name'],'---', place
     api_key = 'AIzaSyD2owaTzJTWi9m1f2QqAlJ1S0hfFT3nT0w'
     gmaps = GoogleMaps(api_key)
     location = gmaps.geocode(place)
-    try:
-        if 'location' in location[0]['geometry']:
-            lat=location[0]['geometry']['location']['lat']
-            lng=location[0]['geometry']['location']['lng']
-        else:  #if it's a aproximation
-            lat = location[0]['geometry']['bounds']['northeast']['lat'] + location[0]['geometry']['bounds']['southwest']['lat']
-            lng = location[0]['geometry']['bounds']['northeast']['lng'] + location[0]['geometry']['bounds']['southwest']['lng']
-    except:
-        print 'algo va mal'
-        pass
+    ok = False
+    while ok is False:
+        try:
+            if 'location' in location[0]['geometry']:
+                lat=location[0]['geometry']['location']['lat']
+                lng=location[0]['geometry']['location']['lng']
+            else:  #if it's a aproximation
+                lat = location[0]['geometry']['bounds']['northeast']['lat'] + location[0]['geometry']['bounds']['southwest']['lat']
+                lng = location[0]['geometry']['bounds']['northeast']['lng'] + location[0]['geometry']['bounds']['southwest']['lng']
+            ok = True
+        except Exception as error:
+            print 'algo va mal', error
+            print 'location-->', location
+            ok = True
+            lat = ''
+            lng = ''
+            print place.find('Ed')
+            if place.find('Ed') != -1: #In structured comercio tenerife cases
+                place = str(item[coordinates[0]][:item[coordinates[0]].find('Ed')].encode('UTF-8'))
+                for i in range(1,len(coordinates)):
+                    field = coordinates[i]
+                    if field in item:
+                        place += str(item[field].encode('UTF-8'))                   #The place searched is the composed to the fields to get the coordinates
+                        place += ' '
+                ok = False
+                location = gmaps.geocode(place)
+                print 'place->',place
+            print 'ok->',ok
+            pass
 
     result_coordinates['lat']=lat
     result_coordinates['lng']=lng
@@ -242,14 +269,14 @@ def fix_fields_in_only_one(field,fields_to_fix_elements,elements_to_fix_in_one,e
 
     return items_to_fix
 
-def change_months(item, fields_month):
+def change_months(item, field_month):
     months_str = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', \
-             'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-
-    for field in fields_month:
-        month = months_str[int(item[field])-1]
-        del item[field]
-        item.update({field:month})
+             'Septiembre', 'Octubre', 'Noviembre', 'Diciembre', 'Total']
+    try:
+        month = months_str[int(item[field_month])-1]
+        item[field_month] = month
+    except:
+        pass
 
     return item
 
