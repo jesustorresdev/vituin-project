@@ -75,6 +75,11 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
     else:
         change_fields = []
 
+    if 'date' in kwords:
+        date = kwords["date"]
+    else:
+        date = []
+
 
 
     #Get all values of the sheet
@@ -147,6 +152,9 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
                     if change_fields:
                         item_tmp = utils.change_field_name(item_tmp,change_fields)
 
+                    if date:
+                        item_tmp = utils.set_date(item_tmp,date)
+
                     item_tmp["key"]=getKey(item_tmp)
                     actions = getActions(actions, es, item_tmp, name_index, type_index, index_elastic)
 
@@ -158,6 +166,9 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
 
             if change_months:
                 item = utils.change_months(item, change_months)
+
+            if date:
+                item = utils.set_date(item,date)
 
             item["key"]=getKey(item)
             actions = getActions(actions, es, item, name_index, type_index, index_elastic)

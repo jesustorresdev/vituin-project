@@ -4,32 +4,34 @@ sys.path.append('../')
 
 from structured_data import index_excels_normalTable
 
-excel = "excels_factores_económicos/demanda 2016 a 2018.xlsx"
+excel = "excels_factores_económicos/Contratos registrados por sexo, edad y sector economico 2016 a 2018.xlsx"
 sheet = 0
-name_index = "index_demanda"
+name_index = "index_contratos_sexo_edad_sector"
 type_index = "structured"
 
 
 table_start_and_end = {
     "start_row": 0,
     "start_col": 0,
-    "end_row": 2720,
-    "end_col": 5,
+    "end_row": 57298,
+    "end_col": 7,
     "start_value_row": 1,
     "start_value_col": 0
 }
 
 type_items = {
-    "activity" : str,
-    "code" : str,
     "place" : str,
-    "month" : str,
+    "gender" : str,
+    "sector" : str,
+    "age" : str,
+    "type" : str,
     "year" : str,
+    "month" : str,
     "value" : int
 }
 
 
-name_items = ["year", "month", "place", "activity", "code", "value"]
+name_items = ["place", "gender", "sector", "age", "type", "year", "month", "value"]
 
 change_months = 'month'
 

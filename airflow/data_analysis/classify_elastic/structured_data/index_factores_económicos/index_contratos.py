@@ -4,41 +4,36 @@ sys.path.append('../')
 
 from structured_data import index_excels_normalTable
 
-excel = "excels_factores_económicos/Factores económicos.xlsx"
+excel = "excels_factores_económicos/contratos 2016 a 2018.xlsx"
 sheet = 0
 name_index = "index_contratos"
 type_index = "structured"
 
 
 table_start_and_end = {
-    "start_row": 27,
+    "start_row": 0,
     "start_col": 0,
-    "end_row": 40,
-    "end_col": 9,
-    "start_value_row": 28,
+    "end_row": 2462,
+    "end_col": 5,
+    "start_value_row": 1,
     "start_value_col": 0
 }
 
 type_items = {
     "activity" : str,
     "code" : str,
-    "island" : str,
+    "place" : str,
+    "month" : str,
+    "year" : str,
     "value" : int
 }
 
-pos_value_restrictions = [
-    {
-        'name':'island',
-        'ini':2,
-        'end':9
-    }
-]
 
+name_items = ["year", "month", "place", "activity", "code", "value"]
 
-name_items = ["activity", "code", "Tenerife", "El Hierro", "Fuerteventura", "Gran Canaria", "La Gomera", "La Palma", "Lanzarote", "Canarias"]
+change_months = 'month'
 
-
-index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, pos_value_restrictions = pos_value_restrictions)
+index_excels_normalTable.main(excel, sheet, name_index, type_index, table_start_and_end, type_items, name_items, change_months=change_months)
 
 
 

@@ -21,16 +21,16 @@ table_start_and_end = {
 
 type_items = {
     "name" : str,
-    "adress" : str,
-    "lat" : str,
-    "lng" : str,
+    "address" : str,
+    "lat" : float,
+    "lng" : float,
     "phone" : str,
     "email" : str,
     "schedule" : str,
 }
 
 
-name_items = ["name", "adress","lat","lng","phone","email","schedule"]
+name_items = ["name", "address","lat","lng","phone","email","schedule"]
 
 attributes_to_fixed={
     "place": "Puerto de la Cruz"

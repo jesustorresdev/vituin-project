@@ -6,7 +6,7 @@ from structured_data import index_excels_normalTable
 
 excel = "excels_hoteles/indicedeocupacionporzonas.xls"
 sheet = 0
-name_index = "index_censal_por_zonas"
+name_index = "index_indice_censal_por_zonas"
 type_index = "structured"
 
 

@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 import xlrd
 import datetime
@@ -20,6 +21,10 @@ attr_spl_r = {}
 low_let = []
 attr_spl_s = {}
 attr_spl_r_s = {}
+irr_table=[]
+irr_items=[]
+a_c_value=[]
+value_percentage = False
 
 names_item_final = []
 
@@ -32,10 +37,22 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
 
     t_se = table_start_and_end
 
+    #Is a irregular table?
+    try:
+        if kwords["irregular_table"]:
+            global irr_table
+            irr_table = kwords["irregular_table"]
+    except:
+        pass
+
+    global irr_items
+    if irr_table:
+        irr_items = [element["name_item"] for element in irr_table]
+
     # Get type and subtype of the cols
     try:
         if name_items["subtype_cols"]:
-            cols = type_col(sheet,t_se, 1)
+            cols = type_col(sheet,t_se, 1) if 'subtype_cols' not in irr_items else type_col(sheet,t_se, 1, irr_table = irr_table[irr_items.index('subtype_cols')])
     except:
         cols = type_col(sheet,t_se, 0)
 
@@ -43,7 +60,7 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     type_cols = cols["array_cols"]
 
     # Get type and subtype of the rows
-    rows = type_row(sheet,t_se)
+    rows = type_row(sheet,t_se) if 'subtype_rows' not in irr_items else type_row(sheet,t_se, irr_table = irr_table[irr_items.index('subtype_rows')])
     n_rows = rows["n_rows"]
     type_rows = rows["array_rows"]
 
@@ -108,6 +125,25 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
             attr_spl_r_s = kwords["attribute_to_split_remove_string"]
     except:
         pass
+
+
+
+    #Add column like value to previous item
+    try:
+        if kwords["add_column_value_to_previous_item"]:
+            global a_c_value
+            a_c_value = kwords["add_column_value_to_previous_item"]
+    except:
+        pass
+
+    #Value is a percentage
+    try:
+        if kwords["value_percentage"]:
+            global value_percentage
+            value_percentage = kwords["value_percentage"]
+    except:
+        pass
+
 
     if  n_cols != 0 and n_rows != 0:
         subtype_cols = subtype_col(sheet,n_cols, t_se)
@@ -209,31 +245,43 @@ def call_elastic(name_index,es):
 
 def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows, n_cols, start_row ,start_col, type_value, name_index, type_index, name_items, cont_id, sheet, index_elastic):
 
+
     count = 0
     actions = []
     first_iteration = True
+    global irr_table
+    global irr_items
+    break_subtype_cols = False
+    break_subtype_rows = False
+    break_type_rows = False
+    break_type_cols = False
+    irr_table_rows = 0
 
+    #Get all values of the sheet
     for i in range(0,len(type_rows)):
         for j in range(0,len(subtype_rows)):
+            irr_table_cols = 0
             for m in range(0,len(type_cols)):
                 for n in range(0,len(subtype_cols)):
 
-                    value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row, colx=(m*n_cols+n)+start_col)
+                    value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row-irr_table_rows, colx=(m*n_cols+n)+start_col-irr_table_cols)
+
+                    if value == '-' or value == '':
+                        value = 0
+
+                    global value_percentage
+                    if value_percentage:
+                        value *= 100
 
                     item = {}
 
-                    item["insert_time"]=datetime.datetime.today()
+                    item['insert_time']=datetime.datetime.today()
                     #If the type is str, it has attribute "strip()" (can be a blank space)
                     #if the type isn't str, it should transform to str
                     try:
                         item[name_items["type_rows"]] = type_rows[i].strip()
                     except:
                         item[name_items["type_rows"]] = str(type_rows[i])
-
-                    try:
-                        item[name_items["subtype_rows"]] = subtype_rows[j].strip()
-                    except:
-                        item[name_items["subtype_rows"]] = str(subtype_rows[j])
 
                     try:
                         item[name_items["type_cols"]] = type_cols[m].strip()
@@ -245,6 +293,204 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     except:
                         item[name_items["subtype_cols"]] = str(subtype_cols[n])
 
+                    try:
+                        item[name_items["subtype_rows"]] = subtype_rows[j].strip()
+                    except:
+                        item[name_items["subtype_rows"]] = str(subtype_rows[j])
+
+                    continue_iteration = True
+                    global a_c_value
+                    for element in a_c_value:
+                        if str(item[name_items[element['type_item']]].encode('UTF-8')) == element['name']:
+                            try:
+                                acts[-1]['_source'][element['name_item']] = value * 100
+                            except:
+                                pass
+                            continue_iteration = False
+                            break
+
+                    if continue_iteration:
+
+                        global fs_change
+                        #if exist field to change
+                        if fs_change:
+                            item = utils.change_field_name(item, fs_change)
+
+                        global attr_spl_r_s
+                        #if exist field to change
+                        if attr_spl_r_s:
+                            item = utils.getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s)
+
+                        #Generate key of this value
+                        if type_value != str:
+                            str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
+                        else:
+                            str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
+
+                        '''
+                        print '-----------------------------------'
+                        print 'rowx = ', i+start_row
+                        print 'colx = ', (m*n_cols+n)+start_col
+                        print 'value = ', value
+                        print 'sub_c'
+                        '''
+
+                        global attr_fix
+                        #if it's place, country or city
+                        global field_region
+                        tem_attr_fix = {}
+                        if field_region:
+                            for name in name_items:
+                                for element in field_region:
+                                    if element == name_items[name]:
+                                        regions = get_region(item[name_items[name]], field = name_items[name])
+                                        tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
+                                        tem_attr_fix.update(attr_fix)
+                                        tem_attr_fix.update(regions)
+                        else:
+                            tem_attr_fix = attr_fix
+
+                        #if there are attributes_to_fixed
+                        if tem_attr_fix:
+                            item=utils.getAttribute_Fixed(item, tem_attr_fix)
+                            for element in tem_attr_fix:
+                                str_key += tem_attr_fix[element]
+
+                        global attr_spl_r
+                        if attr_spl_r:
+                            item=utils.getAttributes_Split_Remove(item, name_items, attr_spl_r)
+
+                        global attr_spl_s
+                        if attr_spl_s:
+                            item=utils.getAttributes_Split_String(item, name_items, attr_spl_s)
+
+                        global attr_spl
+                        if attr_spl:
+                            item=utils.getAttributes_Split(item, name_items, attr_spl)
+
+                        global low_let
+                        if low_let:
+                            item = utils.getLowercaseWord(item, low_let)
+
+                        if value == '.' or value == '..':               #if there isn't value
+                            continue
+
+                        item["value"] = utils.getValue_with_type(type_value, value)
+
+                        key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
+                        item["key"] = key
+
+                        if first_iteration:
+                            global names_item_final
+                            names_item_final = utils.get_names_item_final(item)
+                            first_iteration=False
+
+                        action = {
+                            "_index": name_index,
+                            "_type": type_index,
+                            "_id": int(cont_id),
+                            "_source": item
+                        }
+
+                        acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
+
+                        if acts:                       #if actions was append
+                            actions = acts
+                            cont_id += 1
+                            count += 1
+
+
+                        if irr_table:
+                            for name in irr_items:
+                                if name == 'subtype_cols':
+                                    for element in irr_table[irr_items.index('subtype_cols')]['involved_elements']:
+                                        if element['name'] == item[name_items["type_cols"]]:
+                                            if n+1 >= len(subtype_cols)- element['number']:
+                                                break_subtype_cols = True
+                                                irr_table_cols += element['number']
+
+                            if m*n_cols+n-irr_table_cols > (len(type_cols)-1)*n_cols + len(subtype_cols)-1:
+                                break_subtype_cols = True
+                                break_type_cols = True
+
+                        if break_subtype_cols:
+                            break_subtype_cols =  False
+                            break
+
+                if break_type_cols:
+                    break_type_cols =  False
+                    break
+
+            if break_subtype_rows:
+                break_subtype_rows =  False
+                break
+
+        if break_type_rows:
+            break_type_rows =  False
+            break
+
+    return {'actions' : actions, 'count':count}
+
+
+def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col, type_value, name_index, type_index, name_items, cont_id, sheet, index_elastic):
+
+    count = 0
+    actions = []
+    first_iteration = True
+    global irr_table
+    global irr_items
+    break_subtype_cols = False
+    break_type_rows = False
+    break_type_cols = False
+    irr_table_rows = 0
+
+    #Get all values of the sheet
+    for i in range(0,len(type_rows)):
+        irr_table_cols = 0
+        for m in range(0,len(type_cols)):
+            for n in range(0,len(subtype_cols)):
+
+                value = sheet.cell_value(rowx=i+start_row-irr_table_rows, colx=(m*n_cols+n)+start_col-irr_table_cols)
+
+                if value == '-' or value == '':
+                    value = 0
+
+                global value_percentage
+                if value_percentage:
+                    value *= 100
+
+                item = {}
+
+                item['insert_time']=datetime.datetime.today()
+                #If the type is str, it has attribute "strip()" (can be a blank space)
+                #if the type isn't str, it should transform to str
+                try:
+                    item[name_items["type_rows"]] = type_rows[i].strip()
+                except:
+                    item[name_items["type_rows"]] = str(type_rows[i])
+
+                try:
+                    item[name_items["type_cols"]] = type_cols[m].strip()
+                except:
+                    item[name_items["type_cols"]] = str(type_cols[m])
+
+                try:
+                    item[name_items["subtype_cols"]] = subtype_cols[n].strip() 
+                except:
+                    item[name_items["subtype_cols"]] = str(subtype_cols[n])
+
+                continue_iteration = True
+                global a_c_value
+                for element in a_c_value:
+                    if str(item[name_items[element['type_item']]].encode('UTF-8')) == element['name']:
+                        try:
+                            acts[-1]['_source'][element['name_item']] = value * 100
+                        except:
+                            pass
+                        continue_iteration = False
+                        break
+
+                if continue_iteration:
 
                     global fs_change
                     #if exist field to change
@@ -258,16 +504,16 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
                     #Generate key of this value
                     if type_value != str:
-                        str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_rows"]] + item[name_items["subtype_cols"]]
+                        str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
                     else:
-                        str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_rows"]] + item[name_items["subtype_cols"]]
+                        str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
 
                     '''
                     print '-----------------------------------'
-                    print 'rowx = ', (i*n_rows+i+1+j)+start_row
+                    print 'rowx = ', i+start_row
                     print 'colx = ', (m*n_cols+n)+start_col
                     print 'value = ', value
-                    print 'all'
+                    print 'sub_c'
                     '''
 
                     global attr_fix
@@ -299,7 +545,6 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     if attr_spl_s:
                         item=utils.getAttributes_Split_String(item, name_items, attr_spl_s)
 
-
                     global attr_spl
                     if attr_spl:
                         item=utils.getAttributes_Split(item, name_items, attr_spl)
@@ -322,12 +567,11 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                         first_iteration=False
 
                     action = {
-                        "_index": name_index,
-                        "_type": type_index,
-                        "_id": int(cont_id),
-                        "_source": item
+                      "_index": name_index,
+                      "_type": type_index,
+                      "_id": int(cont_id),
+                      "_source": item
                     }
-
 
                     acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
 
@@ -336,129 +580,31 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                         cont_id += 1
                         count += 1
 
-    return {'actions' : actions, 'count':count}
 
-def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col, type_value, name_index, type_index, name_items, cont_id, sheet, index_elastic):
+                    if irr_table:
+                        for name in irr_items:
+                            if name == 'subtype_cols':
+                                for element in irr_table[irr_items.index('subtype_cols')]['involved_elements']:
+                                    if element['name'] == item[name_items["type_cols"]]:
+                                        if n+1 >= len(subtype_cols)- element['number']:
+                                            break_subtype_cols = True
+                                            irr_table_cols += element['number']
 
-    count = 0
-    actions = []
-    first_iteration = True
+                        if m*n_cols+n-irr_table_cols > (len(type_cols)-1)*n_cols + len(subtype_cols)-1:
+                            break_subtype_cols = True
+                            break_type_cols = True
 
-    #Get all values of the sheet
-    for i in range(0,len(type_rows)):
-        for m in range(0,len(type_cols)):
-            for n in range(0,len(subtype_cols)):
+                    if break_subtype_cols:
+                        break_subtype_cols =  False
+                        break
 
-                value = sheet.cell_value(rowx=i+start_row, colx=(m*n_cols+n)+start_col)
+            if break_type_cols:
+                break_type_cols =  False
+                break
 
-                item = {}
-
-                item['insert_time']=datetime.datetime.today()
-                #If the type is str, it has attribute "strip()" (can be a blank space)
-                #if the type isn't str, it should transform to str
-                try:
-                    item[name_items["type_rows"]] = type_rows[i].strip()
-                except:
-                    item[name_items["type_rows"]] = str(type_rows[i])
-
-                try:
-                    item[name_items["type_cols"]] = type_cols[m].strip()
-                except:
-                    item[name_items["type_cols"]] = str(type_cols[m])
-
-                try:
-                    item[name_items["subtype_cols"]] = subtype_cols[n].strip()
-                except:
-                    item[name_items["subtype_cols"]] = str(subtype_cols[n])
-
-                global fs_change
-                #if exist field to change
-                if fs_change:
-                    item = utils.change_field_name(item, fs_change)
-
-                global attr_spl_r_s
-                #if exist field to change
-                if attr_spl_r_s:
-                    item = utils.getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s)
-
-                #Generate key of this value
-                if type_value != str:
-                    str_key = str(value) + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
-                else:
-                    str_key = value + item[name_items["type_rows"]] + item[name_items["type_cols"]] + item[name_items["subtype_cols"]]
-
-                '''
-                print '-----------------------------------'
-                print 'rowx = ', i+start_row
-                print 'colx = ', (m*n_cols+n)+start_col
-                print 'value = ', value
-                print 'sub_c'
-                '''
-
-                global attr_fix
-                #if it's place, country or city
-                global field_region
-                tem_attr_fix = {}
-                if field_region:
-                    for name in name_items:
-                        for element in field_region:
-                            if element == name_items[name]:
-                                regions = get_region(item[name_items[name]], field = name_items[name])
-                                tem_attr_fix = {}              #Temp for the variables in this iteration that they will be fixed
-                                tem_attr_fix.update(attr_fix)
-                                tem_attr_fix.update(regions)
-                else:
-                    tem_attr_fix = attr_fix
-
-                #if there are attributes_to_fixed
-                if tem_attr_fix:
-                    item=utils.getAttribute_Fixed(item, tem_attr_fix)
-                    for element in tem_attr_fix:
-                        str_key += tem_attr_fix[element]
-
-                global attr_spl_r
-                if attr_spl_r:
-                    item=utils.getAttributes_Split_Remove(item, name_items, attr_spl_r)
-
-                global attr_spl_s
-                if attr_spl_s:
-                    item=utils.getAttributes_Split_String(item, name_items, attr_spl_s)
-
-                global attr_spl
-                if attr_spl:
-                    item=utils.getAttributes_Split(item, name_items, attr_spl)
-
-                global low_let
-                if low_let:
-                    item = utils.getLowercaseWord(item, low_let)
-
-                if value == '.' or value == '..':               #if there isn't value
-                    continue
-
-                item["value"] = utils.getValue_with_type(type_value, value)
-
-                key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
-                item["key"] = key
-
-                if first_iteration:
-                    global names_item_final
-                    names_item_final = utils.get_names_item_final(item)
-                    first_iteration=False
-
-                action = {
-                  "_index": name_index,
-                  "_type": type_index,
-                  "_id": int(cont_id),
-                  "_source": item
-                }
-
-
-                acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
-
-                if acts:                       #if actions was append
-                    actions = acts
-                    cont_id += 1
-                    count += 1
+        if break_type_rows:
+            break_type_rows =  False
+            break
 
     return {'actions' : actions, 'count':count}
 
@@ -728,7 +874,7 @@ def append_Action(exist_index, key, name_index, action, actions):
 
 
 #Return array with types of columns
-def type_col(sheet,t_se, subtype_col):
+def type_col(sheet,t_se, subtype_col, **kwords):
     n_cols = 0                      # Number of columns of subtypes for each cloumn of type
     array_cols = []                 # Array with each name of the types
 
@@ -736,21 +882,30 @@ def type_col(sheet,t_se, subtype_col):
     all_cols = sheet.row_slice(rowx=t_se["start_row"],
                             start_colx=t_se["start_value_col"], # Saving since col values starts, not where it starts table (not col type there)
                             end_colx=t_se["end_col"]+1)         # row_slice uses end col - 1 by defect. For this it's necessary sum 1
+    irr_table = {}
+    if 'irr_table' in kwords:
+        irr_table = kwords['irr_table']
 
     for element in all_cols:
         if element.value != "":
             array_cols.append(element.value)
         i=i+1
 
+    if irr_table:
+        i = i + irr_table['number'] if irr_table['type'] == 'sum' else i - irr_table['number']
+
+
     if subtype_col:                      #If there is subtype_col
         n_cols = i / len(array_cols)     # Number of columns (its numbers of subtype_cols)
     else:
         n_cols = 0
 
+
     cols =  {
       "n_cols" : n_cols,
       "array_cols" : array_cols
     }
+
     return cols
 
 #Return array with subtypes of columns
@@ -758,14 +913,13 @@ def subtype_col(sheet, n_cols, t_se):
     array_cols = sheet.row_slice(rowx=t_se["start_row"]+1, #Subtypecol is in the second line
                             start_colx=t_se["start_value_col"], #The line where start cols and values is the same
                             end_colx=t_se["start_value_col"]+n_cols)
-
     for i in range(0,len(array_cols)):
         array_cols[i] = array_cols[i].value    #Transform format of row_slice
 
     return array_cols
 
 #Return array with types of rows
-def type_row(sheet, t_se):
+def type_row(sheet, t_se, **kwords):
     n_rows = 0                      # Number of columns of subtypes for each row of type
     array_rows = []                 # Array with each name of the types
 
@@ -778,6 +932,9 @@ def type_row(sheet, t_se):
                             start_rowx=t_se["start_value_row"],  # Saving since row values starts, not where it starts table (not row type there)
                             end_rowx=t_se["end_row"]+1)          # col_slice uses end row - 1 by defect. For this it's necessary sum 1
 
+    irr_table = {}
+    if 'irr_table' in kwords:
+        irr_table = kwords['irr_table']
 
     nElements = len(array_rows0)              # Length of each column in the table
 
@@ -785,6 +942,9 @@ def type_row(sheet, t_se):
         for i in range(0,nElements):
             if array_rows1[i].value == '':
                 array_rows.append(array_rows0[i].value)
+
+        if irr_table:
+            nElements = nElements + irr_table['number'] if irr_table['type'] == 'sum' else nElements - irr_table['number']
 
         n_rows = (nElements-len(array_rows)) / len(array_rows)
 

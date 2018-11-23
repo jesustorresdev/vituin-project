@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from googlemaps import Client as GoogleMaps
 from elasticsearch import Elasticsearch
+import datetime
 
 def change_field_name_json(field, fs_change):
     return fs_change[field].decode('UTF-8')
@@ -122,15 +123,16 @@ def getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s):
             list_items.append(v)
     else:
         list_items = name_items
-
+    list_items = ['dia','mes']
     for element in attr_spl_r_s:
         for i in range(0,len(element["attributes"])):                                  #All elements to split
             for v in list_items:
                 if v == element["attributes"][i]:                                      #if is the element
 
-                    old_string = item[v]
+                    old_string = item['fecha']
                     pos_start = True if element["attr"+str(i)][0] is 'start' else False
                     pos_final = True if element["attr"+str(i)][1] is 'final' else False
+
 
                     if not pos_start:
                         new_string_0 = old_string[:element["attr"+str(i)][0]]
@@ -142,8 +144,12 @@ def getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s):
                     else:
                         new_string_1 = ''
 
-                    new_string = new_string_0 + new_string_1
+                    if not pos_final and not pos_start:
+                        new_string=old_string[element["attr"+str(i)][0]:element["attr"+str(i)][1]]
+                    else:
+                        new_string = new_string_0 + new_string_1
                     item[v] = new_string
+
     return item
 
 
@@ -190,7 +196,7 @@ def getCoordinates(coordinates,item):
         if field in item:
             place += str(item[field].encode('UTF-8'))                   #The place searched is the composed to the fields to get the coordinates
             place += ' '
-    print item['name'],'---', place
+    print place
     api_key = 'AIzaSyD2owaTzJTWi9m1f2QqAlJ1S0hfFT3nT0w'
     gmaps = GoogleMaps(api_key)
     location = gmaps.geocode(place)
@@ -246,10 +252,14 @@ def fix_fields_in_only_one(field,fields_to_fix_elements,elements_to_fix_in_one,e
         # print 'element_to_fix-->', element_to_fix
         tmp_item = {}
         #If field to change in value o field
-        if element[element_to_fix] in fs_change:
-            value = change_field_name_json(element[field],fs_change)
-        else:
-            value = element[element_to_fix]
+        try:
+            if element[element_to_fix] in fs_change:
+                value = change_field_name_json(element[field],fs_change)
+            else:
+                value = element[element_to_fix]
+        except:
+            value = ''
+
         if element_to_fix in fs_change:
             element_to_fix = change_field_name_json(field,fs_change)
 
@@ -269,6 +279,12 @@ def fix_fields_in_only_one(field,fields_to_fix_elements,elements_to_fix_in_one,e
         items_to_fix.append(tmp_item)
 
     return items_to_fix
+
+def set_date(item,fields_date):
+    for field_date in fields_date:
+        item[field_date] = datetime.datetime.strptime(item[field_date], '%Y-%m-%d %H:%M:%S.%f')
+    return item
+
 
 def change_months(item, field_month):
     months_str = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', \
@@ -303,7 +319,70 @@ def set_properties(name_items, type_index, name_index):
 def get_names_item_final(item):
     name_items = []
     for key in item.keys():
-        if key != 'value' and key != 'insert_time':
+        if key != 'value' and key != 'insert_time' and key != 'date':
             name_items.append(key)
 
     return name_items
+
+#Return all elements of one index
+def search_elastic(index,doc_type):
+    es = Elasticsearch(
+        [
+            'elastic:vituinproject@elasticsearch:9200/',
+        ]
+    )
+
+    #SearchAllEstablishments
+    doc = {
+        'size' : 10000,
+        'query': {
+            'match_all' : {}
+        },
+        'sort': [
+            {"_id": "asc"}
+        ]
+    }
+
+
+    result = es.search(index=index, doc_type=doc_type, body=doc,scroll='1m',request_timeout=300)
+    numberElements = es.search(index=index, doc_type=doc_type, body=doc,size=0)['hits']['total']    #The number of Elements searched
+
+    elements = []
+    count = 0
+    for hit in result['hits']['hits']:            #Append the elements in the array
+        elements.append(hit)
+        count += 1
+
+    pos = count - 1                               #Last pos appended
+    numberElements -= count
+
+    #Elastic only allow search 10000 elements in a called. If the table contains more element \
+    # its necessary to do a recursive called
+    while numberElements > 0:
+
+
+        doc = {
+            'size':10000,
+            'query': {
+                'match_all' : {}
+            },
+            "search_after": [elements[pos]['_id']],  #It allows to search since a determinate position
+            "sort": [
+                {"_id": "asc"}
+            ]
+        }
+
+        result = es.search(index=index, doc_type=doc_type, body=doc)
+
+        numberElements -= count
+        count = 0
+        for hit in result['hits']['hits']:        #Append the elements in the array
+            elements.append(hit)
+            count += 1
+
+        pos += count                              #Last pos append
+
+
+    elements=sorted(elements, key=lambda k: int(k['_id']))
+
+    return elements

@@ -4,7 +4,7 @@ sys.path.append('../')
 
 from structured_data import index_excels_normalTable
 
-excel = "excels_infraestructuras_turísticas/Alquiler vacacional.xlsx"
+excel = "excels_infraestructuras_turísticas/Alquiler vacacional Adeje.xlsx"
 sheet = 0
 name_index = "index_alquiler_vacacional_tfcomercio"
 type_index = "structured"
@@ -13,7 +13,7 @@ type_index = "structured"
 table_start_and_end = {
     "start_row": 0,
     "start_col": 0,
-    "end_row": 2471,
+    "end_row": 211,
     "end_col": 2,
     "start_value_row": 2,
     "start_value_col": 0

@@ -165,7 +165,6 @@ def indexed(name_index,type_index, path_to_start, metadata,fields_to_get, **kwor
             tmp_item.update(item)
             tmp_item.update(item_to_fix)
 
-            # print 'fecha--->', item['fecha']
             #if exist field to remove substring
             if attr_spl_r_s:
                 tmp_item = utils.getAttributes_Split_Remove_String(tmp_item, fields, attr_spl_r_s)
