@@ -34,7 +34,7 @@ rentalia_files = os.path.join(CSVdir, rentalia_files)
 
 #Arrays will be save the dada
 samples_homes=[]
-samples_homes.append(["id_rentalia", "type_residence", "numberReviews", "mainBubbles", "capacity", "min_stay", "lng", "lat"])
+samples_homes.append(["id_rentalia", "type_residence", "numberReviews", "mainBubbles", "min_stay", "lng", "lat"])
 
 
 index_homes=1
@@ -105,10 +105,6 @@ for n in range(0,len(urls)):
                         lat = coor[coor.find(':')+2:coor.find(',')-1]
                         lng = coor[coor.find('"longitude"')+len("longitude")+4:-2]
 
-                        pos_capacity = controller.rfind('"capacity_min":')-1
-                        capacity = controller[pos_capacity:]
-                        capacity = capacity[capacity.find(':')+1:capacity.find(',')]
-
                         pos_min_stay = controller.rfind('"nights_min":')-1
                         min_stay = controller[pos_min_stay+1:]
                         min_stay = min_stay[min_stay.find(':')+1:min_stay.find(',')]
@@ -116,15 +112,15 @@ for n in range(0,len(urls)):
                         print "url ---->", driver.current_url
                         print 'id ---->',ids[n]
                         print 'latitude-->',lat
+                        print 'latitude-->',lat
                         print 'longitude-->',lng
                         print 'rating-->',mainBubbles
                         print "numberReviews ---->", numberReviews
-                        print "capacity ---->", capacity
                         print "min_stay ---->", min_stay
 
 
 
-                        samples_homes.append([ids[n], type_residence, numberReviews, mainBubbles, capacity, min_stay, lng, lat])
+                        samples_homes.append([ids[n], type_residence, numberReviews, mainBubbles, min_stay, lng, lat])
                         index_homes+=1
                         contador = 0
                         number_success+=1
