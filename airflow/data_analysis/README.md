@@ -8,7 +8,7 @@ The project itself is a Scrapy project that is used to gather training and testi
 
 ### [Creating a sentiment analysis model with Scrapy and MonkeyLearn](https://blog.monkeylearn.com/creating-sentiment-analysis-model-with-scrapy-and-monkeylearn/)
 
-The TripAdvisor (hotel_sentiment/spider/tripadvisor_spider.py) spider is used to gather data to train a sentiment analysis classifier in MonkeyLearn. Reviews texts are used as the sample content and reviews stars are used as the category (1 and 2 stars = Negative, 4 and 5 stars = Positive).
+The TripAdvisor (extraction_data/spider/tripadvisor_spider.py) spider is used to gather data to train a sentiment analysis classifier in MonkeyLearn. Reviews texts are used as the sample content and reviews stars are used as the category (1 and 2 stars = Negative, 4 and 5 stars = Positive).
 
 To crawl ~15000 items from tripadvisor, from some zone, use:
 ```sh
@@ -24,7 +24,7 @@ You can check out the generated machine learning sentiment analysis model [here]
 
 ### [Aspect Analysis from reviews using Machine Learning](https://blog.monkeylearn.com/aspect-analysis-from-reviews-using-machine-learning/)
 
-The Booking spider (hotel_sentiment/spider/booking_spider.py) is used to gather data to train an aspect classifier in MonkeyLearn. The data obtained with this spider can be manually tagged with each aspect (eg: cleanliness, comfort & facilities, food, internet, location, staff, value for money) using MonkeyLearn's Sample tab or an external crowd sourcing service like Mechanical Turk.
+The Booking spider (extraction_data/spider/booking_spider.py) is used to gather data to train an aspect classifier in MonkeyLearn. The data obtained with this spider can be manually tagged with each aspect (eg: cleanliness, comfort & facilities, food, internet, location, staff, value for money) using MonkeyLearn's Sample tab or an external crowd sourcing service like Mechanical Turk.
 
 To crawl from booking use:
 ```sh
@@ -64,7 +64,7 @@ scrapy crawl tripadvisor_more -a start_url="http://some_url" -o <hotel_name>.csv
 
 ### Extract data from Facebook
 
-You can extract data of Facebook pages: posts, comments or insigths. To extract data from Facebook go to hotel_sentiment/oauth/ and use one of them: 
+You can extract data of Facebook pages: posts, comments or insigths. To extract data from Facebook go to extraction_data/oauth/ and use one of them: 
 
 ```sh
 python facebook_postandcomments.py 
