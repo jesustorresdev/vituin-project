@@ -23,13 +23,19 @@ class BookingSpider(scrapy.Spider):
 #    start_urls = [
 #        "https://www.booking.com/searchresults.en-gb.html?aid=356984;label=gog235jc-country-en-gb-gb-unspec-es-com-L%3Aen-O%3Ax11-B%3Achrome-N%3Ayes-S%3Abo-U%3Ac-H%3As;sid=3d9a779adf10f3e6b7e0a80e5c9500df;region=777"
 #    ]
-    start_urls = BookingZoneURLs()
+    start_urls = BookingZoneURLs('Adeje')
     pageNumber = 1
 
     #for every hotel
     def parse(self, response):
         listErrors=[]
-
+        print 'eeeeeeeee'
+        print 'eeeeeeeee'
+        print 'eeeeeeeee'
+        print 'eeeeeeeee'
+        print 'eeeeeeeee'
+        print 'eeeeeeeee'
+        print 'eeeeeeeee'
         for establishment in response.xpath('//a[@class="hotel_name_link url"]/@href'):
             url = response.urljoin(establishment.extract())
             url2 = 'https://www.booking.com/' + establishment.extract()[1:]
@@ -84,40 +90,7 @@ class BookingSpider(scrapy.Spider):
             print 'type metadata-->',type(meta_data_str)
             print 'error-->',meta_data_str
             print response.url
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            print 'aaaa'
-            raise CloseSpider('aaa')
+            raise CloseSpider('error')
         # url = response.urljoin(reviewsurl[0].extract())
         item['url']=response.url
         item['id_booking'] = response.xpath('//input[@name="hotel_id"]/@value').extract()[0]
@@ -155,8 +128,8 @@ class BookingSpider(scrapy.Spider):
             has_map = meta_data["hasMap"].encode('UTF-8')
             has_map_since_center = has_map[(has_map.find('center')+len('center')+1):]
             coordinates = has_map_since_center[:has_map_since_center.find('&')]
-            item['lng']  = coordinates.split(',')[0]
-            item['lat']  = coordinates.split(',')[1]
+            item['lat']  = coordinates.split(',')[0]
+            item['lng']  = coordinates.split(',')[1]
         except Exception as error:
             print 'meta_data-->', meta_data
             print 'type meta_data-->', type(meta_data)
@@ -164,38 +137,6 @@ class BookingSpider(scrapy.Spider):
             print 'error--->', error
             import sys
             print 'Error on line {}'.format(sys.exc_info()[-1].tb_lineno)
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
-            print ''
             raise CloseSpider('ooo')
 
 
@@ -288,12 +229,12 @@ class BookingSpider(scrapy.Spider):
     #         os.remove('listhotelsBooking.csv')
     #
 
-a ='{"hasMap" : "https://maps.googleapis.com/maps/api/staticmap?markers=color:blue%7c28.4167488,-16.5417624&size=1600x1200&sensor=false&zoom=15&center=28.4167488,-16.5417624&client=gme-booking&channel=booking-frontend&signature=Iiftf0Kyxc8JOVyytz8rpHcmV10=", "url" : "https://www.booking.com/hotel/es/bahia-principe-san-felipe.en-gb.html",    "@type" : "Hotel",   "image" : "https://t-ec.bstatic.com/images/hotel/max500/394/39427948.jpg",    "aggregateRating" : {        "ratingValue" : 8.1,        "@type" : "AggregateRating",        "reviewCount" : 552,        "bestRating" : 10    },    "@context" : "http://schema.org",    "name" : "Sunlight Bahia Principe San Felipe",    "priceRange" : "Prices for upcoming dates start at £77 per night (We Price Match)","address" : {        "streetAddress" : "Avenida de Colón, 22, 38400 Puerto de la Cruz, Spain",        "addressRegion" : "Tenerife",        "postalCode" : "38400",        "addressCountry" : "Spain",        "addressLocality" : "Avenida de Colón, 22",        "@type" : "PostalAddress"},"description" : "Bahia Principe San Felipe is located on the seafront, just 400 metres from the Martíanez Lakes."}'
-o = '{' \
-    '' \
-    '' \
-    '"name" : "Villa Syrah","@type" : "Hotel","priceRange" : null' \
-    '' \
-    '' \
-    '' \
-    '}'
+# a ='{"hasMap" : "https://maps.googleapis.com/maps/api/staticmap?markers=color:blue%7c28.4167488,-16.5417624&size=1600x1200&sensor=false&zoom=15&center=28.4167488,-16.5417624&client=gme-booking&channel=booking-frontend&signature=Iiftf0Kyxc8JOVyytz8rpHcmV10=", "url" : "https://www.booking.com/hotel/es/bahia-principe-san-felipe.en-gb.html",    "@type" : "Hotel",   "image" : "https://t-ec.bstatic.com/images/hotel/max500/394/39427948.jpg",    "aggregateRating" : {        "ratingValue" : 8.1,        "@type" : "AggregateRating",        "reviewCount" : 552,        "bestRating" : 10    },    "@context" : "http://schema.org",    "name" : "Sunlight Bahia Principe San Felipe",    "priceRange" : "Prices for upcoming dates start at £77 per night (We Price Match)","address" : {        "streetAddress" : "Avenida de Colón, 22, 38400 Puerto de la Cruz, Spain",        "addressRegion" : "Tenerife",        "postalCode" : "38400",        "addressCountry" : "Spain",        "addressLocality" : "Avenida de Colón, 22",        "@type" : "PostalAddress"},"description" : "Bahia Principe San Felipe is located on the seafront, just 400 metres from the Martíanez Lakes."}'
+# o = '{' \
+#     '' \
+#     '' \
+#     '"name" : "Villa Syrah","@type" : "Hotel","priceRange" : null' \
+#     '' \
+#     '' \
+#     '' \
+#     '}'

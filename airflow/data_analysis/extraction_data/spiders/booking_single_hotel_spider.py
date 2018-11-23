@@ -13,7 +13,7 @@ exceptionErrorItem=False
 
 class BookingSpider(scrapy.Spider):
     name = "booking_singlehotel"
-    
+
     #When we want to get it a specific URLs
     #start_urls = BookingHotelsURLs()
     start_urls = []

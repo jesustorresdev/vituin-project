@@ -1,8 +1,8 @@
 import scrapy, datetime, os, re,time
-#from hotel_sentiment.items import HotelSentimentItem
+#from extraction_data.items import HotelSentimentItem
 # utilizo la clase del review en vez de la del hotel
 from extraction_data.items import ListHomesTripadvisorItem
-from extraction_data.urls import TripadvisorFuerteventuraHolidaysRentUrls
+from extraction_data.urls import TripadvisorHolidaysRentURLs
 from scrapy.mail import MailSender
 from scrapy.exceptions import CloseSpider
 from elasticsearch import Elasticsearch
@@ -24,7 +24,7 @@ class TripadvisorSpider(scrapy.Spider):
     #start_urls = [
     #    "https://www.tripadvisor.co.uk/Hotels-g187479-Tenerife_Canary_Islands-Hotels.html"
     #]
-    start_urls = TripadvisorFuerteventuraHolidaysRentUrls()
+    start_urls = TripadvisorHolidaysRentURLs('Puerto de la Cruz')
 
     def parse(self, response):
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy, datetime, os, re, time
-#from hotel_sentiment.items import HotelSentimentItem
+#from extraction_data.items import HotelSentimentItem
 # utilizo la clase del review en vez de la del hotel
-from hotel_sentiment.items import ListRestaurantsTripadvisorItem
-#from hotel_sentiment.urls import TripAdvisorPtoCruzRestaurantsURLs
+from extraction_data.items import ListRestaurantsTripadvisorItem
+#from extraction_data.urls import TripAdvisorPtoCruzRestaurantsURLs
 #from scrapy.mail import MailSender
 from scrapy.exceptions import CloseSpider
 from elasticsearch import Elasticsearch

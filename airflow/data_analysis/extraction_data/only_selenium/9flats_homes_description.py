@@ -35,7 +35,7 @@ es = Elasticsearch(
 
 
 #Fields where data will be write
-flats9_files='9flats_homes_description.csv'
+flats9_files='9flats_homes_description_'+PLACE+'.csv'
 CSVdir='/usr/local/airflow/data_analysis/classify_elastic/unstructured_data/data_files'
 flats9_files = os.path.join(CSVdir, flats9_files)
 
@@ -51,7 +51,7 @@ doc = {
     'size' : 10000,
     "query": {
         "match_phrase": {
-            "place": "Puerto de la Cruz"
+            "place": PLACE
         }
     },
     'sort': [
@@ -154,6 +154,7 @@ if contador >= 5:
     print "ERROR"
     error = True
 
+clear_cache(driver)
 driver.close()
 #chromedriver dont stop itself
 os.system("pkill -f chromedriver")

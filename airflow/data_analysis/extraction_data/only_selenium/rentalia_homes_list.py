@@ -1,11 +1,16 @@
 # -*- coding: UTF-8 -*-
 
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time, os
 import unicodecsv as csv
 from elasticsearch import Elasticsearch
+sys.path.append('../')
+from urls import RentaliaURLs
+from utils import clear_cache
 
+PLACE =  sys.argv[1]
 
 driver = webdriver.Chrome()
 
@@ -19,7 +24,7 @@ es = Elasticsearch(
 
 
 #Fields where data will be write
-rentalia_files='rentalia_homes_list.csv'
+rentalia_files='rentalia_homes_list_'+PLACE+'.csv'
 CSVdir='/usr/local/airflow/data_analysis/classify_elastic/unstructured_data/data_files'
 rentalia_files = os.path.join(CSVdir, rentalia_files)
 
@@ -37,141 +42,150 @@ index_homes=1
 contador = 0
 load_all = False
 finish = False
-#It could be that no load at first
-while load_all is False and contador <= 5:
-    load_all = True
-    try:
-        url = 'https://es.rentalia.com/alquiler-vacaciones-puerto-de-la-cruz/'
-        time.sleep(1)
-        driver.get(url)
-        next = True
-        i=0
-        while next == True:
-            i += 1
-            load = False
-            while load is False and finish is False:
-                load = True
-                try:
-                    last_page = driver.find_element_by_xpath("//li[@class='active waves-effect']/a").text
-                    print 'Page', last_page
-                    print '-----Pagina '+str(i)+'------'
-                    homes = driver.find_elements_by_xpath("//div[contains(@class,'itemList')]")
-                    #print links
-                    samples_homes_tmp = []
-                    for home in homes:
-                        print 'home-->', home.get_attribute('id')
+urls = RentaliaURLs(PLACE)
+n_url = 0
+for url in urls:
+    #It could be that no load at first
+    while load_all is False and contador <= 5:
+        load_all = True
+        try:
+            time.sleep(1)
+            driver.get(url)
+            next = True
+            i=0
+            while next == True:
+                i += 1
+                load = False
+                while load is False and finish is False:
+                    load = True
+                    try:
+                        print 'url-->', url
+                        last_page = driver.find_element_by_xpath("//li[@class='active waves-effect']/a").text
+                        print 'Page', last_page
+                        print '-----Pagina '+str(i)+'------'
+                        homes = driver.find_elements_by_xpath("//div[contains(@class,'itemList')]")
+                        samples_homes_tmp = []
+                        for home in homes:
+                            print 'home-->', home.get_attribute('id')
 
-                        title = home.find_element_by_xpath(".//div[contains(@class,'title')]/h3").text
-                        place = home.find_element_by_xpath(".//div[contains(@class,'title')]/h4").text
-                        if len(place.split(',')) is 3:
-                            place = place.split(',')[1].strip()
-                        elif len(place.split(',')) is 2:
-                            place = place.split(',')[0].strip()
-                        else:
-                            place = place.strip()
-                        if place != 'Puerto de la Cruz':
-                            contador = 6
+                            title = home.find_element_by_xpath(".//div[contains(@class,'title')]/h3").text
+                            place = home.find_element_by_xpath(".//div[contains(@class,'title')]/h4").text
+                            if len(place.split(',')) is 3:
+                                place = place.split(',')[1].strip()
+                            elif len(place.split(',')) is 2:
+                                place = place.split(',')[0].strip()
+                            else:
+                                place = place.strip()
+                            if place != PLACE:
+                                contador = 6
+                                finish = True
+                                next = False
+                                break
+
+                            id_rentalia = home.get_attribute('id')
+                            url='https://es.rentalia.com/'+home.get_attribute('id')
+                            attributes=home.find_element_by_xpath(".//p[contains(@class,'capacityInfo')]").text.split('·'.decode('UTF-8'))
+                            attributes_names={
+                                'personas':'',
+                                'habitaciones':'',
+                                'baños'.decode('UTF-8'):'',
+                                'camas':'',
+                            }
+                            for attribute in attributes:
+                                attributes_names[attribute.split()[1].strip()] = attribute.split()[0].strip()
+
+                            bathrooms = attributes_names['baños'.decode('UTF-8')]
+                            rooms = attributes_names['habitaciones']
+                            beds = attributes_names['camas']
+                            capacity = attributes_names['personas']
+
+
+
+                            price = home.find_element_by_xpath(".//div[@class='price']/span").text.split()[0]
+                            print 'id=',id_rentalia,', url=', url,', title=', title, ', rooms=', rooms, ', bathrooms=', bathrooms, ', capacity=', capacity, ', beds=', beds, ', price', price, ', place', place
+                            samples_homes_tmp.append([id_rentalia, title, url, price, rooms, bathrooms, beds, capacity, place])
+                            index_homes+=1
+                        print '-----Fin página '+str(i)+'------'
+                        contador = 0
+                        samples_homes.extend(samples_homes_tmp)
+                    except Exception as error:
+                        load = False
+                        print 'Error elementos de la pagina. Contador', contador, ', error', error
+                        contador += 1
+                        if contador > 5:
+                            load = True
+                            finish = False
+                            contador = 0
+                            next = False
+                        time.sleep(1)
+                        pass
+                load = False
+                while load is False and finish is False:
+                    try:
+                        load = True
+                        pagination_elements = driver.find_elements_by_xpath("//ul[@class='pagination']/li/a")
+
+                        if pagination_elements[-1].text.split()[0] == 'Siguiente':
+                            next_page = pagination_elements[-1]
+                            next_page.click()
+
+                        time.sleep(1)
+
+                    except Exception as error:
+                        load = False
+                        print 'Error cargar siguiente. Contador', contador, ', error', error
+                        contador += 1
+                        if contador > 5:
+                            contador = 0
+                            load = True
                             finish = True
                             next = False
-                            break
-                        id_rentalia = home.get_attribute('id')
-                        url='https://es.rentalia.com/'+home.get_attribute('id')
-                        attributes=home.find_element_by_xpath(".//p[contains(@class,'capacityInfo')]").text.split('·'.decode('UTF-8'))
-                        attributes_names={
-                            'personas':'',
-                            'habitaciones':'',
-                            'baños'.decode('UTF-8'):'',
-                            'camas':'',
-                        }
-                        for attribute in attributes:
-                            attributes_names[attribute.split()[1].strip()] = attribute.split()[0].strip()
-
-                        bathrooms = attributes_names['baños'.decode('UTF-8')]
-                        rooms = attributes_names['habitaciones']
-                        beds = attributes_names['camas']
-                        capacity = attributes_names['personas']
-
-
-
-                        price = home.find_element_by_xpath(".//div[@class='price']/span").text.split()[0]
-                        print 'id=',id_rentalia,', url=', url,', title=', title, ', rooms=', rooms, ', bathrooms=', bathrooms, ', capacity=', capacity, ', beds=', beds, ', price', price, ', place', place
-                        samples_homes_tmp.append([id_rentalia, title, url, price, rooms, bathrooms, beds, capacity, place])
-                        index_homes+=1
-                    print '-----Fin página '+str(i)+'------'
-                    contador = 0
-                    samples_homes.extend(samples_homes_tmp)
-                except Exception as error:
-                    load = False
-                    print 'Error elementos de la pagina. Contador', contador, ', error', error
-                    contador += 1
-                    if contador > 5:
-                        load = True
-                        finish = False
-                        contador = 0
-                        next = False
-                    time.sleep(1)
-                    pass
-            load = False
-            while load is False and finish is False:
-                try:
-                    load = True
-                    pagination_elements = driver.find_elements_by_xpath("//ul[@class='pagination']/li/a")
-
-                    if pagination_elements[-1].text.split()[0] == 'Siguiente':
-                        next_page = pagination_elements[-1]
-                        next_page.click()
-
-                    time.sleep(1)
-
-                except Exception as error:
-                    load = False
-                    print 'Error cargar siguiente. Contador', contador, ', error', error
-                    contador += 1
-                    if contador > 5:
-                        contador = 0
-                        load = True
-                        finish = True
-                        next = False
-                    time.sleep(1)
-                    pass
-            load = False
-            while load is False and finish is False:
-                try:
-                    load = True
-                    current_page = driver.find_element_by_xpath("//li[@class='active waves-effect']/a").text
-                    print 'Current',current_page, ', last', last_page
-                    contador = 0
-                    if last_page!=current_page:
+                        time.sleep(1)
                         pass
-                    else:
-                        print 'Fin'
-                        next = False
-
-                except Exception as error:
-                    load = False
-                    print 'Error ver pagina actual. Contador', contador, ', error', error
-                    contador += 1
-                    if contador > 5:
+                load = False
+                while load is False and finish is False:
+                    try:
                         load = True
-                        finish = True
-                        next = False
+                        current_page = driver.find_element_by_xpath("//li[@class='active waves-effect']/a").text
+                        print 'Current',current_page, ', last', last_page
                         contador = 0
-                    time.sleep(1)
-                    pass
+                        if last_page!=current_page:
+                            pass
+                        else:
+                            print 'Fin'
+                            next = False
 
-    except Exception as error:
-        print 'No Load', contador, ', error', error
+                    except Exception as error:
+                        load = False
+                        print 'Error ver pagina actual. Contador', contador, ', error', error
+                        contador += 1
+                        if contador > 5:
+                            load = True
+                            finish = True
+                            next = False
+                            contador = 0
+                        time.sleep(1)
+                        pass
+
+        except Exception as error:
+            print 'No Load', contador, ', error', error
+            load_all = False
+            contador += 1
+
+            pass
+        if contador > 5:
+            load_all = True
+        contador = 0
+
+    if n_url < len(urls):
+        print 'Siguiente url'
+        n_url += 1
+        contador = 0
         load_all = False
-        contador += 1
-
-        pass
-    if contador > 5:
-        load_all = True
-    contador = 0
+        finish = False
 
 
-
-
+clear_cache(driver)
 driver.close()
 #chromedriver dont stop itself
 os.system("pkill -f chromedriver")

@@ -1,11 +1,16 @@
 # -*- coding: UTF-8 -*-
 
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time, os, sys
 import unicodecsv as csv
 from elasticsearch import Elasticsearch
 from datetime import datetime
+sys.path.append('../')
+from utils import clear_cache
+
+PLACE =  sys.argv[1]
 
 driver = webdriver.Chrome()
 driver.set_window_size(1700,1000)
@@ -22,7 +27,7 @@ es = Elasticsearch(
 
 
 #Fields where data will be write
-only_apartments_files='only_apartments_homes_description.csv'
+only_apartments_files='only_apartments_homes_description_'+PLACE+'.csv'
 CSVdir='/usr/local/airflow/data_analysis/classify_elastic/unstructured_data/data_files'
 only_apartments_files = os.path.join(CSVdir, only_apartments_files)
 
@@ -38,14 +43,13 @@ doc = {
     'size' : 10000,
     "query": {
         "match_phrase": {
-            "place": "Puerto de la Cruz"
+            "place": PLACE
         }
     },
     'sort': [
         {"_id": "asc"}
     ]
 }
-
 
 res = es.search(index="index_list_homes_only_apartments", doc_type="unstructured", body=doc,scroll='1m')
 
@@ -60,7 +64,6 @@ for hit in res['hits']['hits']:
     ids=ids + [hit["_source"]["id_only_apartments"]]
 contador = 0
 number_success = 0
-
 for i in range(0,len(urls)):
     driver.get(urls[i])
     i += 1
@@ -104,7 +107,6 @@ for i in range(0,len(urls)):
                     mainBubbles = ''
                     #Only-apartments reviews and ratings
                     try:
-                        reviews_rating = driver.find_element_by_xpath("//div[contains(@class,'comments-eval')]")
                         mainBubbles = reviews_rating.find_element_by_xpath(".//div[@class='total-rating']./span[@class='value']").text
                         numberReviews = reviews_rating.find_element_by_xpath("//div[contains(@class,'comments')]./h5/strong").text.split()[2]
                     #Tripadvisor reviews and ratings
@@ -167,8 +169,8 @@ for i in range(0,len(urls)):
 
                     title = driver.find_element_by_xpath("//meta[@itemprop='name']").text
                     coordinates = driver.find_element_by_xpath("//meta[@name='geo.position']").get_attribute('content').split(';')
-                    lng = coordinates[0]
-                    lat = coordinates[1]
+                    lat = coordinates[0]
+                    lng = coordinates[1]
                     print "numberReviews ---->", numberReviews
                     print "mainBubbles ---->", mainBubbles
                     print "m2 ---->", m2
@@ -311,7 +313,7 @@ for i in range(0,len(urls)):
                     #             pass
 
 
-                    samples_homes.append([ids[i], title, '', numberReviews, mainBubbles,bathrooms,capacity, beds, m2, '', '', lng, lat])
+                    samples_homes.append([ids[i], title, '', numberReviews, mainBubbles,bathrooms,capacity, beds, m2, '', '', lat, lng])
                     index_homes+=1
                     contador = 0
                     number_success+=1
@@ -342,12 +344,16 @@ error = False
 if contador >= 5:
     print "ERROR"
     error = True
-
-driver.close()
+try:
+    clear_cache(driver)
+    driver.close()
+except:
+    pass
+print 'Numero de exitos-->', number_success
 #chromedriver dont stop itself
 os.system("pkill -f chromedriver")
 
-if error == False or number_success > 10:
+if error == False or number_success > 1:
     print('--------------')
     print(samples_homes[0])
     print('Write ' + str(index_homes-1) + ' only_apartments homes description')

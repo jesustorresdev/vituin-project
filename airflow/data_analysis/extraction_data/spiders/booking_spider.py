@@ -32,13 +32,13 @@ class BookingSpider(scrapy.Spider):
     #get its reviews page
     def parse_hotel(self, response):
         reviewsurl = response.xpath('//a[@class="show_all_reviews_btn"]/@href')
-	url = response.urljoin(reviewsurl[0].extract())
+        url = response.urljoin(reviewsurl[0].extract())
 
         request = scrapy.Request(response.url, callback=self.parse_review)
         #It saves a fields that it will be send
 
         name = response.xpath('//div[@class="hp__hotel-title"]/h2/text()')
-        request.meta['hotel_name']=hotel
+        request.meta['hotel_name']=name
 
         #This fields are optionals. Can be empty
         address = response.xpath('//span[@class="hp_address_subtitle jq_tooltip"]/text()')
@@ -49,9 +49,9 @@ class BookingSpider(scrapy.Spider):
 
         self.pageNumber = 1
 
-        #If there is comment
-        if has_review:
-	        yield request
+        # #If there is comment
+        # if has_review:
+        yield request
 
     #and parse the reviews
     def parse_reviews(self, response):
@@ -68,10 +68,10 @@ class BookingSpider(scrapy.Spider):
             item['hotel_address']=response.meta['hotel_address']
             item['hotel_score']=response.meta['hotel_score']
 
-            review_date = rev.xpath('.//meta[@itemprop="datePublished"]/@content') 
+            review_date = rev.xpath('.//meta[@itemprop="datePublished"]/@content')
             if review_date:
                 item['review_date'] = review_date [0].extract()
-                date = datetime.datetime.strptime(item['review_date'], '%Y-%m-%d') 
+                date = datetime.datetime.strptime(item['review_date'], '%Y-%m-%d')
 
                 #if (now - date).days < 7:
 		if (now - date).days < 1000000:

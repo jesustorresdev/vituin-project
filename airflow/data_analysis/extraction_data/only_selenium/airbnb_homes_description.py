@@ -1,11 +1,15 @@
 # -*- coding: UTF-8 -*-
 
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time, os
 import unicodecsv as csv
 from elasticsearch import Elasticsearch
+sys.path.append('../')
+from utils import clear_cache
 
+PLACE =  sys.argv[1]
 
 driver = webdriver.Chrome()
 
@@ -19,7 +23,7 @@ es = Elasticsearch(
 
 
 #Fields where data will be write
-airbnb_files='airbnb_homes_description.csv'
+airbnb_files='airbnb_homes_description_'+PLACE+'.csv'
 CSVdir='/usr/local/airflow/data_analysis/classify_elastic/unstructured_data/data_files'
 airbnb_files = os.path.join(CSVdir, airbnb_files)
 
@@ -35,7 +39,7 @@ doc = {
     'size' : 10000,
     "query": {
         "match_phrase": {
-            "place": "Puerto de la Cruz"
+            "PLACE": PLACE
         }
     },
     'sort': [
@@ -204,6 +208,7 @@ if contador >= 5:
     print "ERROR"
     error = True
 
+clear_cache(driver)
 driver.close()
 #chromedriver dont stop itself
 os.system("pkill -f chromedriver")

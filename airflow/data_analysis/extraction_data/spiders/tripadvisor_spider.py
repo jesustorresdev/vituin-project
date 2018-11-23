@@ -1,8 +1,8 @@
 # import scrapy, datetime, os, re
-# #from hotel_sentiment.items import HotelSentimentItem
+# #from extraction_data.items import HotelSentimentItem
 # # utilizo la clase del review en vez de la del hotel
-# from hotel_sentiment.items import TripAdvisorReviewItem
-# from hotel_sentiment.urls import TripAdvisorHotelsURLs
+# from extraction_data.items import TripAdvisorReviewItem
+# from extraction_data.urls import TripAdvisorHotelsURLs
 # from scrapy.mail import MailSender
 # from scrapy.exceptions import CloseSpider
 #

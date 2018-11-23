@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time, os
@@ -7,6 +8,10 @@ import unicodecsv as csv
 from elasticsearch import Elasticsearch
 from selenium.webdriver.chrome.options import Options
 import ast
+sys.path.append('../')
+from utils import clear_cache
+
+PLACE =  sys.argv[1]
 
 chrome_options = Options()
 chrome_options.add_argument("--window-size=1400,1000")
@@ -23,7 +28,7 @@ es = Elasticsearch(
 
 
 #Fields where data will be write
-rentalia_files='rentalia_homes_description.csv'
+rentalia_files='rentalia_homes_description_'+PLACE+'.csv'
 CSVdir='/usr/local/airflow/data_analysis/classify_elastic/unstructured_data/data_files'
 rentalia_files = os.path.join(CSVdir, rentalia_files)
 
@@ -39,7 +44,7 @@ doc = {
     'size' : 10000,
     "query": {
         "match_phrase": {
-            "place": "Puerto de la Cruz"
+            "place": PLACE
         }
     },
     'sort': [
@@ -156,6 +161,7 @@ for n in range(0,len(urls)):
         print "ERROR"
         break
 
+clear_cache(driver)
 driver.close()
 #chromedriver dont stop itself
 os.system("pkill -f chromedriver")
