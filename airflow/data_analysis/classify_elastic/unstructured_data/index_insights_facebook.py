@@ -5,8 +5,7 @@ import datetime
 import ast
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-
-#Extract fields in dictonaries.
+import utils#Extract fields in dictonaries.
 
 def fieldsDictionaries(dic, i, item):
     for element in dic:
@@ -57,16 +56,22 @@ def createItem(row, item):
 
 filename =  sys.argv[1]
 
-f = open(filename)
+F = open(filename)
 reference = []
-es = Elasticsearch(
+ES = Elasticsearch(
    [
      'elasticsearch:9200/'
    ]
 )
 
-count = 0
-actions = []
+FILE_COUNT = 0
+ACTIONS = []
+
+EXIST_INDEX = True
+FIRST_ITERATION = False
+ELASTICSEARCH_INDEX='index_tripadvisor_hoteles'
+ELASTICSEARCH_DOC_TYPE='unstructured'
+NAMES_ITEM_FINAL = []
 
 #Search the last indexed id
 doc = {
@@ -76,7 +81,7 @@ doc = {
          }
        }
 try:
-    res = es.search(index='index_facebook_insights', body=doc, size=0)
+    res = ES.search(index='index_facebook_insights', body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -84,15 +89,17 @@ except:
     #If it's the first gruop of elements indexed
     print("First indexed")
     cont_id = 0
+    EXIST_INDEX = False
+    FIRST_ITERATION = True
 
 
 
 #now = datetime.datetime.today()
 
 
-for row in csv.reader(f):
+for row in csv.reader(F):
 
-    if(count!=0):
+    if(FILE_COUNT!=0):
         item = {}
 
         #create item to go up to Elasticsearch
@@ -108,7 +115,7 @@ for row in csv.reader(f):
         if item['creation_time'] ==  day.now - 7:
                 id = item['id']
                 #busqueda de una entrada igual
-                res = es.search(index="index_facebook", doc_type="posts",body={
+                res = ES.search(index="index_facebook", doc_type="posts",body={
                         "query": {
                                 "match_phrase": {
                                         "id": id
@@ -120,16 +127,20 @@ for row in csv.reader(f):
                         exist = hit["_source"]
 
                 if exist == '':
-                        actions.append(action)
+                        ACTIONS.append(action)
         else:
         '''
-        actions.append(action)
+        ACTIONS.append(action)
 
         cont_id += 1
-    count += 1
+    FILE_COUNT += 1
 
-if count > 0:
-        helpers.bulk(es, actions)
+if FILE_COUNT > 0:
+    if EXIST_INDEX is False:
+        es_new = utils.set_properties(NAMES_ITEM_FINAL, ELASTICSEARCH_DOC_TYPE, ELASTICSEARCH_INDEX)
+        helpers.bulk(es_new, ACTIONS)
+    else:
+        helpers.bulk(ES, ACTIONS)        helpers.bulk(ES, ACTIONS)
         print "leftovers"
         print "indexed %d" %cont_id
 

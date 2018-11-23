@@ -11,9 +11,9 @@ from datetime import datetime
 
 filename =  sys.argv[1]
 
-f = open(filename)
+F = open(filename)
 
-es = Elasticsearch(
+ES = Elasticsearch(
     [
         'elasticsearch:9200/'
     ]
@@ -21,7 +21,7 @@ es = Elasticsearch(
 now = datetime.datetime.today()
 timeAgo =  now.day - 100
 
-res = es.search(index="index_facebook_comments", body={
+res = ES.search(index="index_facebook_comments", body={
     "query": {
         "range" : {
             "timestamp" : {
@@ -39,7 +39,7 @@ id=''
 
 for hit in res['hits']['hits']:
     exist = False
-    for row in csv.reader(f):
+    for row in csv.reader(F):
 
         id = row[0]
         if hit["_source"]["id"] == id:
@@ -49,10 +49,14 @@ for hit in res['hits']['hits']:
     if not exist:
         es.update(index='index_facebook_comments',doc_type='unstructured',id=id,
                   body={"doc": {"exist_now": 0 }})
-        count += 1
+        FILE_COUNT += 1
 
-if count > 0:
-    print "Delete %d" %count
+if FILE_COUNT > 0:
+    if EXIST_INDEX is False:
+        es_new = utils.set_properties(NAMES_ITEM_FINAL, ELASTICSEARCH_DOC_TYPE, ELASTICSEARCH_INDEX)
+        helpers.bulk(es_new, ACTIONS)
+    else:
+        helpers.bulk(ES, ACTIONS)    print "Delete %d" %count
 else:
     print "Nothing was deleted"
 

@@ -5,7 +5,7 @@ import datetime
 
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-
+import utils
 #takes two arguments:
 #   the name of the file to index
 #   the starting index for the id
@@ -15,7 +15,7 @@ from elasticsearch import helpers
 filename =  sys.argv[1]
 
 
-f = open(filename)
+F = open(filename)
 reference = ["id_9flats",
              "title",
              "url",
@@ -26,14 +26,20 @@ reference = ["id_9flats",
              "numberReviews"
              ]
 
-es = Elasticsearch(
+ES = Elasticsearch(
     [
         'elasticsearch:9200/'
     ]
 )
 
-count = 0
-actions = []
+FILE_COUNT = 0
+ACTIONS = []
+
+EXIST_INDEX = True
+FIRST_ITERATION = False
+ELASTICSEARCH_INDEX='index_list_homes_9flats'
+ELASTICSEARCH_DOC_TYPE='unstructured'
+NAMES_ITEM_FINAL = []
 
 #Search the last indexed id
 doc = {
@@ -43,7 +49,7 @@ doc = {
     }
 }
 try:
-    res = es.search(index='index_list_homes_9flats', body=doc, size=0)
+    res = ES.search(index=ELASTICSEARCH_INDEX, body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -51,11 +57,13 @@ except:
     #If it's the first gruop of elements indexed
     print("First indexed")
     cont_id = 0
+    EXIST_INDEX = False
+    FIRST_ITERATION = True
 
 j = 0
-for row in csv.reader(f):
+for row in csv.reader(F):
     j +=1
-    if(count!=0):
+    if(FILE_COUNT!=0):
         item = {}
 
         try:
@@ -63,13 +71,12 @@ for row in csv.reader(f):
                 item[reference[i]] = row[i]
 
             if item['web'] is '':
-                item['web'] = '9flatsZ'
-            item['upload_date']=datetime.datetime.today()
+                item['web'] = '9flats'
             item['place'] = 'Puerto de la Cruz'
 
             res ={}
             try:
-                res = es.search(index="index_list_homes_9flats", body={
+                res = ES.search(index=ELASTICSEARCH_INDEX, body={
                     "query": {
                         "match_phrase": {
                             "id_9flats": item['id_9flats'] #Use the key to compare
@@ -81,30 +88,40 @@ for row in csv.reader(f):
 
             if not res or res['hits']['hits'] == []: #If there isn't result
 
+                if not EXIST_INDEX and FIRST_ITERATION is True:
+                    NAMES_ITEM_FINAL = utils.get_names_item_final(item)
+                    FIRST_ITERATION=False
+
+                item['upload_date']=datetime.datetime.today()
+
                 action = {
                     "_index": "index_list_homes_9flats",
-                    "_type": "unstructured",
+                    "_type": ELASTICSEARCH_DOC_TYPE,
                     "_id": cont_id,
                     "_source": item
                 }
                 print item
-                actions.append(action)
+                ACTIONS.append(action)
 
                 cont_id += 1
             else:
-                print 'repeat ', count
+                print 'repeat ', FILE_COUNT
 
         except Exception as error:
-            print 'Error', error, ', en', count
+            print 'Error', error, ', en', FILE_COUNT
             print '------'
             pass
 
-    count += 1
+    FILE_COUNT += 1
 
 
 
-if count > 0:
-    helpers.bulk(es, actions)
+if FILE_COUNT > 0:
+    if EXIST_INDEX is False:
+        es_new = utils.set_properties(NAMES_ITEM_FINAL, ELASTICSEARCH_DOC_TYPE, ELASTICSEARCH_INDEX)
+        helpers.bulk(es_new, ACTIONS)
+    else:
+        helpers.bulk(ES, ACTIONS)
     print "leftovers"
     print "indexed %d" %cont_id
 

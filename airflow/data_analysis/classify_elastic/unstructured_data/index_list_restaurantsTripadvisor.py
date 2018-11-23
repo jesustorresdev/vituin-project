@@ -5,7 +5,7 @@ import datetime
 
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-
+import utils
 #takes two arguments:
 #   the name of the file to index
 #   the starting index for the id
@@ -14,20 +14,25 @@ from elasticsearch import helpers
 
 filename =  sys.argv[1]
 
-place_type = ["Puerto de la Cruz", "Tenerife","Canarias"]
+place_type = ["Puerto de la Cruz", "Tenerife","Canarias", "Adeje"]
 place = place_type[int(sys.argv[2])]
 
-f = open(filename)
+F = open(filename)
 
-es = Elasticsearch(
+ES = Elasticsearch(
    [
      'elasticsearch:9200/'
    ]
 )
 
-count = 0
-actions = []
+FILE_COUNT = 0
+ACTIONS = []
 
+EXIST_INDEX = True
+FIRST_ITERATION = False
+ELASTICSEARCH_INDEX='index_tripadvisor_restaurantes'
+ELASTICSEARCH_DOC_TYPE='unstructured'
+NAMES_ITEM_FINAL = []
 #Search the last indexed id
 doc = {
         'size' : 10000,
@@ -36,7 +41,7 @@ doc = {
          }
        }
 try:
-    res = es.search(index='index_tripadvisor_restaurants_establishments', body=doc, size=0)
+    res = ES.search(index=ELASTICSEARCH_INDEX, body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -44,13 +49,15 @@ except:
     #If it's the first gruop of elements indexed
     print("First indexed")
     cont_id = 0
+    EXIST_INDEX = False
+    FIRST_ITERATION = True
+    EXIST_INDEX = False
+    FIRST_ITERATION = True
+for row in csv.reader(F):
 
-for row in csv.reader(f):
-
-    if(count!=0):
+    if(FILE_COUNT!=0):
         item={}
 
-        item['insert_time']=datetime.datetime.today()
         try:
             item['service']=float(row[0])#service
         except:
@@ -88,21 +95,31 @@ for row in csv.reader(f):
         # item['key']=str(row[20])#key
         item['place'] = place
 
-	action = {
-        	"_index": "index_tripadvisor_restaurants_establishments",
-                "_type": "unstructured",
-            	"_id": cont_id,
-           	"_source": item
-            	}
+        if not EXIST_INDEX and FIRST_ITERATION is True:
+            NAMES_ITEM_FINAL = utils.get_names_item_final(item)
+            FIRST_ITERATION=False
 
-	actions.append(action)
-    	cont_id += 1
+    item['upload_time']=datetime.datetime.today()
 
-    count += 1
+    action = {
+        "_index": ELASTICSEARCH_INDEX,
+        "_type": ELASTICSEARCH_DOC_TYPE,
+        "_id": cont_id,
+        "_source": item
+            }
 
-if count > 0:
-	helpers.bulk(es, actions)
-	print "leftovers"
-	print "indexed %d" %cont_id
+    ACTIONS.append(action)
+    cont_id += 1
+
+    FILE_COUNT += 1
+
+if FILE_COUNT > 0:
+    if EXIST_INDEX is False:
+        es_new = utils.set_properties(NAMES_ITEM_FINAL, ELASTICSEARCH_DOC_TYPE, ELASTICSEARCH_INDEX)
+        helpers.bulk(es_new, ACTIONS)
+    else:
+        helpers.bulk(ES, ACTIONS)
+    print "leftovers"
+    print 'indexed %d' % cont_id
 
 

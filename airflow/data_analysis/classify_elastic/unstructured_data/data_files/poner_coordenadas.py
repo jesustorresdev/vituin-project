@@ -5,7 +5,7 @@ import datetime
 
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-
+import utils
 #takes two arguments:
 #   the name of the file to index
 #   the starting index for the id
@@ -16,7 +16,7 @@ filename =  sys.argv[1]
 filename_con =  sys.argv[2]
 
 
-f = open(filename)
+F = open(filename)
 f_con = open(filename_con)
 reference = ["id_homeway",
              "type_residence",
@@ -33,14 +33,20 @@ reference = ["id_homeway",
              "place"
              ]
 
-es = Elasticsearch(
+ES = Elasticsearch(
     [
         'elasticsearch:9200/'
     ]
 )
 
-count = 0
-actions = []
+FILE_COUNT = 0
+ACTIONS = []
+
+EXIST_INDEX = True
+FIRST_ITERATION = False
+ELASTICSEARCH_INDEX='index_tripadvisor_hoteles'
+ELASTICSEARCH_DOC_TYPE='unstructured'
+NAMES_ITEM_FINAL = []
 
 #Search the last indexed id
 doc = {
@@ -50,7 +56,7 @@ doc = {
     }
 }
 try:
-    res = es.search(index='index_list_description_homeway', body=doc, size=0)
+    res = ES.search(index='index_list_description_homeway', body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -58,11 +64,13 @@ except:
     #If it's the first gruop of elements indexed
     print("First indexed")
     cont_id = 0
+    EXIST_INDEX = False
+    FIRST_ITERATION = True
 
 j = 0
-for row in csv.reader(f):
+for row in csv.reader(F):
     j +=1
-    if(count!=0):
+    if(FILE_COUNT!=0):
         item = {}
 
         try:
@@ -90,7 +98,7 @@ for row in csv.reader(f):
             sys.exit()
             res ={}
             try:
-                res = es.search(index="index_list_description_homeway", body={
+                res = ES.search(index="index_list_description_homeway", body={
                     "query": {
                         "match_phrase": {
                             "id_homeway": item['id_homeway'] #Use the key to compare
@@ -102,14 +110,18 @@ for row in csv.reader(f):
 
             if not res or res['hits']['hits'] == []: #If there isn't result
 
-                action = {
+                if not EXIST_INDEX and FIRST_ITERATION is True:
+            NAMES_ITEM_FINAL = utils.get_names_item_final(item)
+            FIRST_ITERATION=False
+
+        action = {
                     "_index": "index_list_description_homeway",
-                    "_type": "unstructured",
+                    "_type": ELASTICSEARCH_DOC_TYPE,
                     "_id": cont_id,
                     "_source": item
                 }
 
-                actions.append(action)
+                ACTIONS.append(action)
 
                 cont_id += 1
             else:
@@ -120,14 +132,18 @@ for row in csv.reader(f):
 
                 if same is False:
 
-                    action = {
+                    if not EXIST_INDEX and FIRST_ITERATION is True:
+            NAMES_ITEM_FINAL = utils.get_names_item_final(item)
+            FIRST_ITERATION=False
+
+        action = {
                         "_index": "index_list_description_homeway",
-                        "_type": "unstructured",
+                        "_type": ELASTICSEARCH_DOC_TYPE,
                         "_id": cont_id,
                         "_source": item
                     }
 
-                    actions.append(action)
+                    ACTIONS.append(action)
 
                     cont_id += 1
 
@@ -136,12 +152,16 @@ for row in csv.reader(f):
             print '------'
             pass
 
-    count += 1
+    FILE_COUNT += 1
 
 
 
-# if count > 0:
-#     helpers.bulk(es, actions)
+# if FILE_COUNT > 0:
+    if EXIST_INDEX is False:
+        es_new = utils.set_properties(NAMES_ITEM_FINAL, ELASTICSEARCH_DOC_TYPE, ELASTICSEARCH_INDEX)
+        helpers.bulk(es_new, ACTIONS)
+    else:
+        helpers.bulk(ES, ACTIONS)#     helpers.bulk(ES, ACTIONS)
 #     print "leftovers"
 #     print "indexed %d" %cont_id
 

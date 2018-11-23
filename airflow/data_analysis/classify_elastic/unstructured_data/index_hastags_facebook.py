@@ -2,7 +2,7 @@ import sys
 import unicodecsv as csv
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-
+import utils
 #takes two arguments:
 #   the name of the file to index
 #   the starting index for the id
@@ -25,7 +25,7 @@ def hastags_of_message(res, id):
 
     return  result
 
-f = open(filename)
+F = open(filename)
 reference = ["hastag",
              "parent",
              "social_network",
@@ -37,7 +37,7 @@ reference = ["hastag",
              "number_of_this_hastags_in_message"
              ]
 
-es = Elasticsearch(
+ES = Elasticsearch(
     [
         'elasticsearch:9200/'
     ]
@@ -51,7 +51,7 @@ doc = {
     }
 }
 try:
-    res = es.search(index='index_facebook_hastags', body=doc, size=0)
+    res = ES.search(index='index_facebook_hastags', body=doc, size=0)
     #The next element indexed going to be the next id doesn't used
     cont_id = int(res['hits']['total'])
 
@@ -59,16 +59,24 @@ except:
     #If it's the first gruop of elements indexed
     print("First indexed")
     cont_id = 0
+    EXIST_INDEX = False
+    FIRST_ITERATION = True
 
 
-count = 0
-actions = []
+FILE_COUNT = 0
+ACTIONS = []
+
+EXIST_INDEX = True
+FIRST_ITERATION = False
+ELASTICSEARCH_INDEX='index_tripadvisor_hoteles'
+ELASTICSEARCH_DOC_TYPE='unstructured'
+NAMES_ITEM_FINAL = []
 
 messages_visited = {}
 
-for row in csv.reader(f):
+for row in csv.reader(F):
 
-    if(count!=0):
+    if(FILE_COUNT!=0):
         item = {}
 
         for i in range(len(reference)):
@@ -76,7 +84,7 @@ for row in csv.reader(f):
 
         #ID parent in facebook
         parent = item['parent']
-        res = es.search(index="index_facebook_hastags", body={
+        res = ES.search(index="index_facebook_hastags", body={
             "query": {
                 "match_phrase": {
                     "id_parent": parent
@@ -95,7 +103,7 @@ for row in csv.reader(f):
 
         #ID parent in facebook
         key = item['key']
-        res = es.search(index="index_facebook_hastags", body={
+        res = ES.search(index="index_facebook_hastags", body={
             "query": {
                 "match_phrase": {
                     "id_parent": key
@@ -118,14 +126,18 @@ for row in csv.reader(f):
                 "_source": item
             }
 
-            actions.append(action)
+            ACTIONS.append(action)
 
             cont_id += 1
 
-    count += 1
+    FILE_COUNT += 1
 
-if count > 0:
-    helpers.bulk(es, actions)
+if FILE_COUNT > 0:
+    if EXIST_INDEX is False:
+        es_new = utils.set_properties(NAMES_ITEM_FINAL, ELASTICSEARCH_DOC_TYPE, ELASTICSEARCH_INDEX)
+        helpers.bulk(es_new, ACTIONS)
+    else:
+        helpers.bulk(ES, ACTIONS)
     print "leftovers"
     print "indexed %d" %cont_id
 
