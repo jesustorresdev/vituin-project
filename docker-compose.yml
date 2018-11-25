@@ -1,34 +1,25 @@
-version: '2'
+version: '3.2'
 
 services:
-
-
   elasticsearch:
-    build:
-      context: elasticsearch/
+    imagen: elasticsearch:6.5.1
     volumes:
-      - /home/sdiaz/vituin_project/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-      - /home/sdiaz/vituin_project/elasticsearch/data/:/usr/share/elasticsearch/data/
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./elasticsearch/data/:/usr/share/elasticsearch/data/:rw
     ports:
       - "9200:9200"
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - elk
 
   kibana:
-    build:
-      context: kibana/
+    image: kibana:6.5.1
     volumes:
-      - /home/sdiaz/vituin_project/kibana/config/:/usr/share/kibana/config:ro
+      - ./kibana/config/:/usr/share/kibana/config:ro
     ports:
       - "5601:5601"
-    networks:
-      - elk
     depends_on:
       - elasticsearch
-
 
   postgres:
      image: postgres:9.6
@@ -36,8 +27,7 @@ services:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
       - POSTGRES_DB=airflow
-     networks:
-      - elk
+
   airflow:
       build: airflow/
       volumes:
@@ -51,8 +41,6 @@ services:
       ports:
           - "8080:8080"
       command: webserver
-      networks:
-          - elk
 
   dashboard:
       build: dashboard/
@@ -64,15 +52,3 @@ services:
       ports:
           - "80:80"
           - "8050:8050"
-      networks:
-          - elk
-
-networks:
-
-  elk:
-    driver: bridge
-
-
-
-
-
