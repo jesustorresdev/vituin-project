@@ -28,7 +28,7 @@ table_start_and_end = {
 type_value = int
 
 attributes_to_fixed={
-    "type": "Percnotaciones"
+    "type": "Pernoctaciones"
 }
 
 

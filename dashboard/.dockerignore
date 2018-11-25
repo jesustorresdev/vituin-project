@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.git*
+
+/vituin-dashboard/assets/
+/vituin-dashboard/components/
+/vituin-dashboard/**/node_modules/
+/vituin-dashboard/dev-environment.yml
+/vituin-dashboard/dev-components.sh
+/vituin-dashboard/package*.json
+/vituin-dashboard/webpack*.js
