@@ -4,7 +4,7 @@ sys.path.append('../')
 
 from structured_data import index_excels_Istac
 
-excel = "excels_visitantes/tcpuerto201809.xlsx"
+excel = "excels_visitantes/tcpuerto201810.xlsx"
 sheet = 39
 name_index = "index_indice_censal_webtenerife"
 type_index = "structured"
@@ -35,11 +35,16 @@ add_column_value_to_previous_item = [{
     "name":"variación interanual"
 }]
 
+lowercase_letters = ["month"]
+
+fields_to_change = {'total turistas' : ['accomodation','TOTAL TURISTAS']}
+
 involved_elements =[{"name":"Santa Cruz","number":4,"type":"less"}]
 irregular_table = [{"type":"sum", "name_item":"subtype_cols", "number":4, "involved_elements": involved_elements}]
 
 value_percentage = True
 
 index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, value_percentage = value_percentage, \
-                        irregular_table = irregular_table,  add_column_value_to_previous_item = add_column_value_to_previous_item)
+                        irregular_table = irregular_table,  add_column_value_to_previous_item = add_column_value_to_previous_item, \
+                        lowercase_letters = lowercase_letters, fields_to_change =  fields_to_change)
 

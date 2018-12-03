@@ -1,47 +1,48 @@
-import scrapy, datetime, os, re
+# import scrapy, datetime, os, re
 #from extraction_data.items import HotelSentimentItem
 # utilizo la clase del review en vez de la del hotel
 from extraction_data.items import TripAdvisorReviewItem
-from extraction_data.urls import TripAdvisorHotelsURLs
 from scrapy.mail import MailSender
 from scrapy.exceptions import CloseSpider
 from elasticsearch import Elasticsearch
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-sys.path.append('../')
-from utils import clear_cache
+
+from scrapy.spiders import Spider
 
 exceptionErrorItem=False
 
 #TODO use loaders
-class TripadvisorSpider(scrapy.Spider):
+class TripadvisorSpider(Spider):
 
-    name = "tripadvisor_singlehotel"
+    name = "tripadvisor_reviews"
     #start_urls = TripAdvisorHotelsURLs()
     start_urls = []
     es = Elasticsearch(
-        [
-            'elastic:vituinproject@elasticsearch:9200/',
-        ]
+       [
+          'elastic:vituinproject@elasticsearch:9200/',
+       ]
     )
     #SearchAllEstablishments
     doc = {
-        'size' : 10000,
-        'query': {
-            'match_all' : {}
-        }
-    }
+            'size' : 10000,
+            'query': {
+                 'match_all' : {}
+             }
+          }
     res = es.search(index='index_tripadvisor_hoteles', doc_type='unstructured', body=doc,scroll='1m')
 
     #creamos lista de urls
     for hit in res['hits']['hits']:
-        start_urls=start_urls + [hit["_source"]["url"]]
+            start_urls=start_urls + [hit["_source"]["url"]]
 
-
+    print('start_urls--->',len(start_urls))
+    print ''
+    print ''
+    print ''
+    print ''
     start_urls = [
         # "https://www.tripadvisor.co.uk/Hotel_Review-g187481-d10437912-Reviews-Hotel_Weare_La_Paz-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html",
-        # "https://www.tripadvisor.co.uk/Hotel_Review-g187481-d567656-Reviews-Hotel_Tosca-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
-        "https://www.tripadvisor.co.uk/Hotel_Review-g187481-d252888-Reviews-Hotel_Botanico_The_Oriental_Spa_Garden-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+       # "https://www.tripadvisor.co.uk/Hotel_Review-g187481-d567656-Reviews-Hotel_Tosca-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
+       "https://www.tripadvisor.co.uk/Hotel_Review-g187481-d252888-Reviews-Hotel_Botanico_The_Oriental_Spa_Garden-Puerto_de_la_Cruz_Tenerife_Canary_Islands.html"
     ]
 
 
@@ -53,18 +54,18 @@ class TripadvisorSpider(scrapy.Spider):
         request = scrapy.Request(response.url, callback=self.parse_review)
         es = Elasticsearch(
             [
-                'elastic:vituinproject@elasticsearch:9200/',
+               'elastic:vituinproject@elasticsearch:9200/',
             ]
         )
 
         #Make a query to Elasticsearch using the URL
         res = es.search(index="index_tripadvisor_hoteles", doc_type="unstructured",body={
-            "query": {
-                "match_phrase": {
-                    "url": response.url
-                }
-            }
-        })
+        	"query": {
+                	"match_phrase": {
+                        	"url": response.url
+                        	}
+                	}
+       		})
 
 
         hotel =  ''
@@ -91,7 +92,7 @@ class TripadvisorSpider(scrapy.Spider):
         request.meta['hotel_locality_address']=locality
         #if there are comment. If there isnt, it doesnt pass
         if has_review:
-            yield request
+                yield request
 
 
     #to get the full review content I open its page, because I don't get the full content on the main page
@@ -115,21 +116,21 @@ class TripadvisorSpider(scrapy.Spider):
                 now = datetime.datetime.combine(datetime.datetime.today(), datetime.time(0, 0))
                 item['review_date']= date
 
-                #                if (now - date).days < 100000:
+#                if (now - date).days < 100000:
                 if (now - date).days < 7:
 
-                    #                    t = response.xpath('//div[@class="quote isNew"]/a/span/text()')
+#                    t = response.xpath('//div[@class="quote isNew"]/a/span/text()')
                     t = rev.xpath('.//div[starts-with(@class,"quote")]/a/span/text()')
                     if t:
-                        item['title'] = t[0].extract()
+                         item['title'] = t[0].extract()
                     else:
-                        listErrors=listErrors + ['title']
+                         listErrors=listErrors + ['title']
 
                     c = rev.xpath('.//div[@class="entry"]/p/text()')
                     if c:
-                        item['content'] = c.extract()
+                         item['content'] = c.extract()
                     else:
-                        listErrors=listErrors + ['content']
+                         listErrors=listErrors + ['content']
                     print '++++++++++++++++++++++'
                     print '++++++++++++++++++++++'
                     print '++++++++++++++++++++++'
