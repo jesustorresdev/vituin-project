@@ -46,7 +46,7 @@ attribute_to_split = [{
 
 
 attributes_to_fixed={
-    "shop place": "Canarias",
+    "shop place": "En Canarias",
 }
 
 
