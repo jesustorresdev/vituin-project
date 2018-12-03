@@ -1,0 +1,3 @@
+[submodule "dashboard/vituin-dashboard"]
+	path = dashboard/vituin-dashboard
+	url = git@vituin-dashboard:ull-isaatc/vituin-dashboard.git

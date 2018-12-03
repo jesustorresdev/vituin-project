@@ -1,78 +1,69 @@
-version: '2'
+version: '3.2'
 
 services:
-
-
   elasticsearch:
-    build:
-      context: elasticsearch/
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.0 
     volumes:
-      - /home/sdiaz/vituin_project/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-      - /home/sdiaz/vituin_project/elasticsearch/data/:/usr/share/elasticsearch/data/
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./elasticsearch/data/:/usr/share/elasticsearch/data/
     ports:
       - "9200:9200"
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - elk
 
   kibana:
-    build:
-      context: kibana/
+    image: docker.elastic.co/kibana/kibana-oss:6.1.0
     volumes:
-      - /home/sdiaz/vituin_project/kibana/config/:/usr/share/kibana/config:ro
+      - ./kibana/config/:/usr/share/kibana/config:ro
     ports:
       - "5601:5601"
-    networks:
-      - elk
     depends_on:
       - elasticsearch
 
-
   postgres:
-     image: postgres:9.6
-     environment:
+    image: postgres:9.6
+    environment:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
       - POSTGRES_DB=airflow
-     networks:
-      - elk
+
   airflow:
-      build: airflow/
-      volumes:
-      - /home/sdiaz/vituin_project/airflow/data_analysis:/usr/local/airflow/data_analysis
-      - /home/sdiaz/vituin_project/airflow/dags:/usr/local/airflow/dags
-      restart: always
-      depends_on:
-          - postgres
-      environment:
-          - LOAD_EX=y
-      ports:
-          - "8080:8080"
-      command: webserver
-      networks:
-          - elk
+    build: airflow/
+    volumes:
+      - ./airflow/data_analysis:/usr/local/airflow/data_analysis
+      - ./airflow/dags:/usr/local/airflow/dags
+    restart: always
+    environment:
+      - LOAD_EX=y
+    ports:
+      - "8080:8080"
+    command: webserver
+    depends_on:
+      - postgres
 
   dashboard:
-      build: dashboard/
-      volumes:
-      - /home/sdiaz/dash.conf:/etc/apache2/conf-available/dash.conf
-      - /home/sdiaz/extra_components-0.0.1-py2.7.egg:/usr/local/lib/python2.7/dist-packages/
-      - /home/sdiaz/vituin_project/dashboard/vituin_dashboard/web:/var/www/html
-      - /home/sdiaz/vituin_project/dashboard/vituin_dashboard/graficas:/var/local/plotly
-      ports:
-          - "80:80"
-          - "8050:8050"
-      networks:
-          - elk
+    build:
+      context: dashboard/
+      dockerfile: Dockerfile
+    volumes:
+      - ./dashboard/config:/home/vituin-dashboard/instance:ro
+    command: ["./wait-for-elasticsearch.sh", "http://elasticsearch:9200", "--", "./boot.sh"]
+    environment:
+      WEB_CONCURRENCY: 17
+      VITUIN_DASHBOARD_SETTINGS: vituin_dashboard.conf
+    expose:
+      - "5000"
+    depends_on:
+      - elasticsearch
 
-networks:
-
-  elk:
-    driver: bridge
-
-
-
-
+  nginx:
+    restart: always
+    build:
+      context: dashboard/
+      dockerfile: Dockerfile.nginx
+    ports:
+      - 0.0.0.0:80:80
+    depends_on:
+      - dashboard
 
