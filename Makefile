@@ -27,3 +27,11 @@ check-network-config-details:
 update:
 	test -n "$(c)"  # $$c=container
 	docker-compose up -d --no-deps --build $(c)
+
+es-health:
+	@echo "== Elasticsearch cluster status"
+	@curl localhost:9200/_cluster/health
+	@echo "== Elasticsearch indices health"
+	@curl 'localhost:9200/_cluster/health?level=indices&pretty'
+	@echo "== Elasticsarch shards"
+	@curl localhost:9200/_cat/shards?h=index,shard,prirep,state,unassigned.reason
