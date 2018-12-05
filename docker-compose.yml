@@ -6,11 +6,12 @@ services:
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
       - ./elasticsearch/data/:/usr/share/elasticsearch/data/
+    user: "1006"
     ports:
       - "9200:9200"
       - "9300:9300"
     environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m -Des.enforce.bootstrap.checks=true"
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.1.0
