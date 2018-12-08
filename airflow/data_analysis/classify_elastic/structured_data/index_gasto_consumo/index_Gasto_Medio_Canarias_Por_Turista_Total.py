@@ -47,7 +47,7 @@ attribute_to_split = [{
 
 attributes_to_fixed={
     "shop place": "En Canarias",
-    "period":"Total"
+    "period":"TOTAL"
 }
 
 fields_to_change = {'TOTAL PAISES' : ['place_tourist_residence','TOTAL']}

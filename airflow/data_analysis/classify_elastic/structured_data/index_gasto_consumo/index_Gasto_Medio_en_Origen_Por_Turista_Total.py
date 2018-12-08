@@ -47,7 +47,7 @@ attribute_to_split = [{
 
 attributes_to_fixed={
     "shop place": "En origen",
-    "period":"Total"
+    "period":"TOTAL"
 }
 
 # lowercase_letters = ["place"]
