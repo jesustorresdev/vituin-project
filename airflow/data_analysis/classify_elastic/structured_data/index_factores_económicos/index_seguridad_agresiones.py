@@ -27,10 +27,9 @@ table_start_and_end = {
 type_value = float
 
 attributes_to_fixed={
-    "type": "agresiones",
+    "type": "Agresiones",
 }
 
-fields_to_change = {'TOTAL' : ['answer','Total']}
 
 index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, fields_to_change = fields_to_change)
 
