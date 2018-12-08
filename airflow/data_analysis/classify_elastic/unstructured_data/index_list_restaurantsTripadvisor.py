@@ -99,17 +99,17 @@ for row in csv.reader(F):
             NAMES_ITEM_FINAL = utils.get_names_item_final(item)
             FIRST_ITERATION=False
 
-    item['upload_time']=datetime.datetime.today()
+        item['upload_time']=datetime.datetime.today()
 
-    action = {
-        "_index": ELASTICSEARCH_INDEX,
-        "_type": ELASTICSEARCH_DOC_TYPE,
-        "_id": cont_id,
-        "_source": item
-            }
+        action = {
+            "_index": ELASTICSEARCH_INDEX,
+            "_type": ELASTICSEARCH_DOC_TYPE,
+            "_id": cont_id,
+            "_source": item
+                }
 
-    ACTIONS.append(action)
-    cont_id += 1
+        ACTIONS.append(action)
+        cont_id += 1
 
     FILE_COUNT += 1
 

@@ -9,7 +9,7 @@ def change_field_name_json(field, fs_change):
 def getAttribute_Fixed(item, attr_fix):
 
     for k,v in attr_fix.items():
-        item[k]=v.decode('UTF-8')
+        item[k]=v
 
     return item
 
@@ -192,9 +192,13 @@ def getCoordinates(coordinates,item):
     result_coordinates = {'lat':'','lng':''}
 
     place = ''
+    print 'ehhh',item
     for field in coordinates:
         if field in item:
-            place += str(item[field].encode('UTF-8'))                   #The place searched is the composed to the fields to get the coordinates
+            try:
+                place += item[field].encode('UTF-8')                  #The place searched is the composed to the fields to get the coordinates
+            except:
+                place += str(item[field])                   #The place searched is the composed to the fields to get the coordinates
             place += ' '
     print place
     api_key = 'AIzaSyD2owaTzJTWi9m1f2QqAlJ1S0hfFT3nT0w'

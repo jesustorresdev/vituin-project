@@ -33,7 +33,7 @@ attributes_to_fixed={
 
 field_region = ['place_origin']
 
-fields_to_change = {'TOTAL AEROPUERTOS DE ORIGEN' : 'España'}
+fields_to_change = {'TOTAL AEROPUERTOS DE ORIGEN' : ['place_origin','España']}
 
 
 attribute_to_split_remove = [{

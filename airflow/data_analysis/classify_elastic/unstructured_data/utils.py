@@ -91,69 +91,60 @@ def search_elastic(index,doc_type):
 
     return elements
 
-def add_restriction(constraints, set_options, fields_restrictions):
+def add_restriction(constraint, set_options, fields_restrictions):
 
-    constraints.update(fields_restrictions)
+    constraint.update(fields_restrictions)
     i=1
     for k, v in fields_restrictions.items():
         set_options.update({
             'restriction'+str(i) : k
         })
         i+=1
-    return [constraints, set_options]
+    return [constraint, set_options]
 
 
 #If it should sum fields
 def get_sum_field(search,field, **kwords):
 
-    if 'constraints' not in kwords:
-        data = {field:[]}
-        data[field].append(0)
+    if 'constraint' not in kwords:
+        data = 0
         for entry in search:
-            data[field][0] += entry['_source'][field]
+            data += float(entry['_source'][field])
 
     else:
-        data = {}                                                     #We create a variable with values to return
-        constraints = kwords['constraints']
+        data = 0                                                   #We create a variable with values to return
+        constraint = kwords['constraint']
         name_options = kwords['name_options']
         restriction = name_options['restriction1']
 
-
-        for field_res in constraints[restriction]:
-            data.update({field_res:[]})                                     #For each restriction we create a group of values results
-            data[field_res].append(0)
-            for entry in search:
-                if entry['_source'][restriction] == field_res:
-                    data[field_res][0] += entry['_source'][field]
+        for entry in search:
+            if entry['_source'][restriction] == constraint:
+                data += entry['_source'][field]
 
     return data
 
 def get_count(search,field, **kwords):
-    if 'constraints' not in kwords:
-        data = {field:[]}
-        data[field].append(0)
+    if 'constraint' not in kwords:
+        data = 0
         for entry in search:
-            data[field][0] += entry['_source'][field]
+            data += float(entry['_source'][field])
 
     else:
-        data = []                                                     #We create a variable with values to return
-        constraints = kwords['constraints']
+        data = 0                                                     #We create a variable with values to return
+        constraint = kwords['constraint']
         name_options = kwords['name_options']
-        i = 0
         if 'restriction1' in name_options:
             restriction = name_options['restriction1']
         else:
             restriction = name_options[field]
 
-        for field_res in constraints[restriction]:
-            data.append(0)
-            for entry in search:
-                if 'restriction1' in name_options:
-                    if entry['_source'][restriction] == field_res:
-                        data[i] += 1
-                else:
-                    data[i] += 1
-            i+=1
+        for entry in search:
+            if 'restriction1' in name_options:
+                if entry['_source'][restriction] == constraint:
+                    data += 1
+            else:
+                data += 1
+
     return data
 
 

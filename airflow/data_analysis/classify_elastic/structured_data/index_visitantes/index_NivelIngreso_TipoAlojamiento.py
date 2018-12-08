@@ -34,7 +34,7 @@ attribute_to_split= [{
 }]
 
 
-fields_to_change = {'TOTAL NIVELES DE INGRESOS' : 'Total', 'TOTAL ALOJAMIENTOS' : 'Total'}
+fields_to_change = {'TOTAL ALOJAMIENTOS':['accommodation','TOTAL'],'TOTAL NIVELES DE INGRESOS':['income','TOTAL']}
 
 type_value = int
 

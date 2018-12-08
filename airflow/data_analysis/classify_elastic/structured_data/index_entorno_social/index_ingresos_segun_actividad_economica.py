@@ -24,7 +24,7 @@ table_start_and_end = {
 }
 
 
-fields_to_change = {'CANARAS':'Canarias'}
+fields_to_change = {'CANARAS':['place','Canarias']}
 
 type_value = float
 

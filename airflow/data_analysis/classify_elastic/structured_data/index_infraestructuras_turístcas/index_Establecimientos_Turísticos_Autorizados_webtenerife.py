@@ -4,7 +4,7 @@ sys.path.append('../')
 
 from structured_data import index_excels_Istac
 
-excel = "excels_visitantes/tcpuerto201810.xlsx"
+excel = "excels_visitantes/tcpuerto201809.xlsx"
 sheet = 67
 name_index = "index_establecimientos_turisticos_autorizados_webtenerife"
 type_index = "structured"
@@ -27,6 +27,8 @@ table_start_and_end = {
 attributes_to_fixed={
     "place": "Puerto de la Cruz"
 }
+
+lowercase_letters = ["month"]
 
 type_value = int
 

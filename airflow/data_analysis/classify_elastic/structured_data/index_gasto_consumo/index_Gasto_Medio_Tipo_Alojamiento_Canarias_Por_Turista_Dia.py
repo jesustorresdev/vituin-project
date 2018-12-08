@@ -50,7 +50,7 @@ attributes_to_fixed={
 }
 
 
-fields_to_change = {'TOTAL ALOJAMIENTOS' : ['accomodation','Total']}
+fields_to_change = {'TOTAL ALOJAMIENTOS' : ['accommodation','Total']}
 
 index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, attribute_to_split_remove = attribute_to_split_remove, attribute_to_split = attribute_to_split, fields_to_change = fields_to_change)
 

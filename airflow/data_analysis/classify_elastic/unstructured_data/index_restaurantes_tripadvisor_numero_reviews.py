@@ -77,40 +77,47 @@ for field in FIELDS:
     fix_restrictions = utils.add_restriction(constraints, set_options, fields_restrictions)
     constraints = fix_restrictions[0]
     set_options = fix_restrictions[1]
-    if field == FIELDS[0]:
-        data = utils.get_sum_field(res, filter_field, constraints = constraints, name_options = set_options)
-    else:
-        sum = utils.get_sum_field(res, filter_field, constraints = constraints, name_options = set_options)
-        count = utils.get_count(res, filter_field, constraints = constraints, name_options = set_options)
-        for i in range(0, len(count)):
-            sum[constraints[set_options['restriction1']][i]][0] = int(sum[constraints[set_options['restriction1']][i]][0] / count[i])
-        data = sum
+    exist_restriction = True
+    i = 1
+    while exist_restriction:
+        if not 'restriction'+str(i) in set_options:
+            exist_restriction = False
+        else:
+            for constraint in constraints[set_options['restriction'+str(i)]]:
+                if field == FIELDS[0]:
+                    data = utils.get_sum_field(res, filter_field, constraint = constraint, name_options = set_options)
+                else:
+                    sum = utils.get_sum_field(res, filter_field, constraint = constraint, name_options = set_options)
+                    count = utils.get_count(res, filter_field, constraint = constraint, name_options = set_options)
+                    if count!=0:
+                        data = float(sum) / float(count)
+                    else:
+                        data = 0
 
 
+                item = {}
+                item['measure'] = field
 
-    for entry in data:
-        item = {}
-        item['measure'] = field
+                item['place'] = constraint
+                item['value'] = int(data)
 
-        item['place'] = entry
-        item['value'] = int(data[entry][0])
+                if not EXIST_INDEX and FIRST_ITERATION is True:
+                    NAMES_ITEM_FINAL = utils.get_names_item_final(item)
+                    FIRST_ITERATION=False
+                print item
+                item['upload_date']=datetime.datetime.today()
+                action = {
+                    "_index": ELASTICSEARCH_INDEX,
+                    "_type": ELASTICSEARCH_DOC_TYPE,
+                    "_id": cont_id,
+                    "_source": item
+                }
 
-        if not EXIST_INDEX and FIRST_ITERATION is True:
-            NAMES_ITEM_FINAL = utils.get_names_item_final(item)
-            FIRST_ITERATION=False
+                ACTIONS.append(action)
 
-        item['upload_date']=datetime.datetime.today()
-        action = {
-            "_index": ELASTICSEARCH_INDEX,
-            "_type": ELASTICSEARCH_DOC_TYPE,
-            "_id": cont_id,
-            "_source": item
-        }
-
-        ACTIONS.append(action)
-
-        cont_id += 1
-        FILE_COUNT +=1
+                cont_id += 1
+            i+=1
+    FILE_COUNT +=1
 
 
 if FILE_COUNT > 0:
@@ -120,5 +127,5 @@ if FILE_COUNT > 0:
     else:
         helpers.bulk(ES, ACTIONS)
     print "leftovers"
-    print "indexed %d" %cont_id
+    print "indexed", str(cont_id), ",", ELASTICSEARCH_DOC_TYPE
 

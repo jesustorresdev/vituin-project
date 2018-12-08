@@ -42,7 +42,7 @@ add_column_value_to_previous_item = [{
 
 lowercase_letters = ["month"]
 
-fields_to_change = {'total turistas' : ['accomodation','TOTAL TURISTAS']}
+fields_to_change = {'total turistas' : ['accomodation','TOTAL TURISTAS'], 'Tenerife':['place', 'TENERIFE']}
 
 involved_elements =[{"name":"Santa Cruz","number":4,"type":"less"}]
 irregular_table = [{"type":"sum", "name_item":"subtype_cols", "number":4, "involved_elements": involved_elements}]
