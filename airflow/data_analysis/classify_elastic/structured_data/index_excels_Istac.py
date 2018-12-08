@@ -311,11 +311,6 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
 
                     if continue_iteration:
 
-                        global fs_change
-                        #if exist field to change
-                        if fs_change:
-                            item = utils.change_field_name(item, fs_change)
-
                         global attr_spl_r_s
                         #if exist field to change
                         if attr_spl_r_s:
@@ -371,6 +366,11 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                         global low_let
                         if low_let:
                             item = utils.getLowercaseWord(item, low_let)
+
+                        global fs_change
+                        #if exist field to change
+                        if fs_change:
+                            item = utils.change_field_name(item, fs_change)
 
                         if value == '.' or value == '..':               #if there isn't value
                             continue
@@ -492,11 +492,6 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
 
                 if continue_iteration:
 
-                    global fs_change
-                    #if exist field to change
-                    if fs_change:
-                        item = utils.change_field_name(item, fs_change)
-
                     global attr_spl_r_s
                     #if exist field to change
                     if attr_spl_r_s:
@@ -552,6 +547,11 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                     global low_let
                     if low_let:
                         item = utils.getLowercaseWord(item, low_let)
+
+                    global fs_change
+                    #if exist field to change
+                    if fs_change:
+                        item = utils.change_field_name(item, fs_change)
 
                     if value == '.' or value == '..':               #if there isn't value
                         continue
@@ -640,10 +640,6 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 except:
                     item[name_items["subtype_rows"]] = str(subtype_rows[j])
 
-                global fs_change
-                #if exist field to change
-                if fs_change:
-                    item = utils.change_field_name(item, fs_change)
 
                 global attr_spl_r_s
                 #if exist field to change
@@ -702,6 +698,12 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 if low_let:
                     item = utils.getLowercaseWord(item, low_let)
 
+                global fs_change
+                #if exist field to change
+                if fs_change:
+                    item = utils.change_field_name(item, fs_change)
+
+
                 if value == '.' or value == '..':               #if there isn't value
                      continue
 
@@ -756,11 +758,6 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
                 item[name_items["type_cols"]] = type_cols[m].strip()
             except:
                 item[name_items["type_cols"]] = str(int(type_cols[m]))
-
-            global fs_change
-            #if exist field to change
-            if fs_change:
-                item = utils.change_field_name(item, fs_change)
 
             global attr_spl_r_s
             #if exist field to change
@@ -818,6 +815,11 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             global low_let
             if low_let:
                 item = utils.getLowercaseWord(item, low_let)
+
+            global fs_change
+            #if exist field to change
+            if fs_change:
+                item = utils.change_field_name(item, fs_change)
 
             if value == '.' or value == '..':               #if there isn't value
                  continue

@@ -32,4 +32,6 @@ type_value = float
 
 lowercase_letters = ["type"]
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed=attributes_to_fixed, lowercase_letters = lowercase_letters)
+fields_to_change = {'Total residuos' : ['type','TOTAL']}
+
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed=attributes_to_fixed, lowercase_letters = lowercase_letters, fields_to_change = fields_to_change)
