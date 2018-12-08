@@ -34,6 +34,6 @@ attribute_to_split_remove = [{
 
 field_region = ["place_tourist_residence"]
 
-fields_to_change = {'TOTAL PAISES' : ['place_tourist_residence','Total']}
+fields_to_change = {'TOTAL PAISES' : ['place_tourist_residence','TOTAL']}
 
 index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attribute_to_split_remove = attribute_to_split_remove, field_region = field_region, fields_to_change = fields_to_change)

@@ -33,10 +33,10 @@ attribute_to_split= [{
     "attr0":[0],                        #Words by attribute 0
     "attr1":[1,2],                      #Words by attribute 1
     "exception" : "year",               #If there are fields without two arguments
-    "exclude" : ["Total"]               #For each exclude add the attribute. Elements in array should be in order
+    "exclude" : ["TOTAL"]               #For each exclude add the attribute. Elements in array should be in order
 }]
 
-fields_to_change = {'TOTAL PAÍSES' : ['place_origin','Total']}
+fields_to_change = {'TOTAL PAÍSES' : ['place_origin','TOTAL']}
 
 type_value = float
 

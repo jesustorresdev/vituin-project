@@ -46,9 +46,11 @@ attribute_to_split = [{
     "attr0":[0],                        #Words by attribute 0
     "attr1":[1],                        #Words by attribute 1
     "exception" : "year",               #If there are fields without two arguments
-    "exclude" : ["Total"]               #For each exclude add the attribute. Elements in array should be in order
+    "exclude" : ["TOTAL"]               #For each exclude add the attribute. Elements in array should be in order
 }]
 
-index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, attribute_to_split = attribute_to_split, attribute_to_split_remove = attribute_to_split_remove, field_region = field_region)
+fields_to_change = {'TOTAL PAÍSES':['place_origin','TOTAL']}
+
+index_excels_Istac.main(excel, sheet, name_index, type_index, name_items, table_start_and_end, type_value, attributes_to_fixed = attributes_to_fixed, attribute_to_split = attribute_to_split, attribute_to_split_remove = attribute_to_split_remove, field_region = field_region, fields_to_change = fields_to_change)
 
 
