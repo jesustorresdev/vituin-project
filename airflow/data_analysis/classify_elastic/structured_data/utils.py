@@ -301,6 +301,21 @@ def change_months(item, field_month):
 
     return item
 
+
+def delete_p_provisional(item):
+    for field in item:
+        if type(item[field]) is not datetime.datetime:
+            if item[field][-3:] == '(p)':
+                item[field] = item[field][:-4]
+    return item
+
+def delete_script(item):
+    for field in item:
+        if type(item[field]) is not datetime.datetime:
+            if item[field][:2] == '- ':
+                item[field] = item[field][2:]
+    return item
+
 def set_properties(name_items, type_index, name_index):
 
     es_new = Elasticsearch(
