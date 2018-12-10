@@ -30,7 +30,7 @@ coordinates = ['airport']
 name_items = ["airport", "city", "company"]
 
 attributes_to_fixed={
-    "destiny": "América del Sur",
+    "destiny": "América del Sur".decode('UTF-8'),
     "origin": "Tenerife Norte"
 }
 
