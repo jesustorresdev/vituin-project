@@ -287,8 +287,7 @@ def getAllItems(item, row, type_items, name_items):
     for j in range(0,len(row)):
         if(type_items[name_items[j]] is str):
             try:
-                unicode(row[j].value, "ascii")
-                item[name_items[j]] = unicode(row[j].value, "utf-8")
+                item[name_items[j]] = row[j].value.decode("utf-8")
             except:
                 item[name_items[j]] = row[j].value                            #If is str it is going to be a unicode type
 
