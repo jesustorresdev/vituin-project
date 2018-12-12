@@ -167,6 +167,9 @@ def main(excel, n_sheet, name_index, type_index, table_start_and_end, type_items
             if change_months:
                 item = utils.change_months(item, change_months)
 
+            if change_fields:
+                item = utils.change_field_name(item,change_fields)
+
             if date:
                 item = utils.set_date(item,date)
 

@@ -154,7 +154,6 @@ def getAttributes_Split_Remove_String(item, name_items, attr_spl_r_s):
 
 
 def change_field_name(item, fs_change):
-
     for element in fs_change:
         #if the name of item is a field that should to change
         field = fs_change[element][0]
@@ -344,7 +343,7 @@ def get_names_item_final(item):
     return name_items
 
 #Return all elements of one index
-def search_elastic(index,doc_type):
+def search_elastic(index,doc_type,**kwords):
     es = Elasticsearch(
         [
             'elastic:vituinproject@elasticsearch:9200/',
@@ -353,7 +352,6 @@ def search_elastic(index,doc_type):
 
     #SearchAllEstablishments
     doc = {
-        'size' : 10000,
         'query': {
             'match_all' : {}
         },
@@ -363,33 +361,32 @@ def search_elastic(index,doc_type):
     }
 
 
-    result = es.search(index=index, doc_type=doc_type, body=doc,scroll='1m',request_timeout=300)
     numberElements = es.search(index=index, doc_type=doc_type, body=doc,size=0)['hits']['total']    #The number of Elements searched
 
     elements = []
     count = 0
-    for hit in result['hits']['hits']:            #Append the elements in the array
-        elements.append(hit)
-        count += 1
-
     pos = count - 1                               #Last pos appended
-    numberElements -= count
+
+
+    if 'must' in kwords:
+        query = {"bool":kwords['must']}
+    else:
+        query = {'match_all' : {}}
 
     #Elastic only allow search 10000 elements in a called. If the table contains more element \
     # its necessary to do a recursive called
     while numberElements > 0:
 
-
         doc = {
             'size':10000,
-            'query': {
-                'match_all' : {}
-            },
-            "search_after": [elements[pos]['_id']],  #It allows to search since a determinate position
+            'query': query,
             "sort": [
                 {"_id": "asc"}
             ]
         }
+
+        if count != 0:
+            doc.update({"search_after": [elements[pos]['_id']]})  #It allows to search since a determinate position
 
         result = es.search(index=index, doc_type=doc_type, body=doc)
 
