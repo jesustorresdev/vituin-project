@@ -1,6 +1,7 @@
 import nltk
 from wordcloud import WordCloud, STOPWORDS
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import RegexpTokenizer
+
 from nltk.corpus import stopwords
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -66,7 +67,9 @@ if res:
     for dat in data:
         text += dat
 
-    textToken = word_tokenize(text)
+    tokenizer = RegexpTokenizer("[\w']+")
+
+    textToken = tokenizer.tokenize(text)
     for t in textToken:
         if t not in stopWordsSpanish and \
                 t not in stopWordsItalian and \
@@ -74,7 +77,8 @@ if res:
                 t not in stopWordsGerman and \
                 t not in stopWordsEnglish:
             wordsFiltered.append(t)
-
+    print(textToken)
+    exit()
     text = ''
     for dat in wordsFiltered:
         text += ' ' + dat
