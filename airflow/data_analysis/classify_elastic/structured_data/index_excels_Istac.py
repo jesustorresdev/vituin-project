@@ -25,6 +25,7 @@ irr_table=[]
 irr_items=[]
 a_c_value=[]
 value_percentage = False
+establishments=False
 
 names_item_final = []
 
@@ -45,6 +46,14 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     except:
         pass
 
+    #Establishments
+    try:
+        if kwords["establishments"]:
+            global establishments
+            establishments = kwords["establishments"]
+    except:
+        pass
+
     global irr_items
     if irr_table:
         irr_items = [element["name_item"] for element in irr_table]
@@ -52,7 +61,7 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     # Get type and subtype of the cols
     try:
         if name_items["subtype_cols"]:
-            cols = type_col(sheet,t_se, 1) if 'subtype_cols' not in irr_items else type_col(sheet,t_se, 1, irr_table = irr_table[irr_items.index('subtype_cols')])
+            cols = type_col(sheet,t_se, 1, establishments = establishments) if 'subtype_cols' not in irr_items else type_col(sheet,t_se, 1, irr_table = irr_table[irr_items.index('subtype_cols'), establishments])
     except:
         cols = type_col(sheet,t_se, 0)
 
@@ -145,6 +154,7 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
         pass
 
 
+
     if  n_cols != 0 and n_rows != 0:
         subtype_cols = subtype_col(sheet,n_cols, t_se)
         subtype_rows = subtype_row(sheet,n_rows, t_se)
@@ -153,10 +163,17 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
         sub_r = ['subtype_rows', subtype_rows]
         update_elastic(sheet, n_cols, n_rows, name_index, type_index, name_items, t_se["start_value_row"], t_se["start_value_col"], type_value, type_cols, type_rows, sub_c, sub_r)
     elif n_cols != 0:
-        subtype_cols = subtype_col(sheet,n_cols, t_se)
-        sub_c = ['subtype_cols', subtype_cols]
+        if establishments:
+            subtype_cols = subtype_col(sheet,n_cols, t_se, type_cols = type_cols)
+            type_cols = subtype_cols
+            update_elastic(sheet, n_cols, 0, name_index, type_index, name_items, t_se["start_value_row"], t_se["start_value_col"], type_value, type_cols, type_rows)
+        else:
+            subtype_cols = subtype_col(sheet,n_cols, t_se)
+            sub_c = ['subtype_cols', subtype_cols]
+            update_elastic(sheet, n_cols, 0, name_index, type_index, name_items, t_se["start_value_row"], t_se["start_value_col"], type_value, type_cols, type_rows, sub_c)
+
+
         #Upload to elasticsearch with subtype_cols
-        update_elastic(sheet, n_cols, 0, name_index, type_index, name_items, t_se["start_value_row"], t_se["start_value_col"], type_value, type_cols, type_rows, sub_c)
     elif n_rows != 0:
         subtype_rows = subtype_row(sheet,n_rows, t_se)
         sub_r = ['subtype_rows', subtype_rows]
@@ -899,8 +916,12 @@ def type_col(sheet,t_se, subtype_col, **kwords):
     if 'irr_table' in kwords:
         irr_table = kwords['irr_table']
 
+    establishments = False
+    if 'establishments' in kwords:
+        establishments = True
+
     for element in all_cols:
-        if element.value != "":
+        if (element.value != "" and establishments is False) or establishments is True:
             array_cols.append(element.value)
         i=i+1
 
@@ -913,6 +934,8 @@ def type_col(sheet,t_se, subtype_col, **kwords):
     else:
         n_cols = 0
 
+    if establishments:
+        array_cols = delete_empty_fields(array_cols)
 
     cols =  {
       "n_cols" : n_cols,
@@ -922,12 +945,16 @@ def type_col(sheet,t_se, subtype_col, **kwords):
     return cols
 
 #Return array with subtypes of columns
-def subtype_col(sheet, n_cols, t_se):
+def subtype_col(sheet, n_cols, t_se, **kwords):
+    if 'type_cols' in kwords:
+        n_cols = len(kwords['type_cols'])
+
     array_cols = sheet.row_slice(rowx=t_se["start_row"]+1, #Subtypecol is in the second line
                             start_colx=t_se["start_value_col"], #The line where start cols and values is the same
                             end_colx=t_se["start_value_col"]+n_cols)
+
     for i in range(0,len(array_cols)):
-        array_cols[i] = array_cols[i].value    #Transform format of row_slice
+        array_cols[i] = array_cols[i].value if 'type_cols' not in kwords else array_cols[i].value + ' ' + kwords['type_cols'][i]     #Transform format of row_slice
 
     return array_cols
 
@@ -986,3 +1013,10 @@ def subtype_row(sheet, n_rows, t_se):
     return array_rows
 
 
+def delete_empty_fields(array):
+    tmp_element = ''
+    for i in range(0,len(array)):
+        if array[i] != '':
+            tmp_element = array[i]
+        array[i] = tmp_element
+    return array
