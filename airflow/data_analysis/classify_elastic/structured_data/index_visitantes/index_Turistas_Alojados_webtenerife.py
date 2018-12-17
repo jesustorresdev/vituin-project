@@ -6,7 +6,7 @@ from structured_data import index_excels_Istac
 
 excel = "excels_visitantes/tcpuerto201810.xlsx"
 sheet = 26
-name_index = "index_turistas_alojados_webtenerife"
+name_index = "index_pernoctaciones_viajeros_webtenerife"
 type_index = "structured"
 
 
