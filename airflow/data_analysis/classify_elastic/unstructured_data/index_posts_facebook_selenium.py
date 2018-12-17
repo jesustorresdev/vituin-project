@@ -13,13 +13,12 @@ import utils
 #IMPORTANT: before indexing opinion units you must index the parent reviews
 
 filename =  sys.argv[1]
-place_type = ["Puerto de la Cruz", "Tenerife","Canarias", "Fuerteventura", "Adeje"]
-place = place_type[int(sys.argv[2])]
+# place_type = ["Puerto de la Cruz", "Tenerife","Canarias", "Fuerteventura", "Adeje"]
+# place = place_type[int(sys.argv[2])]
 
 
 F = open(filename)
 reference = ["id",
-             "type",
              "message",
              "comments",
              "shares",
@@ -27,11 +26,15 @@ reference = ["id",
              "likes",
              "loves",
              "wows",
-             "hahas",
+             "enjoyes",
              "sads",
              "angries",
-             "extraction_time",
-             "creation_time"
+             "key",
+             "creation_time",
+             "year",
+             "month",
+             "day",
+             "extraction_time"
              ]
 
 ES = Elasticsearch(
@@ -77,8 +80,6 @@ for row in csv.reader(F):
 
         for i in range(len(reference)):
             item[reference[i]] = row[i]
-
-        item['place']=place
 
         if not res or res['hits']['hits'] == []: #If there isn't result
 

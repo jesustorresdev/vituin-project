@@ -18,9 +18,11 @@ nltk.download('punkt')
 
 WORD_COUNT = 0
 ACTIONS = []
-ELASTICSEARCH_INDEX_SEARCHED = 'index_comments_facebook_selenium'
-ELASTICSEARCH_INDEX = 'index_comments_facebook_wordscloud'
+ELASTICSEARCH_INDEX_SEARCHED = 'index_reviews_homes_booking'
+ELASTICSEARCH_INDEX = 'index_reviews_booking_wordscloud'
 ELASTICSEARCH_DOC_TYPE = 'unstructured'
+REVIEW_FIELD_1 = 'positive_content'
+REVIEW_FIELD_2 = 'negative_content'
 EXIST_INDEX = True
 FIRST_ITERATION = False
 NAMES_ITEM = []
@@ -60,9 +62,11 @@ if res:
     stopWordsGerman = set(stopwords.words('german'))
     stopWordsEnglish = set(stopwords.words('english'))
 
-    data = [
-        entry['_source']['message'] for entry in res
-    ]
+    data = []
+    for i in range(0,len(res)):
+        data.append(res[i]['_source'][REVIEW_FIELD_1])
+        data.append(res[i]['_source'][REVIEW_FIELD_2])
+
     text = ''
     for dat in data:
         text += dat
@@ -70,15 +74,13 @@ if res:
     tokenizer = RegexpTokenizer("[\w']+")
 
     textToken = tokenizer.tokenize(text)
-    for t in textToken:
-        if t not in stopWordsSpanish and \
-                t not in stopWordsItalian and \
-                t not in stopWordsFrench and \
-                t not in stopWordsGerman and \
-                t not in stopWordsEnglish:
-            wordsFiltered.append(t)
-    print(textToken)
-    exit()
+    wordsFiltered = [t for t in textToken if t.lower() not in stopWordsSpanish and \
+                     t.lower() not in stopWordsItalian and \
+                     t.lower() not in stopWordsFrench and \
+                     t.lower() not in stopWordsGerman and \
+                     t.lower() not in stopWordsEnglish
+                     ]
+
     text = ''
     for dat in wordsFiltered:
         text += ' ' + dat
