@@ -26,6 +26,8 @@ irr_items=[]
 a_c_value=[]
 value_percentage = False
 establishments=False
+third_col=False
+two_rows=False
 
 names_item_final = []
 
@@ -54,14 +56,31 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     except:
         pass
 
+    #Establishments
+    try:
+        if kwords["third_col"]:
+            global third_col
+            third_col = kwords["third_col"]
+    except:
+        pass
+
+    #Two rows
+    try:
+        if kwords["two_rows"]:
+            global two_rows
+            two_rows = kwords["two_rows"]
+    except:
+        pass
+
     global irr_items
     if irr_table:
         irr_items = [element["name_item"] for element in irr_table]
 
-    # Get type and subtype of the cols
     try:
+        # Get type and subtype of the cols
         if name_items["subtype_cols"]:
-            cols = type_col(sheet,t_se, 1, establishments = establishments) if 'subtype_cols' not in irr_items else type_col(sheet,t_se, 1, irr_table = irr_table[irr_items.index('subtype_cols'), establishments])
+            cols = type_col(sheet,t_se, 1, establishments = establishments) if 'subtype_cols' not in irr_items \
+                else type_col(sheet,t_se, 1, irr_table = irr_table[irr_items.index('subtype_cols')], establishments = establishments)
     except:
         cols = type_col(sheet,t_se, 0)
 
@@ -69,7 +88,7 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     type_cols = cols["array_cols"]
 
     # Get type and subtype of the rows
-    rows = type_row(sheet,t_se) if 'subtype_rows' not in irr_items else type_row(sheet,t_se, irr_table = irr_table[irr_items.index('subtype_rows')])
+    rows = type_row(sheet,t_se, two_rows = two_rows) if 'subtype_rows' not in irr_items else type_row(sheet,t_se, irr_table = irr_table[irr_items.index('subtype_rows')])
     n_rows = rows["n_rows"]
     type_rows = rows["array_rows"]
 
@@ -153,11 +172,11 @@ def main(excel, n_sheet, name_index, type_index, name_items, table_start_and_end
     except:
         pass
 
-
-
     if  n_cols != 0 and n_rows != 0:
         subtype_cols = subtype_col(sheet,n_cols, t_se)
-        subtype_rows = subtype_row(sheet,n_rows, t_se)
+        if third_col:
+            subtype_cols = subtype_col(sheet,n_cols,t_se, third_col = third_col, subtype_cols = subtype_cols)
+        subtype_rows = subtype_row(sheet,n_rows, t_se) if not two_rows else subtype_row(sheet,n_rows, t_se, two_rows = two_rows)
         #Upload to elasticsearch with all parameters
         sub_c = ['subtype_cols', subtype_cols]
         sub_r = ['subtype_rows', subtype_rows]
@@ -280,8 +299,9 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
             irr_table_cols = 0
             for m in range(0,len(type_cols)):
                 for n in range(0,len(subtype_cols)):
-
-                    value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row-irr_table_rows, colx=(m*n_cols+n)+start_col-irr_table_cols)
+                    global two_rows
+                    value = sheet.cell_value(rowx=(i*n_rows+i+1+j)+start_row-irr_table_rows, colx=(m*n_cols+n)+start_col-irr_table_cols) if two_rows is False else \
+                            sheet.cell_value(rowx=(i*n_rows+1+j)+start_row-irr_table_rows, colx=(m*n_cols+n)+start_col-irr_table_cols)
 
                     if value == '-' or value == '':
                         value = 0
@@ -918,7 +938,7 @@ def type_col(sheet,t_se, subtype_col, **kwords):
 
     establishments = False
     if 'establishments' in kwords:
-        establishments = True
+        establishments = kwords["establishments"]
 
     for element in all_cols:
         if (element.value != "" and establishments is False) or establishments is True:
@@ -949,6 +969,14 @@ def subtype_col(sheet, n_cols, t_se, **kwords):
     if 'type_cols' in kwords:
         n_cols = len(kwords['type_cols'])
 
+    if 'third_col' in kwords:
+        t_se["start_row"] += 1
+
+    third_col = False
+    if 'subtype_cols' in kwords:
+        third_col = True
+        subtype_cols_tmp = kwords['subtype_cols']
+
     array_cols = sheet.row_slice(rowx=t_se["start_row"]+1, #Subtypecol is in the second line
                             start_colx=t_se["start_value_col"], #The line where start cols and values is the same
                             end_colx=t_se["start_value_col"]+n_cols)
@@ -956,6 +984,9 @@ def subtype_col(sheet, n_cols, t_se, **kwords):
     for i in range(0,len(array_cols)):
         array_cols[i] = array_cols[i].value if 'type_cols' not in kwords else array_cols[i].value + ' ' + kwords['type_cols'][i]     #Transform format of row_slice
 
+    if third_col:
+        for i in range(0,len(array_cols)):
+            array_cols[i] = subtype_cols_tmp[i] if subtype_cols_tmp[i] != '' else array_cols[i]
     return array_cols
 
 #Return array with types of rows
@@ -973,26 +1004,36 @@ def type_row(sheet, t_se, **kwords):
                             end_rowx=t_se["end_row"]+1)          # col_slice uses end row - 1 by defect. For this it's necessary sum 1
 
     irr_table = {}
+    two_rows = False
     if 'irr_table' in kwords:
         irr_table = kwords['irr_table']
 
-    nElements = len(array_rows0)              # Length of each column in the table
+    if 'two_rows' in kwords:
+        two_rows = kwords['two_rows']
 
-    try:
+    nElements = len(array_rows0)              # Length of each column in the table
+    if two_rows:
         for i in range(0,nElements):
-            if array_rows1[i].value == '':
+            if array_rows0[i].value != "":
                 array_rows.append(array_rows0[i].value)
 
-        if irr_table:
-            nElements = nElements + irr_table['number'] if irr_table['type'] == 'sum' else nElements - irr_table['number']
+        n_rows = nElements / len(array_rows)     # Number of columns (its numbers of subtype_cols)
 
-        n_rows = (nElements-len(array_rows)) / len(array_rows)
+    else:
+        try:
+            for i in range(0,nElements):
+                if array_rows1[i].value == '':
+                    array_rows.append(array_rows0[i].value)
 
-    except ZeroDivisionError:
-        n_rows = 0
-        for i in range(0,nElements):
-            array_rows.append(array_rows0[i].value)
+            if irr_table:
+                nElements = nElements + irr_table['number'] if irr_table['type'] == 'sum' else nElements - irr_table['number']
 
+            n_rows = (nElements-len(array_rows)) / len(array_rows)
+
+        except ZeroDivisionError:
+            n_rows = 0
+            for i in range(0,nElements):
+                array_rows.append(array_rows0[i].value)
 
     rows =  {
       "n_rows" : n_rows,
@@ -1002,13 +1043,17 @@ def type_row(sheet, t_se, **kwords):
     return rows
 
 #Return array with subtypes of rows
-def subtype_row(sheet, n_rows, t_se):
+def subtype_row(sheet, n_rows, t_se, **kwords):
+    if 'two_rows' in kwords:
+        t_se["start_col"] += 1
+        t_se["start_value_row"] -= 1
     array_rows = sheet.col_slice(colx=t_se["start_col"],
                             start_rowx=t_se["start_value_row"]+1, # First is type and not subtype
                             end_rowx=t_se["start_value_row"]+1+n_rows)
 
     for i in range(0,len(array_rows)):
         array_rows[i] = array_rows[i].value    #Transform format of col_slice
+
 
     return array_rows
 
