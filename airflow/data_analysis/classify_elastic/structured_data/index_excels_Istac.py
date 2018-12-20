@@ -318,26 +318,25 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     try:
                         item[name_items["type_rows"]] = type_rows[i].strip()
                     except:
-                        item[name_items["type_rows"]] = str(type_rows[i])
+                        item[name_items["type_rows"]] = str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
 
                     try:
                         item[name_items["type_cols"]] = type_cols[m].strip()
                     except:
-                        item[name_items["type_cols"]] = str(type_cols[m])
+                        item[name_items["type_cols"]] = str(type_cols[m]) if str(type_cols[m])[-2:] != '.0' else str(type_cols[m])[:-2]
 
                     try:
                         item[name_items["subtype_cols"]] = subtype_cols[n].strip()
                     except:
-                        item[name_items["subtype_cols"]] = str(subtype_cols[n])
+                        item[name_items["subtype_cols"]] = str(subtype_cols[n]) if str(subtype_cols[n])[-2:] != '.0' else str(subtype_cols[n])[:-2]
 
                     try:
                         item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                     except:
-                        item[name_items["subtype_rows"]] = str(subtype_rows[j])
+                        item[name_items["subtype_rows"]] = str(subtype_rows[j]) if str(subtype_rows[j])[-2:] != '.0' else str(subtype_rows[j])[:-2]
 
                     item = utils.delete_p_provisional(item)
                     item = utils.delete_script(item)
-
                     continue_iteration = True
                     global a_c_value
                     for element in a_c_value:
@@ -507,17 +506,17 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 try:
                     item[name_items["type_rows"]] = type_rows[i].strip()
                 except:
-                    item[name_items["type_rows"]] = str(type_rows[i])
+                    item[name_items["type_rows"]]= str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
 
                 try:
                     item[name_items["type_cols"]] = type_cols[m].strip()
                 except:
-                    item[name_items["type_cols"]] = str(type_cols[m])
+                    item[name_items["type_cols"]] = str(type_cols[m]) if str(type_cols[m])[-2:] != '.0' else str(type_cols[m])[:-2]
 
                 try:
                     item[name_items["subtype_cols"]] = subtype_cols[n].strip() 
                 except:
-                    item[name_items["subtype_cols"]] = str(subtype_cols[n])
+                    item[name_items["subtype_cols"]] = str(subtype_cols[n]) if str(subtype_cols[n])[-2:] != '.0' else str(subtype_cols[n])[:-2]
 
                 item = utils.delete_p_provisional(item)
                 item = utils.delete_script(item)
@@ -671,17 +670,17 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 try:
                     item[name_items["type_rows"]] = type_rows[i].strip()
                 except:
-                    item[name_items["type_rows"]] = str(type_rows[i])
+                    item[name_items["type_rows"]]= str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
 
                 try:
                     item[name_items["type_cols"]] = type_cols[m].strip()
                 except:
-                    item[name_items["type_cols"]] = str(type_cols[m])
+                    item[name_items["type_cols"]] = str(type_cols[m]) if str(type_cols[m])[-2:] != '.0' else str(type_cols[m])[:-2]
 
                 try:
                     item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                 except:
-                    item[name_items["subtype_rows"]] = str(subtype_rows[j])
+                    item[name_items["subtype_rows"]] = str(subtype_rows[j]) if str(subtype_rows[j])[-2:] != '.0' else str(subtype_rows[j])[:-2]
 
                 item = utils.delete_p_provisional(item)
                 item = utils.delete_script(item)
@@ -798,11 +797,11 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             try:
                 item[name_items["type_rows"]] = type_rows[i].strip()
             except:
-                item[name_items["type_rows"]] = str(type_rows[i])
+                item[name_items["type_rows"]]= str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
             try:
                 item[name_items["type_cols"]] = type_cols[m].strip()
             except:
-                item[name_items["type_cols"]] = str(int(type_cols[m]))
+                item[name_items["type_cols"]] = str(int(type_cols[m])) if str(int(type_cols[m]))[-2:] != '.0' else str(int(type_cols[m]))[:-2]
 
             item = utils.delete_p_provisional(item)
             item = utils.delete_script(item)

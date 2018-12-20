@@ -287,23 +287,22 @@ def getKey(item):
 #There aren't cols that are only one
 def getAllItems(item, row, type_items, name_items):
 
-    for j in range(0,len(row)):
-        if(type_items[name_items[j]] is str):
-            try:
-                item[name_items[j]] = row[j].value.decode("utf-8")
-            except:
-                item[name_items[j]] = row[j].value                            #If is str it is going to be a unicode type
-
+    for i in range(0,len(row)):
+        if(type_items[name_items[i]] is str):                      #If it is str it is going to be a unicode type
+            if type(row[i]) is float:                                            #If it was a number before, like years
+                if int(row[i]) == row[i]:                                               #If it was a int
+                    item[name_items[i]] =unicode(int(row[i].value))
+                else:
+                    item[name_items[i]] = unicode(row[i].value)
+            else:                                                                #If it has ever been a str or it was a float
+                item[name_items[i]] = unicode(row[i].value)[:-2] if unicode(row[i].value)[-2:] == '.0' else unicode(row[i].value)
         else:
-            if row[j].value == '' or row[j].value == '.' or row[j].value == '..' :
-                item[name_items[j]] = 0
-            else:
-                item[name_items[j]] = type_items[name_items[j]](row[j].value) #If it is other type, like int or float, it is going to this type
+            item[name_items[i]] = type_items[name_items[i]](row[i].value) #If it is other type, like int or float, it is going to this type
+
     return item
 
 #There are cols that are only one
 def getSomeItems(item, pos_restrictions, row, type_items, name_items):
-
 
     for i in range(0,len(row)):
         if i not in pos_restrictions:
@@ -317,6 +316,7 @@ def getSomeItems(item, pos_restrictions, row, type_items, name_items):
                    item[name_items[i]] = unicode(row[i].value)[:-2] if unicode(row[i].value)[-2:] == '.0' else unicode(row[i].value)
             else:
                item[name_items[i]] = type_items[name_items[i]](row[i].value) #If it is other type, like int or float, it is going to this type
+
     return item
 
 #return all position with restrictions
