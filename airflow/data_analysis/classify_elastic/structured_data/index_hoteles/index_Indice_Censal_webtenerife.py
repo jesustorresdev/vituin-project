@@ -39,7 +39,7 @@ lowercase_letters = ["month"]
 
 fields_to_change = {'total turistas' : ['accomodation','TOTAL TURISTAS'], 'Tenerife':['place', 'TENERIFE']}
 
-involved_elements =[{"name":"Santa Cruz","number":4,"type":"less"}]
+involved_elements = [{"name":"Santa Cruz","number":4,"type":"less", "subtype_cols":["TOTAL TURISTAS"]}]
 irregular_table = [{"type":"sum", "name_item":"subtype_cols", "number":4, "involved_elements": involved_elements}]
 
 value_percentage = True

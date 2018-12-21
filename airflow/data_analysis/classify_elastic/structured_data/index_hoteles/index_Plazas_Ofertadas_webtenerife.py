@@ -37,9 +37,9 @@ add_column_value_to_previous_item = [{
 }]
 
 
-fields_to_change = {'total' : ['accomodation','TOTAL TURISTAS'], 'extrahotelero' : ['accomodation','Extrahotelero'], 'Tenerife':['place', 'TENERIFE']}
+fields_to_change = {'Total' : ['accomodation','TOTAL TURISTAS'], 'extrahotelero' : ['accomodation','Extrahotelero'], 'Tenerife':['place', 'TENERIFE']}
 
-involved_elements =[{"name":"Santa Cruz","number":4,"type":"less"}]
+involved_elements = [{"name":"Santa Cruz","number":4,"type":"less", "subtype_cols":["TOTAL TURISTAS"]}]
 irregular_table = [{"type":"sum", "name_item":"subtype_cols", "number":4, "involved_elements": involved_elements}]
 third_col = True
 two_rows = True
