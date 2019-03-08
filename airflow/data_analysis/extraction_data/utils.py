@@ -1,26 +1,58 @@
-from selenium.webdriver.support.ui import WebDriverWait
+# -*- coding: UTF-8 -*-
 
-def get_clear_browsing_button(driver):
-    """Find the "CLEAR BROWSING BUTTON" on the Chrome settings page."""
-    return driver.find_element_by_css_selector('* /deep/ #clearBrowsingDataConfirm')
+import re
+from mail_settings import mailfrom, smtphost, smtpport, smtpuser, smtppass
+from scrapy.mail import MailSender
+from scrapy.exceptions import CloseSpider
 
+##QUITAR DE AQUI A SCRAPY SPIDER
 
-def clear_cache(driver, timeout=60):
-    """Clear the cookies and cache for the ChromeDriver instance."""
-    # navigate to the settings page
-    driver.get('chrome://settings/clearBrowserData')
+def split_try(element, pos=None, separator=' ', pos_aray=None, splitline=False):
+    if pos_aray != None:
+        try:
+            element=element[pos_aray]
+        except:
+            return ''
 
-    # wait for the button to appear
-    wait = WebDriverWait(driver, timeout)
-    wait.until(get_clear_browsing_button)
+    if pos != None:
+        if splitline:
+            try:
+                return element.splitlines()[pos]
+            except:
+                return ''
+        else:
+            try:
+                return element.split(separator)[pos]
+            except:
+                return ''
+    else:
+        if splitline:
+            try:
+                return element.splitlines()
+            except:
+                return ''
+        else:
+            try:
+                element.split(separator)
+            except:
+                return ''
 
-    # click the button to clear the cache
-    get_clear_browsing_button(driver).click()
-
-    # wait for the button to be gone before returning
-    wait.until_not(get_clear_browsing_button)
-
-
+def type_try(element, type_change):
+    try:
+        if type_change==int:
+            return int(element)
+        elif type_change==float:
+            return float(element)
+        elif type_change==str:
+            return str(element)
+        else:
+            return ''
+    except:
+         return ''
+#
+# QUITAR DE AQUI
+#
+#
 def get_reactions(reactions, name, driver):
     number_like = None
     number_love = None

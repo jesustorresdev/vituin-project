@@ -234,7 +234,7 @@ def update_elastic(sheet, n_cols, n_rows, name_index, type_index, name_items, st
     count = dic_loop['count']
     actions = dic_loop['actions']
 
-    print count
+
     if count > 0:
         if index_elastic['exist_index'] is 0:
             global names_item_final
@@ -281,6 +281,7 @@ def call_elastic(name_index,es):
 
 def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows, n_cols, start_row ,start_col, type_value, name_index, type_index, name_items, cont_id, sheet, index_elastic):
 
+
     count = 0
     actions = []
     first_iteration = True
@@ -317,25 +318,26 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                     try:
                         item[name_items["type_rows"]] = type_rows[i].strip()
                     except:
-                        item[name_items["type_rows"]] = str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
+                        item[name_items["type_rows"]] = str(type_rows[i])
 
                     try:
                         item[name_items["type_cols"]] = type_cols[m].strip()
                     except:
-                        item[name_items["type_cols"]] = str(type_cols[m]) if str(type_cols[m])[-2:] != '.0' else str(type_cols[m])[:-2]
+                        item[name_items["type_cols"]] = str(type_cols[m])
 
                     try:
                         item[name_items["subtype_cols"]] = subtype_cols[n].strip()
                     except:
-                        item[name_items["subtype_cols"]] = str(subtype_cols[n]) if str(subtype_cols[n])[-2:] != '.0' else str(subtype_cols[n])[:-2]
+                        item[name_items["subtype_cols"]] = str(subtype_cols[n])
 
                     try:
                         item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                     except:
-                        item[name_items["subtype_rows"]] = str(subtype_rows[j]) if str(subtype_rows[j])[-2:] != '.0' else str(subtype_rows[j])[:-2]
+                        item[name_items["subtype_rows"]] = str(subtype_rows[j])
 
                     item = utils.delete_p_provisional(item)
                     item = utils.delete_script(item)
+
                     continue_iteration = True
                     global a_c_value
                     for element in a_c_value:
@@ -414,20 +416,6 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                             continue
 
                         item["value"] = utils.getValue_with_type(type_value, value)
-                        if irr_table:
-                            for name in irr_items:
-                                if name == 'subtype_cols':
-                                    for element in irr_table[irr_items.index('subtype_cols')]['involved_elements']:
-                                        if element['name'] == item[name_items["type_cols"]]:
-                                            item[name_items["subtype_cols"]] = element['subtype_cols'][n]
-                                            if n+2 >= len(subtype_cols)- element['number']:
-                                                break_subtype_cols = True
-                                                irr_table_cols += element['number']
-
-                            if m*n_cols+n-irr_table_cols > (len(type_cols)-1)*n_cols + len(subtype_cols)-1:
-                                break_subtype_cols = True
-                                break_type_cols = True
-
 
                         key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                         item["key"] = key
@@ -451,6 +439,19 @@ def loop_all_parameters(type_rows, type_cols, subtype_rows, subtype_cols, n_rows
                             cont_id += 1
                             count += 1
 
+
+                        if irr_table:
+                            for name in irr_items:
+                                if name == 'subtype_cols':
+                                    for element in irr_table[irr_items.index('subtype_cols')]['involved_elements']:
+                                        if element['name'] == item[name_items["type_cols"]]:
+                                            if n+1 >= len(subtype_cols)- element['number']:
+                                                break_subtype_cols = True
+                                                irr_table_cols += element['number']
+
+                            if m*n_cols+n-irr_table_cols > (len(type_cols)-1)*n_cols + len(subtype_cols)-1:
+                                break_subtype_cols = True
+                                break_type_cols = True
 
                         if break_subtype_cols:
                             break_subtype_cols =  False
@@ -506,17 +507,17 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                 try:
                     item[name_items["type_rows"]] = type_rows[i].strip()
                 except:
-                    item[name_items["type_rows"]]= str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
+                    item[name_items["type_rows"]] = str(type_rows[i])
 
                 try:
                     item[name_items["type_cols"]] = type_cols[m].strip()
                 except:
-                    item[name_items["type_cols"]] = str(type_cols[m]) if str(type_cols[m])[-2:] != '.0' else str(type_cols[m])[:-2]
+                    item[name_items["type_cols"]] = str(type_cols[m])
 
                 try:
                     item[name_items["subtype_cols"]] = subtype_cols[n].strip() 
                 except:
-                    item[name_items["subtype_cols"]] = str(subtype_cols[n]) if str(subtype_cols[n])[-2:] != '.0' else str(subtype_cols[n])[:-2]
+                    item[name_items["subtype_cols"]] = str(subtype_cols[n])
 
                 item = utils.delete_p_provisional(item)
                 item = utils.delete_script(item)
@@ -600,20 +601,6 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
 
                     item["value"] = utils.getValue_with_type(type_value, value)
 
-                    if irr_table:
-                        for name in irr_items:
-                            if name == 'subtype_cols':
-                                for element in irr_table[irr_items.index('subtype_cols')]['involved_elements']:
-                                    if element['name'] == item[name_items["type_cols"]]:
-                                        item[name_items["subtype_cols"]] = element["subtype_cols"][n]
-                                        if n+2 >= len(subtype_cols)- element['number']:
-                                            break_subtype_cols = True
-                                            irr_table_cols += element['number']
-
-                        if m*n_cols+n-irr_table_cols > (len(type_cols)-1)*n_cols + len(subtype_cols)-1:
-                            break_subtype_cols = True
-                            break_type_cols = True
-
                     key =  hashlib.md5(str_key.encode('utf-8')).hexdigest()
                     item["key"] = key
 
@@ -623,10 +610,10 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                         first_iteration=False
 
                     action = {
-                        "_index": name_index,
-                        "_type": type_index,
-                        "_id": int(cont_id),
-                        "_source": item
+                      "_index": name_index,
+                      "_type": type_index,
+                      "_id": int(cont_id),
+                      "_source": item
                     }
 
                     acts = append_Action(index_elastic["exist_index"], key, name_index, action, actions)
@@ -636,9 +623,23 @@ def loop_sub_c(type_rows, type_cols, subtype_cols, n_cols, start_row ,start_col,
                         cont_id += 1
                         count += 1
 
-                if break_subtype_cols:
-                    break_subtype_cols =  False
-                    break
+
+                    if irr_table:
+                        for name in irr_items:
+                            if name == 'subtype_cols':
+                                for element in irr_table[irr_items.index('subtype_cols')]['involved_elements']:
+                                    if element['name'] == item[name_items["type_cols"]]:
+                                        if n+1 >= len(subtype_cols)- element['number']:
+                                            break_subtype_cols = True
+                                            irr_table_cols += element['number']
+
+                        if m*n_cols+n-irr_table_cols > (len(type_cols)-1)*n_cols + len(subtype_cols)-1:
+                            break_subtype_cols = True
+                            break_type_cols = True
+
+                    if break_subtype_cols:
+                        break_subtype_cols =  False
+                        break
 
             if break_type_cols:
                 break_type_cols =  False
@@ -670,17 +671,17 @@ def loop_sub_r(type_rows, type_cols, subtype_rows, n_rows, start_row ,start_col,
                 try:
                     item[name_items["type_rows"]] = type_rows[i].strip()
                 except:
-                    item[name_items["type_rows"]]= str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
+                    item[name_items["type_rows"]] = str(type_rows[i])
 
                 try:
                     item[name_items["type_cols"]] = type_cols[m].strip()
                 except:
-                    item[name_items["type_cols"]] = str(type_cols[m]) if str(type_cols[m])[-2:] != '.0' else str(type_cols[m])[:-2]
+                    item[name_items["type_cols"]] = str(type_cols[m])
 
                 try:
                     item[name_items["subtype_rows"]] = subtype_rows[j].strip()
                 except:
-                    item[name_items["subtype_rows"]] = str(subtype_rows[j]) if str(subtype_rows[j])[-2:] != '.0' else str(subtype_rows[j])[:-2]
+                    item[name_items["subtype_rows"]] = str(subtype_rows[j])
 
                 item = utils.delete_p_provisional(item)
                 item = utils.delete_script(item)
@@ -797,11 +798,11 @@ def loop_without_subtypes(type_rows, type_cols, start_row ,start_col, type_value
             try:
                 item[name_items["type_rows"]] = type_rows[i].strip()
             except:
-                item[name_items["type_rows"]]= str(type_rows[i]) if str(type_rows[i])[-2:] != '.0' else str(type_rows[i])[:-2]
+                item[name_items["type_rows"]] = str(type_rows[i])
             try:
                 item[name_items["type_cols"]] = type_cols[m].strip()
             except:
-                item[name_items["type_cols"]] = str(int(type_cols[m])) if str(int(type_cols[m]))[-2:] != '.0' else str(int(type_cols[m]))[:-2]
+                item[name_items["type_cols"]] = str(int(type_cols[m]))
 
             item = utils.delete_p_provisional(item)
             item = utils.delete_script(item)

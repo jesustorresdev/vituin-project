@@ -1,0 +1,80 @@
+2019-03-07 18:47:12 [scrapy.utils.log] INFO: Scrapy 1.5.0 started (bot: extraction_data)
+2019-03-07 18:47:12 [scrapy.utils.log] INFO: Versions: lxml 3.8.0.0, libxml2 2.9.3, cssselect 1.0.3, parsel 1.4.0, w3lib 1.19.0, Twisted 18.4.0, Python 2.7.12 (default, Nov 20 2017, 18:23:56) - [GCC 5.4.0 20160609], pyOpenSSL 18.0.0 (OpenSSL 1.1.0h  27 Mar 2018), cryptography 2.2.2, Platform Linux-4.10.0-42-generic-x86_64-with-Ubuntu-16.04-xenial
+2019-03-07 18:47:12 [scrapy.crawler] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'extraction_data.spiders', 'FEED_FORMAT': 'csv', 'SPIDER_MODULES': ['extraction_data.spiders'], 'FEED_URI': 'FuerteventuraHomeway.csv', 'BOT_NAME': 'extraction_data'}
+2019-03-07 18:47:12 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.feedexport.FeedExporter',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2019-03-07 18:47:12 [urllib3.util.retry] DEBUG: Converted retries value: False -> Retry(total=False, connect=None, read=None, redirect=0, status=None)
+2019-03-07 18:47:12 [urllib3.connectionpool] DEBUG: Starting new HTTP connection (1): elasticsearch
+2019-03-07 18:47:12 [urllib3.connectionpool] DEBUG: http://elasticsearch:9200 "GET /homeway_homes/_search?size=0 HTTP/1.1" 200 133
+2019-03-07 18:47:12 [elasticsearch] INFO: GET http://elasticsearch:9200/homeway_homes/_search?size=0 [status:200 request:0.006s]
+2019-03-07 18:47:12 [elasticsearch] DEBUG: > {"query":{"match_all":{}}}
+2019-03-07 18:47:12 [elasticsearch] DEBUG: < {"took":0,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":1,"max_score":0.0,"hits":[]}}
+2019-03-07 18:47:12 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2019-03-07 18:47:12 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2019-03-07 18:47:12 [scrapy.middleware] INFO: Enabled item pipelines:
+[]
+2019-03-07 18:47:12 [scrapy.core.engine] INFO: Spider opened
+2019-03-07 18:47:12 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2019-03-07 18:47:12 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023
+2019-03-07 18:47:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.homeaway.es/search/keywords:La%20Oliva%2C%20Canarias%2C%20Espa%C3%B1a/> (referer: None)
+2019-03-07 18:47:16 [selenium.webdriver.remote.remote_connection] DEBUG: POST http://127.0.0.1:55351/session {"capabilities": {"alwaysMatch": {"goog:chromeOptions": {"args": [], "extensions": []}, "browserName": "chrome", "platformName": "any"}, "firstMatch": [{}]}, "desiredCapabilities": {"goog:chromeOptions": {"args": [], "extensions": []}, "platform": "ANY", "browserName": "chrome", "version": ""}}
+2019-03-07 18:47:17 [selenium.webdriver.remote.remote_connection] DEBUG: Finished Request {u'status': 0, u'sessionId': u'7141c374b7b821962f59a973ef775e93', u'value': {u'takesScreenshot': True, u'acceptSslCerts': True, u'networkConnectionEnabled': False, u'mobileEmulationEnabled': False, u'unexpectedAlertBehaviour': u'', u'applicationCacheEnabled': False, u'locationContextEnabled': True, u'rotatable': False, u'chrome': {u'chromedriverVersion': u'2.34.522913 (36222509aa6e819815938cbf2709b4849735537c)', u'userDataDir': u'/tmp/.org.chromium.Chromium.6LwR7W'}, u'hasTouchScreen': False, u'platform': u'Linux', u'version': u'63.0.3239.84', u'nativeEvents': True, u'handlesAlerts': True, u'takesHeapSnapshot': True, u'javascriptEnabled': True, u'databaseEnabled': False, u'browserName': u'chrome', u'webStorageEnabled': True, u'browserConnectionEnabled': False, u'cssSelectorsEnabled': True, u'setWindowRect': True, u'pageLoadStrategy': u'normal'}}
+2019-03-07 18:47:17 [selenium.webdriver.remote.remote_connection] DEBUG: POST http://127.0.0.1:55351/session/7141c374b7b821962f59a973ef775e93/url {"url": "https://www.homeaway.es/search/keywords:La%20Oliva%2C%20Canarias%2C%20Espa%C3%B1a/", "sessionId": "7141c374b7b821962f59a973ef775e93"}
+2019-03-07 18:47:33 [selenium.webdriver.remote.remote_connection] DEBUG: Finished Request {u'status': 0, u'sessionId': u'7141c374b7b821962f59a973ef775e93', u'value': None}
+2019-03-07 18:47:33 [selenium.webdriver.remote.remote_connection] DEBUG: POST http://127.0.0.1:55351/session/7141c374b7b821962f59a973ef775e93/elements {"using": "xpath", "sessionId": "7141c374b7b821962f59a973ef775e93", "value": "//h4[contains(@class, 'HitInfo__headline')]"}
+2019-03-07 18:47:33 [selenium.webdriver.remote.remote_connection] DEBUG: Finished Request {u'status': 0, u'sessionId': u'7141c374b7b821962f59a973ef775e93', u'value': [{u'ELEMENT': u'0.4888699180280196-1'}, {u'ELEMENT': u'0.4888699180280196-2'}, {u'ELEMENT': u'0.4888699180280196-3'}, {u'ELEMENT': u'0.4888699180280196-4'}, {u'ELEMENT': u'0.4888699180280196-5'}, {u'ELEMENT': u'0.4888699180280196-6'}, {u'ELEMENT': u'0.4888699180280196-7'}, {u'ELEMENT': u'0.4888699180280196-8'}, {u'ELEMENT': u'0.4888699180280196-9'}, {u'ELEMENT': u'0.4888699180280196-10'}, {u'ELEMENT': u'0.4888699180280196-11'}, {u'ELEMENT': u'0.4888699180280196-12'}, {u'ELEMENT': u'0.4888699180280196-13'}, {u'ELEMENT': u'0.4888699180280196-14'}, {u'ELEMENT': u'0.4888699180280196-15'}, {u'ELEMENT': u'0.4888699180280196-16'}, {u'ELEMENT': u'0.4888699180280196-17'}, {u'ELEMENT': u'0.4888699180280196-18'}, {u'ELEMENT': u'0.4888699180280196-19'}, {u'ELEMENT': u'0.4888699180280196-20'}, {u'ELEMENT': u'0.4888699180280196-21'}, {u'ELEMENT': u'0.4888699180280196-22'}, {u'ELEMENT': u'0.4888699180280196-23'}, {u'ELEMENT': u'0.4888699180280196-24'}, {u'ELEMENT': u'0.4888699180280196-25'}, {u'ELEMENT': u'0.4888699180280196-26'}, {u'ELEMENT': u'0.4888699180280196-27'}, {u'ELEMENT': u'0.4888699180280196-28'}, {u'ELEMENT': u'0.4888699180280196-29'}, {u'ELEMENT': u'0.4888699180280196-30'}, {u'ELEMENT': u'0.4888699180280196-31'}, {u'ELEMENT': u'0.4888699180280196-32'}, {u'ELEMENT': u'0.4888699180280196-33'}, {u'ELEMENT': u'0.4888699180280196-34'}, {u'ELEMENT': u'0.4888699180280196-35'}, {u'ELEMENT': u'0.4888699180280196-36'}, {u'ELEMENT': u'0.4888699180280196-37'}, {u'ELEMENT': u'0.4888699180280196-38'}, {u'ELEMENT': u'0.4888699180280196-39'}, {u'ELEMENT': u'0.4888699180280196-40'}, {u'ELEMENT': u'0.4888699180280196-41'}, {u'ELEMENT': u'0.4888699180280196-42'}, {u'ELEMENT': u'0.4888699180280196-43'}, {u'ELEMENT': u'0.4888699180280196-44'}, {u'ELEMENT': u'0.4888699180280196-45'}, {u'ELEMENT': u'0.4888699180280196-46'}, {u'ELEMENT': u'0.4888699180280196-47'}, {u'ELEMENT': u'0.4888699180280196-48'}, {u'ELEMENT': u'0.4888699180280196-49'}, {u'ELEMENT': u'0.4888699180280196-50'}]}
+2019-03-07 18:47:33 [selenium.webdriver.remote.remote_connection] DEBUG: GET http://127.0.0.1:55351/session/7141c374b7b821962f59a973ef775e93/element/0.4888699180280196-1/attribute/href {"sessionId": "7141c374b7b821962f59a973ef775e93", "name": "href", "id": "0.4888699180280196-1"}
+2019-03-07 18:47:33 [selenium.webdriver.remote.remote_connection] DEBUG: Finished Request {u'status': 0, u'sessionId': u'7141c374b7b821962f59a973ef775e93', u'value': u'/p546294?noDates=true&petIncluded=false'}
+2019-03-07 18:47:33 [urllib3.util.retry] DEBUG: Converted retries value: False -> Retry(total=False, connect=None, read=None, redirect=0, status=None)
+2019-03-07 18:47:33 [urllib3.connectionpool] DEBUG: http://elasticsearch:9200 "GET /homeway_homes/_search HTTP/1.1" 200 1002
+2019-03-07 18:47:33 [elasticsearch] INFO: GET http://elasticsearch:9200/homeway_homes/_search [status:200 request:0.251s]
+2019-03-07 18:47:33 [elasticsearch] DEBUG: > {"query":{"match_phrase":{"url":"https://www.homeaway.es/p546294?noDates=true&petIncluded=false"}}}
+2019-03-07 18:47:33 [elasticsearch] DEBUG: < {"took":8,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":1,"max_score":0.2876821,"hits":[{"_index":"homeway_homes","_type":"unstructured","_id":"dWlhWWkB3FBxOGCG2aZC","_score":0.2876821,"_source":{"toilets":"","capacity":"4","description":"Hermoso apartamento con vistas al mar, jardín de palmeras, terraza, 3 piscinas, WI-FI gratis. Precioso apartamento, tranquila en Oasis Tamarindo\n  El complej...","title":"Hermoso apartamento con vistas al mar, jardín de palmeras, terraza, 3 piscinas, WI-FI gratis - Corrale","url":"https://www.homeaway.es/p546294?noDates=true&petIncluded=false","price":"42","m2":"50","min_stay":"4 - 30 noches","place_searched":"Fuerteventura","main_bubbles":"4.8157897","place":"","rooms":"1","insert_time":"2019-03-07T18:19:38.688797","tourist_license":"","lat":"28.7220553","bathrooms":"1","lng":"-13.8679218","number_reviews":"comentarios","id":"p546294?noDates=true&petIncluded=false","type_residence":"Apartamento"}}]}}
+2019-03-07 18:47:33 [selenium.webdriver.remote.remote_connection] DEBUG: POST http://127.0.0.1:55351/session/7141c374b7b821962f59a973ef775e93/url {"url": "chrome://settings/clearBrowserData", "sessionId": "7141c374b7b821962f59a973ef775e93"}
+2019-03-07 18:47:35 [selenium.webdriver.remote.remote_connection] DEBUG: Finished Request {u'status': 0, u'sessionId': u'7141c374b7b821962f59a973ef775e93', u'value': None}
+2019-03-07 18:47:35 [selenium.webdriver.remote.remote_connection] DEBUG: DELETE http://127.0.0.1:55351/session/7141c374b7b821962f59a973ef775e93/window {"sessionId": "7141c374b7b821962f59a973ef775e93"}
+2019-03-07 18:47:35 [selenium.webdriver.remote.remote_connection] DEBUG: Finished Request {u'status': 0, u'sessionId': u'7141c374b7b821962f59a973ef775e93', u'value': None}
+2019-03-07 18:47:35 [scrapy.core.engine] INFO: Closing spider (finished)
+2019-03-07 18:47:35 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 272,
+ 'downloader/request_count': 1,
+ 'downloader/request_method_count/GET': 1,
+ 'downloader/response_bytes': 74004,
+ 'downloader/response_count': 1,
+ 'downloader/response_status_count/200': 1,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2019, 3, 7, 18, 47, 35, 686323),
+ 'log_count/DEBUG': 23,
+ 'log_count/INFO': 9,
+ 'memusage/max': 64749568,
+ 'memusage/startup': 64749568,
+ 'response_received_count': 1,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'start_time': datetime.datetime(2019, 3, 7, 18, 47, 12, 756936)}
+2019-03-07 18:47:35 [scrapy.core.engine] INFO: Spider closed (finished)
+
+(' id=', u'p546294?noDates=true&petIncluded=false', ', url=', u'https://www.homeaway.es/p546294?noDates=true&petIncluded=false')
+
