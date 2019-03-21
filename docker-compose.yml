@@ -42,7 +42,9 @@ services:
     command: webserver
     depends_on:
       - postgres
-
+    context: .
+    shm_size: '256m'
+  
   dashboard:
     build:
       context: dashboard/
