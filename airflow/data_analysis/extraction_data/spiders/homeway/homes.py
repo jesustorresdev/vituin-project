@@ -32,17 +32,19 @@ class HomewaySpider(ScrapySpider):
     def parse(self, response):
         selenium = SeleniumSpider()
         selenium.set_url(response.url)
-
+        root_url = response.url[response.url.find('search/')+6:]
         more_pages = True
-        n=0
+        n_page = 0
+        n_home = 0
         while more_pages:
-            n+=1
+            n_page += 1
             links = selenium.xpath("//h4[contains(@class, 'HitInfo__headline')]", type='object', stop_if_error=True)
             for link in links:
+                n_home += 1
                 url = selenium.xpath( "./", selenium_object=link, type='attribute', attribute='href', stop_if_error=True)
                 id = url[:url.find('?')]
                 url='https://www.homeaway.es'+url
-                print(' id=', id, ', url=', url)
+                print(' id=', id, ', url=', url, ', n_home=', n_home, ', n_page=', n_page, ', n_links=', str(len(links)))
                 request = Request(url, callback=self.parse_home)
                 request.meta['id'] = id
                 if self.first_searched:
@@ -50,36 +52,33 @@ class HomewaySpider(ScrapySpider):
                 elif not self.exist_item(ELASTICSEARCH_INDEX, url):
                     yield request
 
-            next_page_url = selenium.xpath( "//a[@label='Next page']", type='attribute', attribute='href')
+            next_page_url = selenium.xpath( "//a[@label='Next page']", type='attribute', attribute='href', number_of_attemps=0)
+
             if next_page_url:
-                print('pagina siguiente', next_page_url)
-                selenium.set_url(next_page_url)
+                url_new_page = next_page_url + root_url
+                print('')
+                print('pagina siguiente', url_new_page)
+                print('')
+                selenium.set_url(url_new_page)
             else:
                 more_pages = False
 
-        selenium.close_and_kill_browser()
-
+        selenium.quit_browser()
 
     def parse_home(self, response):
         item = ListHomewayHomeItem()
 
-
-        selenium = SeleniumSpider()
-        selenium.set_url(response.url)
-        tourist_license = selenium.xpath("//div[@class='registration-number']", type='text', number_of_attemps=0)
-        tourist_license = tourist_license[tourist_license.find(':')+1:].strip()
-        (lat,lng) = selenium.get_coordinates_google_map()
-        place = selenium.xpath("//input[@id='react-destination-typeahead']", type='attribute', attribute='value')
-        selenium.close_browser()
-
         title = self.xpath(response, "//meta[@property='og:title']", type='attribute', attribute='content')
-        title = title[:title.find('- HomeAway')-1]
+        title = title[:title.find('- HomeAway')+1]
+        if not title:
+            title = self.xpath(response, "//h1[@data-wdio='property-headline__headline']", type='text')
+
         description = self.xpath(response, "//meta[@property='og:description']", type='attribute', attribute='content')
         price = self.xpath(response, "//meta[@property='og:price:amount']", type='attribute', attribute='content')
         mainBubbles = self.xpath(response, "//meta[@property='og:rating']", type='attribute', attribute='content')
         if mainBubbles and mainBubbles != 0:
             numberReviews = self.xpath(response, "//strong[@class='reviews-summary__num-reviews']", type='text')
-            numberReviews = split_try(numberReviews,1)
+            numberReviews = split_try(numberReviews,0)
         else:
             numberReviews = 0
 
@@ -95,6 +94,16 @@ class HomewaySpider(ScrapySpider):
             name_element = self.get_attribute_description(element[:element.find(':')].strip())
             value_element = element[element.find(':')+1:]
             list_attributes.update({name_element:value_element.strip()})
+
+
+        selenium = SeleniumSpider()
+        selenium.set_url(response.url)
+        tourist_license = selenium.xpath("//div[@class='registration-number']", type='text', number_of_attemps=0)
+        tourist_license = tourist_license[tourist_license.find(':')+1:].strip()
+        (lat,lng) = selenium.get_coordinates_google_map(pos_above='//div[@class="pdp-map-thumbnail__hover-catcher"]')
+        place = selenium.xpath("//input[@id='react-destination-typeahead']", type='attribute', attribute='value')
+        selenium.quit_browser()
+
 
         item['id'] = response.meta['id']
         item['title'] = title
@@ -115,6 +124,7 @@ class HomewaySpider(ScrapySpider):
         item['tourist_license'] = tourist_license
         item['place'] = place
         item['place_searched'] = self.place
+
 
         self.check_item(item, ListHomewayHomeRequiredFields())
         self.update_database(item, ELASTICSEARCH_INDEX, ELASTICSEARCH_DOC_TYPE, self.first_searched)

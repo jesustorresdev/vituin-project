@@ -41,29 +41,35 @@ class AibrnbSpider(ScrapySpider):
         self.first_searched = self.get_if_first_searched(ELASTICSEARCH_INDEX, ELASTICSEARCH_DOC_TYPE)
 
     def parse(self, response):
-        print 'INICIO'
-        print response.url
-        selenium = SeleniumSpider()
+        selenium = SeleniumSpider(width=200,height=350)
         selenium.set_url(response.url)
-        n = 0
+        n_home = 0
+        n_page = 0
         more_pages = True
         while more_pages:
-            last_page = selenium.xpath("//div[@class='_1bdke5s']", pos_extract=-1)
-            print 'Last_Page', last_page
-            links = selenium.xpath("//a[contains(@class, '_1ol0z3h')]", type='object', stop_if_error='Links')
-            print links
+            n_page += 1
+            links = selenium.xpath("//a[contains(@class, '_1ol0z3h')]", type='object', stop_if_error=True)
+
+            url_new_page = selenium.xpath("//a[@class='_1ip5u88']", type='attribute', attribute='href', pos_array=-1,number_of_attemps=0)
+            last_page = type_try(selenium.xpath("//div[@class='_1bdke5s']", type='text', pos_array=-1, number_of_attemps=0), int)
+            current_page = type_try(selenium.xpath("//div[@class='_e602arm']", type='text', pos_array=-1, number_of_attemps=0), int)
+            print('-----------')
+            print('-----------')
+            print('current_page',current_page, type(current_page))
+            print('last_page',last_page, type(last_page))
+            print('n_page',n_page)
+            print('-----------')
+            print('-----------')
+            last_page = last_page - 1 if type(last_page) is int else 0
+            current_page = current_page - 1 if type(current_page) is int else 1000
+
             for link in links:
                 link = selenium.xpath("./", selenium_object=link, type='attribute', attribute='href')
                 id = link[link.find('rooms')+6:link.find('?')]
-                n+=1
+                n_home += 1
                 url = response.urljoin(link)
-                print ''
-                print ''
-                print ''
-                print(n, ' id=', id, ', url=', url, '------->n:',n,'links=',len(links))
-                print ''
-                print ''
-                print ''
+                print(n_home, ' id=', id, ', url=', url, ', pagina: ', current_page, 'ultima pagina:', last_page, 'url busqueda general:', str(response.url))
+                print('')
                 request = Request(url, callback=self.parse_home)
 
                 request.meta['id']=id
@@ -74,9 +80,6 @@ class AibrnbSpider(ScrapySpider):
                     yield request
 
 
-            url_new_page = selenium.xpath("//a[@class='_1ip5u88']", type='attribute', attribute='href', pos_array=-1)
-            last_page = type_try(selenium.xpath("//div[@class='_1bdke5s']", type='text', pos_array=-1), int)-1
-            current_page = type_try(selenium.xpath("//div[@class='_e602arm']", type='text', pos_array=-1), int)-1
 
             print('')
             print('')
@@ -90,11 +93,12 @@ class AibrnbSpider(ScrapySpider):
                 selenium.set_url(url_new_page)
             else:
                 more_pages = False
-                print 'Fin'
+                print 'Fin n_page=',n_page,':', str(response.url)
+                print 'Fin n_page=',n_page,':', str(response.url)
 
-        selenium.close_browser()
-        selenium.kill_chrome()
-        selenium.kill_chromedriver()
+        selenium.quit_browser()
+        # selenium.kill_chrome()
+        # selenium.kill_chromedriver()
 
     def parse_home(self, response):
         item = ListAirbnbHomeItem()
@@ -103,9 +107,14 @@ class AibrnbSpider(ScrapySpider):
 
         selenium = SeleniumSpider(width=330,height=350)
         selenium.set_url(response.url)
+        if not name:
+            name = selenium.xpath("//meta[@property='og:title']", type='attribute', attribute='content', number_of_attemps=0)
+        if not description:
+            description = selenium.xpath("//meta[@name='description']", type='attribute', attribute='content', number_of_attemps=0)
+
         url_coordinates = selenium.xpath("//div[@class='_59m2yxn']/img", type='attribute', attribute='src')
         (lat, lng) = get_coordinates(url_coordinates)
-        type_residence = selenium.xpath("//span[@class='_1xxanas2']/span", type='text', pos_array=-1).lower()
+        type_residence = selenium.xpath("//div[@class='_1p3joamp']", type='text').lower()
         attributes = selenium.xpath("//div[@class='_n5lh69r']/div/div/span[@class='_czm8crp']", type='object')
 
         list_attributes = {'capacity':'','rooms':'','bathrooms':'', 'beds':''}
@@ -116,7 +125,7 @@ class AibrnbSpider(ScrapySpider):
         place = selenium.xpath("//a[@href='#neighborhood']", type='attribute', attribute='aria-label')
         place = place[place.find(":")+1:]
 
-        selenium.close_browser()
+        selenium.quit_browser()
 
         item['name'] = name
         item['id'] = response.meta['id']

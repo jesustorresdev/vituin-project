@@ -57,18 +57,19 @@ class FlipkeySpider(ScrapySpider):
             print('aaa->',aa)
             print('')
             print('')
-            request = Request(url, callback=self.parse_home)
-            request.meta['id'] = id
-            request.meta['place'] = place.strip()
-            request.meta['lat'] = lat
-            request.meta['lng'] = lng
-            request.meta['type_residence'] = type_residence
-            request.meta['min_stay'] = min_stay
-            #
-            if self.first_searched:
-                yield request
-            elif not self.exist_item(ELASTICSEARCH_INDEX, url):
-                yield request
+            if url != 'https://www.holidaylettings.co.uk/' and url:
+                request = Request(url, callback=self.parse_home)
+                request.meta['id'] = id
+                request.meta['place'] = place.strip()
+                request.meta['lat'] = lat
+                request.meta['lng'] = lng
+                request.meta['type_residence'] = type_residence
+                request.meta['min_stay'] = min_stay
+                #
+                if self.first_searched:
+                    yield request
+                elif not self.exist_item(ELASTICSEARCH_INDEX, url):
+                    yield request
 
         # total_of_apartments = self.xpath(response, "//span[@class='data-tracking-tree-NG']", type='attribute',
         #                                  attribute='data-tracking-tree').replace(',','')

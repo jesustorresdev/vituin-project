@@ -43,6 +43,13 @@ class TripadvisorSpider(ScrapySpider):
                 yield request
             break
         next_page = self.xpath(response,'//a[@class="ui_button primary nav next"]',type='attribute', attribute='href')
+        print('')
+        print('')
+        print('')
+        print('next_page_url',next_page)
+        print('')
+        print('')
+        print('')
         if next_page:
             next_page_url = 'https://www.tripadvisor.es'+next_page
             yield Request(
@@ -67,12 +74,12 @@ class TripadvisorSpider(ScrapySpider):
         min_stay = split_try(self.xpath(description_items,'./', type='text', pos_extract=3),0)
 
         place = self.xpath(response, '//meta[@property="og:title"]',type='attribute', attribute='content')
-        place = place[place.find('(')+1:place.find(')')]
+        place = place[place.find('Alquileres vacacionales en')+27:place.find('Tripadvisor')-13]
         selenium = SeleniumSpider(width=500,height=300)
         selenium.set_url(response.url)
         (lat,lng) = selenium.get_coordinates_google_map()
         price = split_try(selenium.xpath('//span[starts-with(@class,"vr-rap-RapFooter__periodCost")]', type='text', number_of_attemps=0),0)
-        selenium.close_browser()
+        selenium.quit_browser()
 
         item['url']=response.url
         item['id'] = response.meta['id']

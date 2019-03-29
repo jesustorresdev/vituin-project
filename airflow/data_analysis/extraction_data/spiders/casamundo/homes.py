@@ -17,7 +17,8 @@ from extraction_data.selenium_spider import SeleniumSpider
 from extraction_data.scrapy_spider import ScrapySpider
 from extraction_data.utils import split_try
 
-
+ELASTICSEARCH_INDEX = 'casamundo_homes'
+ELASTICSEARCH_DOC_TYPE = 'unstructured'
 
 #TODO use loaders
 class CasamundoSpider(ScrapySpider):
@@ -25,7 +26,6 @@ class CasamundoSpider(ScrapySpider):
     def __init__(self, place=''):
         self.place = place
         self.start_urls = CasamundoURLs(place)
-        # self.start_urls = ["https://www.casamundo.es/apartamento?linkedby=pvbqx1iy7r-lkoip&object_id=188840"]
 
         self.first_searched = self.get_if_first_searched(ELASTICSEARCH_INDEX, ELASTICSEARCH_DOC_TYPE)
 
@@ -77,7 +77,7 @@ class CasamundoSpider(ScrapySpider):
         # selenium = SeleniumSpider()
         # selenium.set_url(response.url)
         # (lat,lng) = selenium.get_coordinates_google_map(pos_above="//section[@class ='map-content']")
-        # selenium.close_browser()
+        # selenium.quit_browser()
 
         # WebDriver driver = new FirefoxDriver();
         # driver.get(URL);

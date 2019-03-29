@@ -1,6 +1,7 @@
 
 #!/bin/bash
 
+:<<-!
 #Atraveo
 scrapy crawl atraveo_listHomes -a place='Gran Canaria' -o GranCanaria_atraveo.csv 2>&1 | tee GranCanaria_atraveo.txt
 scrapy crawl atraveo_listHomes -a place='Fuerteventura' -o Fuerteventura_atraveo.csv 2>&1 | tee Fuerteventura_atraveo.txt
@@ -8,8 +9,9 @@ scrapy crawl atraveo_listHomes -a place='Lanzarote' -o Lanzarote_atraveo.csv 2>&
 scrapy crawl atraveo_listHomes -a place='La Palma' -o LaPalma_atraveo.csv 2>&1 | tee LaPalma_atraveo.txt
 scrapy crawl atraveo_listHomes -a place='La Gomera' -o LaGomera_atraveo.csv 2>&1 | tee LaGomera_atraveo.txt
 scrapy crawl atraveo_listHomes -a place='El Hierro' -o ElHierro_atraveo.csv 2>&1 | tee ElHierro_atraveo.txt
-#scrapy crawl atraveo_listHomes -a place='Tenerife' -o Tenerife_atraveo.csv 2>&1 | tee Tenerife_atraveo.txt
+scrapy crawl atraveo_listHomes -a place='Tenerife' -o Tenerife_atraveo.csv 2>&1 | tee Tenerife_atraveo.txt
 
+!
 :<<-!
 #Flipkey
 scrapy crawl flipkey_listHomes -a place='Gran Canaria' -o GranCanaria_flipkey.csv 2>&1 | tee GranCanaria_flipkey.txt
@@ -18,46 +20,46 @@ scrapy crawl flipkey_listHomes -a place='Lanzarote' -o Lanzarote_flipkey.csv 2>&
 scrapy crawl flipkey_listHomes -a place='La Palma' -o LaPalma_flipkey.csv 2>&1 | tee LaPalma_flipkey.txt
 scrapy crawl flipkey_listHomes -a place='La Gomera' -o LaGomera_flipkey.csv 2>&1 | tee LaGomera_flipkey.txt
 scrapy crawl flipkey_listHomes -a place='El Hierro' -o ElHierro_flipkey.csv 2>&1 | tee ElHierro_flipkey.txt
-#scrapy crawl flipkey_listHomes -a place='Tenerife' -o Tenerife_flipkey.csv 2>&1 | tee Tenerife_flipkey.txt
+scrapy crawl flipkey_listHomes -a place='Tenerife' -o Tenerife_flipkey.csv 2>&1 | tee Tenerife_flipkey.txt
 !
-
+:<<-!
 #Holidaylettings
-#scrapy crawl holidaylettings_listHomes -a place='Gran Canaria' -o GranCanaria_holidaylettings.csv 2>&1 | tee GranCanaria_holidaylettings.txt
-#scrapy crawl holidaylettings_listHomes -a place='Fuerteventura' -o Fuerteventura_holidaylettings.csv 2>&1 | tee Fuerteventura_holidaylettings.txt
-#scrapy crawl holidaylettings_listHomes -a place='Lanzarote' -o Lanzarote_holidaylettings.csv 2>&1 | tee Lanzarote_holidaylettings.txt
+scrapy crawl holidaylettings_listHomes -a place='Gran Canaria' -o GranCanaria_holidaylettings.csv 2>&1 | tee GranCanaria_holidaylettings.txt
+scrapy crawl holidaylettings_listHomes -a place='Fuerteventura' -o Fuerteventura_holidaylettings.csv 2>&1 | tee Fuerteventura_holidaylettings.txt
+scrapy crawl holidaylettings_listHomes -a place='Lanzarote' -o Lanzarote_holidaylettings.csv 2>&1 | tee Lanzarote_holidaylettings.txt
 scrapy crawl holidaylettings_listHomes -a place='La Palma' -o LaPalma_holidaylettings.csv 2>&1 | tee LaPalma_holidaylettings.txt
 scrapy crawl holidaylettings_listHomes -a place='La Gomera' -o LaGomera_holidaylettings.csv 2>&1 | tee LaGomera_holidaylettings.txt
 scrapy crawl holidaylettings_listHomes -a place='El Hierro' -o ElHierro_holidaylettings.csv 2>&1 | tee ElHierro_holidaylettings.txt
-#scrapy crawl holidaylettings_listHomes -a place='Tenerife' -o Tenerife_holidaylettings.csv 2>&1 | tee Tenerife_holidaylettings.txt
+scrapy crawl holidaylettings_listHomes -a place='Tenerife' -o Tenerife_holidaylettings.csv 2>&1 | tee Tenerife_holidaylettings.txt
 
 
 #Housetrip
 scrapy crawl housetrip_listHomes -a place='Gran Canaria' -o GranCanaria_housetrip.csv 2>&1 | tee GranCanaria_housetrip.txt
-#scrapy crawl housetrip_listHomes -a place='Fuerteventura' -o Fuerteventura_housetrip.csv 2>&1 | tee Fuerteventura_housetrip.txt
+scrapy crawl housetrip_listHomes -a place='Fuerteventura' -o Fuerteventura_housetrip.csv 2>&1 | tee Fuerteventura_housetrip.txt
 scrapy crawl housetrip_listHomes -a place='Lanzarote' -o Lanzarote_housetrip.csv 2>&1 | tee Lanzarote_housetrip.txt
 scrapy crawl housetrip_listHomes -a place='La Palma' -o LaPalma_housetrip.csv 2>&1 | tee LaPalma_housetrip.txt
 scrapy crawl housetrip_listHomes -a place='La Gomera' -o LaGomera_housetrip.csv 2>&1 | tee LaGomera_housetrip.txt
 scrapy crawl housetrip_listHomes -a place='El Hierro' -o ElHierro_housetrip.csv 2>&1 | tee ElHierro_housetrip.txt
-#scrapy crawl housetrip_listHomes -a place='Tenerife' -o Tenerife_housetrip.csv 2>&1 | tee Tenerife_housetrip.txt
+scrapy crawl housetrip_listHomes -a place='Tenerife' -o Tenerife_housetrip.csv 2>&1 | tee Tenerife_housetrip.txt
 
 #Niumba
-#scrapy crawl niumba_listHomes -a place='Gran Canaria' -o GranCanaria_niumba.csv 2>&1 | tee GranCanaria_niumba.txt
-#scrapy crawl niumba_listHomes -a place='Fuerteventura' -o Fuerteventura_niumba.csv 2>&1 | tee Fuerteventura_niumba.txt
+scrapy crawl niumba_listHomes -a place='Gran Canaria' -o GranCanaria_niumba.csv 2>&1 | tee GranCanaria_niumba.txt
+scrapy crawl niumba_listHomes -a place='Fuerteventura' -o Fuerteventura_niumba.csv 2>&1 | tee Fuerteventura_niumba.txt
 scrapy crawl niumba_listHomes -a place='Lanzarote' -o Lanzarote_niumba.csv 2>&1 | tee Lanzarote_niumba.txt
 scrapy crawl niumba_listHomes -a place='La Palma' -o LaPalma_niumba.csv 2>&1 | tee LaPalma_niumba.txt
 scrapy crawl niumba_listHomes -a place='La Gomera' -o LaGomera_niumba.csv 2>&1 | tee LaGomera_niumba.txt
 scrapy crawl niumba_listHomes -a place='El Hierro' -o ElHierro_niumba.csv 2>&1 | tee ElHierro_niumba.txt
-#scrapy crawl niumba_listHomes -a place='Tenerife' -o Tenerife_niumba.csv 2>&1 | tee Tenerife_niumba.txt
+scrapy crawl niumba_listHomes -a place='Tenerife' -o Tenerife_niumba.csv 2>&1 | tee Tenerife_niumba.txt
 
 #Only Apartments
 scrapy crawl only_apartments_listHomes -a place='Gran Canaria' -o GranCanaria_only_apartments.csv 2>&1 | tee GranCanaria_only_apartments.txt
-#scrapy crawl only_apartments_listHomes -a place='Fuerteventura' -o Fuerteventura_only_apartments.csv 2>&1 | tee Fuerteventura_only_apartments.txt
+scrapy crawl only_apartments_listHomes -a place='Fuerteventura' -o Fuerteventura_only_apartments.csv 2>&1 | tee Fuerteventura_only_apartments.txt
 scrapy crawl only_apartments_listHomes -a place='Lanzarote' -o Lanzarote_only_apartments.csv 2>&1 | tee Lanzarote_only_apartments.txt
 scrapy crawl only_apartments_listHomes -a place='La Palma' -o LaPalma_only_apartments.csv 2>&1 | tee LaPalma_only_apartments.txt
 scrapy crawl only_apartments_listHomes -a place='La Gomera' -o LaGomera_only_apartments.csv 2>&1 | tee LaGomera_only_apartments.txt
 scrapy crawl only_apartments_listHomes -a place='El Hierro' -o ElHierro_only_apartments.csv 2>&1 | tee ElHierro_only_apartments.txt
-#scrapy crawl only_apartments_listHomes -a place='Tenerife' -o Tenerife_only_apartments.csv 2>&1 | tee Tenerife_only_apartments.txt
-
+scrapy crawl only_apartments_listHomes -a place='Tenerife' -o Tenerife_only_apartments.csv 2>&1 | tee Tenerife_only_apartments.txt
+!
 :<<-!
 #Rentalia
 scrapy crawl rentalia_listHomes -a place='Gran Canaria' -o GranCanaria_rentalia.csv 2>&1 | tee GranCanaria_rentalia.txt
@@ -66,17 +68,185 @@ scrapy crawl rentalia_listHomes -a place='Lanzarote' -o Lanzarote_rentalia.csv 2
 scrapy crawl rentalia_listHomes -a place='La Palma' -o LaPalma_rentalia.csv 2>&1 | tee LaPalma_rentalia.txt
 scrapy crawl rentalia_listHomes -a place='La Gomera' -o LaGomera_rentalia.csv 2>&1 | tee LaGomera_rentalia.txt
 scrapy crawl rentalia_listHomes -a place='El Hierro' -o ElHierro_rentalia.csv 2>&1 | tee ElHierro_rentalia.txt
-#scrapy crawl rentalia_listHomes -a place='Tenerife' -o Tenerife_rentalia.csv 2>&1 | tee Tenerife_rentalia.txt
+scrapy crawl rentalia_listHomes -a place='Tenerife' -o Tenerife_rentalia.csv 2>&1 | tee Tenerife_rentalia.txt
 !
+:<<-!
+
+#Airbnb
+scrapy crawl airbnb_listHomes -a place='La Gomera 1' -o LaGomera1_airbnb.csv 2>&1 | tee LaGomera1_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Gomera 2' -o LaGomera2_airbnb.csv 2>&1 | tee LaGomera2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Gomera 3' -o LaGomera3_airbnb.csv 2>&1 | tee LaGomera3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Tias' -o LanzaroteTias_airbnb.csv 2>&1 | tee LanzaroteTias_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Tias2' -o LanzaroteTias2_airbnb.csv 2>&1 | tee LanzaroteTias2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Puerto del Carmen' -o LanzarotePuertodelCarmen_airbnb.csv 2>&1 | tee LanzarotePuertodelCarmen_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Puerto del Carmen2' -o LanzarotePuertodelCarmen2_airbnb.csv 2>&1 | tee LanzarotePuertodelCarmen2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Yaiza' -o LanzaroteYaiza_airbnb.csv 2>&1 | tee LanzaroteYaiza_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Yaiza2' -o LanzaroteYaiza2_airbnb.csv 2>&1 | tee LanzaroteYaiza2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Yaiza3' -o LanzaroteYaiza3_airbnb.csv 2>&1 | tee LanzaroteYaiza3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Arrecife' -o LanzaroteArrecife_airbnb.csv 2>&1 | tee LanzaroteArrecife_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Arrecife2' -o LanzaroteArrecife2_airbnb.csv 2>&1 | tee LanzaroteArrecife2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote San Bartolome' -o LanzaroteSanBartolome_airbnb.csv 2>&1 | tee LanzaroteSanBartolome_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Haria' -o LanzaroteHaria_airbnb.csv 2>&1 | tee LanzaroteHaria_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Haria2' -o LanzaroteHaria2_airbnb.csv 2>&1 | tee LanzaroteHaria2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Tinajo' -o LanzaroteTinajo_airbnb.csv 2>&1 | tee LanzaroteTinajo_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Teguise' -o LanzaroteTeguise_airbnb.csv 2>&1 | tee LanzaroteTeguise_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Teguise2' -o LanzaroteTeguise2_airbnb.csv 2>&1 | tee LanzaroteTeguise2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Lanzarote Costa Teguise' -o LanzaroteCostaTeguise_airbnb.csv 2>&1 | tee LanzaroteCostaTeguise_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura La Oliva' -o FuerteventuraLaOliva_airbnb.csv 2>&1 | tee FuerteventuraLaOliva_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura La Oliva2' -o FuerteventuraLaOliva2_airbnb.csv 2>&1 | tee FuerteventuraLaOliva2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura El Cotillo' -o FuerteventuraElCotillo_airbnb.csv 2>&1 | tee FuerteventuraElCotillo_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Corralejo' -o FuerteventuraCorralejo_airbnb.csv 2>&1 | tee FuerteventuraCorralejo_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Corralejo2' -o FuerteventuraCorralejo2_airbnb.csv 2>&1 | tee FuerteventuraCorralejo2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Corralejo3' -o FuerteventuraCorralejo3_airbnb.csv 2>&1 | tee FuerteventuraCorralejo3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Corralejo4' -o FuerteventuraCorralejo4_airbnb.csv 2>&1 | tee FuerteventuraCorralejo4_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Pajara' -o FuerteventuraPajara_airbnb.csv 2>&1 | tee FuerteventuraPajara_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Pajara2' -o FuerteventuraPajara2_airbnb.csv 2>&1 | tee FuerteventuraPajara2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Pajara3' -o FuerteventuraPajara3_airbnb.csv 2>&1 | tee FuerteventuraPajara3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Antigua' -o FuerteventuraAntigua_airbnb.csv 2>&1 | tee FuerteventuraAntigua_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Antigua2' -o FuerteventuraAntigua_airbnb.csv 2>&1 | tee FuerteventuraAntigua_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Pto Rosario' -o FuerteventuraPtoRosario_airbnb.csv 2>&1 | tee FuerteventuraPtoRosario_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Pto Rosario2' -o FuerteventuraPtoRosario2_airbnb.csv 2>&1 | tee FuerteventuraPtoRosario2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Tuineje' -o FuerteventuraTuineje_airbnb.csv 2>&1 | tee FuerteventuraTuineje_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Fuerteventura Betancuria' -o FuerteventuraBetancuria_airbnb.csv 2>&1 | tee FuerteventuraBetancuria_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='El Hierro' -o ElHierro_airbnb.csv 2>&1 | tee ElHierro_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Palma Oeste' -o LaPalmaOeste_airbnb.csv 2>&1 | tee LaPalmaOeste_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Palma Oeste2' -o LaPalmaOeste2_airbnb.csv 2>&1 | tee LaPalmaOeste2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Palma Oeste3' -o LaPalmaOeste3_airbnb.csv 2>&1 | tee LaPalmaOeste3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Palma Este' -o LaPalmaEste_airbnb.csv 2>&1 | tee LaPalmaEste_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Palma Norte' -o LaPalmaNorte_airbnb.csv 2>&1 | tee LaPalmaNorte_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='La Palma Centro' -o LaPalmaCentro_airbnb.csv 2>&1 | tee LaPalmaCentro_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria LP ciudad alta' -o GranCanariaLPciudadalta_airbnb.csv 2>&1 | tee GranCanariaLPciudadalta_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria LP centro 1' -o GranCanariaLPcentro1_airbnb.csv 2>&1 | tee GranCanariaLPcentro1_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria LP centro 2' -o GranCanariaLPcentro2_airbnb.csv 2>&1 | tee GranCanariaLPcentro2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria LP centro 3' -o GranCanariaLPcentro3_airbnb.csv 2>&1 | tee GranCanariaLPcentro3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Canteras' -o GranCanariaCanteras_airbnb.csv 2>&1 | tee GranCanariaCanteras_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Canteras2' -o GranCanariaCanteras2_airbnb.csv 2>&1 | tee GranCanariaCanteras2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Canteras3' -o GranCanariaCanteras3_airbnb.csv 2>&1 | tee GranCanariaCanteras3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Isleta' -o GranCanariaIsleta_airbnb.csv 2>&1 | tee GranCanariaIsleta_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Isleta2' -o GranCanariaIsleta2_airbnb.csv 2>&1 | tee GranCanariaIsleta2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria zona antigua' -o GranCanariaZonaAntigua_airbnb.csv 2>&1 | tee GranCanariaZonaAntigua_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria LP sur' -o GranCanariaLPsur_airbnb.csv 2>&1 | tee GranCanariaLPsur_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Aldea' -o GranCanariaAldea_airbnb.csv 2>&1 | tee GranCanariaAldea_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Agaete' -o GranCanariaAgaete_airbnb.csv 2>&1 | tee GranCanariaAgaete_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Galdar' -o GranCanariaGaldar_airbnb.csv 2>&1 | tee GranCanariaGaldar_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Guia' -o GranCanariaGuia_airbnb.csv 2>&1 | tee GranCanariaGuia_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Valleseco' -o GranCanariaValleseco_airbnb.csv 2>&1 | tee GranCanariaValleseco_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Teror' -o GranCanariaTeror_airbnb.csv 2>&1 | tee GranCanariaTeror_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Arucas' -o GranCanariaArucas_airbnb.csv 2>&1 | tee GranCanariaArucas_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Telde' -o GranCanariaTelde_airbnb.csv 2>&1 | tee GranCanariaTelde_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Telde2' -o GranCanariaTelde2_airbnb.csv 2>&1 | tee GranCanariaTelde2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Telde3' -o GranCanariaTelde3_airbnb.csv 2>&1 | tee GranCanariaTelde3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Ingenio' -o GranCanariaIngenio_airbnb.csv 2>&1 | tee GranCanariaIngenio_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Aguimes' -o GranCanariaAguimes_airbnb.csv 2>&1 | tee GranCanariaAguimes_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria San Agustin' -o GranCanariaSanAgustin_airbnb.csv 2>&1 | tee GranCanariaSanAgustin_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria San Agustin2' -o GranCanariaSanAgustin2_airbnb.csv 2>&1 | tee GranCanariaSanAgustin2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Playa del Ingles' -o GranCanariaPlayadelIngles_airbnb.csv 2>&1 | tee GranCanariaPlayadelIngles_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Playa del Ingles2' -o GranCanariaPlayadelIngles2_airbnb.csv 2>&1 | tee GranCanariaPlayadelIngles2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Maspalomas' -o GranCanariaMaspalomas_airbnb.csv 2>&1 | tee GranCanariaMaspalomas_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Maspalomas2' -o GranCanariaMaspalomas2_airbnb.csv 2>&1 | tee GranCanariaMaspalomas2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Maspalomas3' -o GranCanariaMaspalomas3_airbnb.csv 2>&1 | tee GranCanariaMaspalomas3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Resto San Bartolome' -o GranCanariaRestoSanBartolome_airbnb.csv 2>&1 | tee GranCanariaRestoSanBartolome_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Resto San Bartolome2' -o GranCanariaRestoSanBartolome2_airbnb.csv 2>&1 | tee GranCanariaRestoSanBartolome2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Santa Lucia' -o GranCanariaSantaLucia_airbnb.csv 2>&1 | tee GranCanariaSantaLucia_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Santa Lucia2' -o GranCanariaSantaLucia2_airbnb.csv 2>&1 | tee GranCanariaSantaLucia2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Santa Lucia3' -o GranCanariaSantaLucia3_airbnb.csv 2>&1 | tee GranCanariaSantaLucia3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Mogan' -o GranCanariaMogan_airbnb.csv 2>&1 | tee GranCanariaMogan_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Mogan1' -o GranCanariaMogan1_airbnb.csv 2>&1 | tee GranCanariaMogan1_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Mogan2' -o GranCanariaMogan2_airbnb.csv 2>&1 | tee GranCanariaMogan2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Santa Brigida' -o GranCanariaSantaBrigida_airbnb.csv 2>&1 | tee GranCanariaSantaBrigida_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Artenara' -o GranCanariaArtenara_airbnb.csv 2>&1 | tee GranCanariaArtenara_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Tejeda' -o GranCanariaTejeda_airbnb.csv 2>&1 | tee GranCanariaTejeda_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Moya' -o GranCanariaMoya_airbnb.csv 2>&1 | tee GranCanariaMoya_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria San Mateo' -o GranCanariaSanMateo_airbnb.csv 2>&1 | tee GranCanariaSanMateo_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Valsequillo' -o GranCanariaValsequillo_airbnb.csv 2>&1 | tee GranCanariaValsequillo_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Gran Canaria Firgas' -o GranCanariaFirgas_airbnb.csv 2>&1 | tee GranCanariaFirgas_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Anaga' -o TenerifeAnaga_airbnb.csv 2>&1 | tee TenerifeAnaga_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife SC centro' -o TenerifeSCcentro_airbnb.csv 2>&1 | tee TenerifeSCcentro_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife SC centro2' -o TenerifeSCcentro2_airbnb.csv 2>&1 | tee TenerifeSCcentro2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife SC centro3' -o TenerifeSCcentro3_airbnb.csv 2>&1 | tee TenerifeSCcentro3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife barrios del medio' -o TenerifeBarriosdelMedio_airbnb.csv 2>&1 | tee TenerifeBarriosdelMedio_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife barrios del medio2' -o TenerifeBarriosdelMedio2_airbnb.csv 2>&1 | tee TenerifeBarriosdelMedio2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife barrios oeste' -o TenerifeBarriosOeste_airbnb.csv 2>&1 | tee TenerifeBarriosOeste_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife barrios oeste2' -o TenerifeBarriosOeste_airbnb2.csv 2>&1 | tee TenerifeBarriosOeste2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife LL centro' -o TenerifeLLcentro_airbnb.csv 2>&1 | tee TenerifeLLcentro_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife LL Resto' -o TenerifeLLResto_airbnb.csv 2>&1 | tee TenerifeLLResto_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife La Esperanza' -o TenerifeLaEsperanza_airbnb.csv 2>&1 | tee TenerifeLaEsperanza_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Tejina' -o TenerifeTejina_airbnb.csv 2>&1 | tee TenerifeTejina_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Tegueste' -o TenerifeTegueste_airbnb.csv 2>&1 | tee TenerifeTegueste_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Tacoronte' -o TenerifeTacoronte_airbnb.csv 2>&1 | tee TenerifeTacoronte_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Sauzal' -o TenerifeSauzal_airbnb.csv 2>&1 | tee TenerifeSauzal_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Matanza' -o TenerifeMatanza_airbnb.csv 2>&1 | tee TenerifeMatanza_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Victoria' -o TenerifeVictoria_airbnb.csv 2>&1 | tee TenerifeVictoria_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Santa Ursula' -o TenerifeSantaUrsula_airbnb.csv 2>&1 | tee TenerifeSantaUrsula_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Orotava' -o TenerifeOrotava_airbnb.csv 2>&1 | tee TenerifeOrotava_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Realejos' -o TenerifeRealejos_airbnb.csv 2>&1 | tee TenerifeRealejos_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Puerto de la Cruz' -o TenerifePuertodelaCruz_airbnb.csv 2>&1 | tee TenerifePuertodelaCruz_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Puerto de la Cruz2' -o TenerifePuertodelaCruz2_airbnb.csv 2>&1 | tee TenerifePuertodelaCruz2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Puerto de la Cruz3' -o TenerifePuertodelaCruz3_airbnb.csv 2>&1 | tee TenerifePuertodelaCruz3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Puerto de la Cruz4' -o TenerifePuertodelaCruz4_airbnb.csv 2>&1 | tee TenerifePuertodelaCruz4_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife La Guancha' -o TenerifeLaGuancha_airbnb.csv 2>&1 | tee TenerifeLaGuancha_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife San Juan de la Rambla' -o TenerifeSanJuandelaRambla_airbnb.csv 2>&1 | tee TenerifeSanJuandelaRambla_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Icod' -o TenerifeIcod_airbnb.csv 2>&1 | tee TenerifeIcod_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Icod2' -o TenerifeIcod2_airbnb.csv 2>&1 | tee TenerifeIcod2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Silos' -o TenerifeSilos_airbnb.csv 2>&1 | tee TenerifeSilos_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Garachico' -o TenerifeGarachico_airbnb.csv 2>&1 | tee TenerifeGarachico_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Buenavista' -o TenerifeBuenavista_airbnb.csv 2>&1 | tee TenerifeBuenavista_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Santiago del Teide' -o TenerifeSantiagodelTeide_airbnb.csv 2>&1 | tee TenerifeSantiagodelTeide_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Santiago del Teide2' -o TenerifeSantiagodelTeide2_airbnb.csv 2>&1 | tee TenerifeSantiagodelTeide2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Santiago del Teide3' -o TenerifeSantiagodelTeide3_airbnb.csv 2>&1 | tee TenerifeSantiagodelTeide3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife El Tanque' -o TenerifeElTanque_airbnb.csv 2>&1 | tee TenerifeElTanque_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Guia Isora' -o TenerifeGuiadeIsora_airbnb.csv 2>&1 | tee TenerifeGuiadeIsora_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Guia Isora2' -o TenerifeGuiadeIsora2_airbnb.csv 2>&1 | tee TenerifeGuiadeIsora2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Adeje Resto' -o TenerifeAdejeResto_airbnb.csv 2>&1 | tee TenerifeAdejeResto_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Callao Salvaje' -o TenerifeCallaoSalvaje_airbnb.csv 2>&1 | tee TenerifeCallaoSalvaje_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Callao Salvaje' -o TenerifeCallaoSalvaje2_airbnb.csv 2>&1 | tee TenerifeCallaoSalvaje2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Adeje barrios' -o TenerifeAdejebarrios_airbnb.csv 2>&1 | tee TenerifeAdejebarrios_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Costa Adeje' -o TenerifeCostaAdeje_airbnb.csv 2>&1 | tee TenerifeCostaAdeje_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Costa Adeje2' -o TenerifeCostaAdeje2_airbnb.csv 2>&1 | tee TenerifeCostaAdeje2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Costa Adeje3' -o TenerifeCostaAdeje3_airbnb.csv 2>&1 | tee TenerifeCostaAdeje3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Costa Adeje4' -o TenerifeCostaAdeje4_airbnb.csv 2>&1 | tee TenerifeCostaAdeje4_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Fanabe' -o TenerifeFanabe_airbnb.csv 2>&1 | tee TenerifeFanabe_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Fanabe2' -o TenerifeFanabe2_airbnb.csv 2>&1 | tee TenerifeFanabe2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Troya' -o TenerifeTroya_airbnb.csv 2>&1 | tee TenerifeTroya_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Americas' -o TenerifeAmericas_airbnb.csv 2>&1 | tee TenerifeAmericas_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Americas2' -o TenerifeAmericas2_airbnb.csv 2>&1 | tee TenerifeAmericas2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Cristianos' -o TenerifeCristianos_airbnb.csv 2>&1 | tee TenerifeCristianos_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Cristianos2' -o TenerifeCristianos2_airbnb.csv 2>&1 | tee TenerifeCristianos2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Cristianos3' -o TenerifeCristianos3_airbnb.csv 2>&1 | tee TenerifeCristianos3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Arona barrios altos' -o TenerifeAronaBarriosAltos_airbnb.csv 2>&1 | tee TenerifeAronaBarriosAltos_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Arona barrios bajos' -o TenerifeAronaBarriosBajos_airbnb.csv 2>&1 | tee TenerifeAronaBarriosBajos_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Arona barrios bajos2' -o TenerifeAronaBarriosBajos2_airbnb.csv 2>&1 | tee TenerifeAronaBarriosBajos2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Costa del Silencio' -o TenerifeCostadelSilencio_airbnb.csv 2>&1 | tee TenerifeCostadelSilencio_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife San Miguel' -o TenerifeSanMiguel_airbnb.csv 2>&1 | tee TenerifeSanMiguel_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife San Miguel2' -o TenerifeSanMiguel_airbnb.csv 2>&1 | tee TenerifeSanMiguel2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Vilaflor' -o TenerifeVilaflor_airbnb.csv 2>&1 | tee TenerifeVilaflor_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Granadilla' -o TenerifeGranadilla_airbnb.csv 2>&1 | tee TenerifeGranadilla_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife El Medano' -o TenerifeElMedano_airbnb.csv 2>&1 | tee TenerifeElMedano_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife El Medano2' -o TenerifeElMedano2_airbnb.csv 2>&1 | tee TenerifeElMedano2_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife El Medano3' -o TenerifeElMedano3_airbnb.csv 2>&1 | tee TenerifeElMedano3_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Arico' -o TenerifeArico_airbnb.csv 2>&1 | tee TenerifeArico_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Fasnia' -o TenerifeFasnia_airbnb.csv 2>&1 | tee TenerifeFasnia_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Guimar' -o TenerifeGuimar_airbnb.csv 2>&1 | tee TenerifeGuimar_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Arafo' -o TenerifeArafo_airbnb.csv 2>&1 | tee TenerifeArafo_airbnb.txt
+scrapy crawl airbnb_listHomes -a place='Tenerife Candelaria' -o TenerifeCandelaria_airbnb.csv 2>&1 | tee TenerifeCandelaria_airbnb.txt
+
+#Booking
+scrapy crawl booking_listHomes -a place='Gran Canaria' -o GranCanaria_booking.csv 2>&1 | tee GranCanaria_booking.txt
+scrapy crawl booking_listHomes -a place='Fuerteventura' -o Fuerteventura_booking.csv 2>&1 | tee Fuerteventura_booking.txt
+scrapy crawl booking_listHomes -a place='La Palma' -o LaPalma_booking.csv 2>&1 | tee LaPalma_booking.txt
+scrapy crawl booking_listHomes -a place='Lanzarote' -o Lanzarote.csv 2>&1 | tee Lanzarote.txt
+scrapy crawl booking_listHomes -a place='La Gomera' -o LaGomera_booking.csv 2>&1 | tee LaGomera_booking.txt
+scrapy crawl booking_listHomes -a place='El Hierro' -o ElHierro_booking.csv 2>&1 | tee ElHierro_booking.txt
+scrapy crawl booking_listHomes -a place='Tenerife' -o Tenerife_booking.csv 2>&1 | tee Tenerife_booking.txt
 
 #Tripadvisor Rentals
 scrapy crawl tripadvisor_listHomes -a place='Gran Canaria' -o GranCanaria_tripadvisor.csv 2>&1 | tee GranCanaria_tripadvisor.txt
-#scrapy crawl tripadvisor_listHomes -a place='Fuerteventura' -o Fuerteventura_tripadvisor.csv 2>&1 | tee Fuerteventura_tripadvisor.txt
+scrapy crawl tripadvisor_listHomes -a place='Fuerteventura' -o Fuerteventura_tripadvisor.csv 2>&1 | tee Fuerteventura_tripadvisor.txt
 scrapy crawl tripadvisor_listHomes -a place='Lanzarote' -o Lanzarote_tripadvisor.csv 2>&1 | tee Lanzarote_tripadvisor.txt
 scrapy crawl tripadvisor_listHomes -a place='La Palma' -o LaPalma_tripadvisor.csv 2>&1 | tee LaPalma_tripadvisor.txt
 scrapy crawl tripadvisor_listHomes -a place='La Gomera' -o LaGomera_tripadvisor.csv 2>&1 | tee LaGomera_tripadvisor.txt
 scrapy crawl tripadvisor_listHomes -a place='El Hierro' -o ElHierro_tripadvisor.csv 2>&1 | tee ElHierro_tripadvisor.txt
-#scrapy crawl tripadvisor_listHomes -a place='Tenerife' -o Tenerife_tripadvisor.csv 2>&1 | tee Tenerife_tripadvisor.txt
+scrapy crawl tripadvisor_listHomes -a place='Tenerife' -o Tenerife_tripadvisor.csv 2>&1 | tee Tenerife_tripadvisor.txt
 
 
 #Homeway
@@ -86,23 +256,13 @@ scrapy crawl homeway_listHomes -a place='Lanzarote' -o Lanzarote_homeway.csv 2>&
 scrapy crawl homeway_listHomes -a place='La Palma' -o LaPalma_homeway.csv 2>&1 | tee LaPalma_homeway.txt
 scrapy crawl homeway_listHomes -a place='La Gomera' -o LaGomera_homeway.csv 2>&1 | tee LaGomera_homeway.txt
 scrapy crawl homeway_listHomes -a place='El Hierro' -o ElHierro_homeway.csv 2>&1 | tee ElHierro_homeway.txt
-#scrapy crawl homeway_listHomes -a place='Tenerife' -o Tenerife_homeway.csv 2>&1 | tee Tenerife_homeway.txt
-
-
-#Airbnb
-scrapy crawl airbnb_listHomes -a place='Gran Canaria' -o GranCanaria_airbnb.csv 2>&1 | tee GranCanaria_airbnb.txt
-scrapy crawl airbnb_listHomes -a place='Fuerteventura' -o Fuerteventura_airbnb.csv 2>&1 | tee Fuerteventura_airbnb.txt
-scrapy crawl airbnb_listHomes -a place='Lanzarote' -o Lanzarote_airbnb.csv 2>&1 | tee Lanzarote_airbnb.txt
-scrapy crawl airbnb_listHomes -a place='La Palma' -o LaPalma_airbnb.csv 2>&1 | tee LaPalma_airbnb.txt
-scrapy crawl airbnb_listHomes -a place='La Gomera' -o LaGomera_airbnb.csv 2>&1 | tee LaGomera_airbnb.txt
-#scrapy crawl airbnb_listHomes -a place='El Hierro' -o ElHierro_airbnb.csv 2>&1 | tee ElHierro_airbnb.txt
-#scrapy crawl airbnb_listHomes -a place='Tenerife' -o Tenerife_airbnb.csv 2>&1 | tee Tenerife_airbnb.txt
-
-#Booking
-scrapy crawl booking_listHomes -a place='Gran Canaria' -o GranCanaria_booking.csv 2>&1 | tee GranCanaria_booking.txt
-#scrapy crawl booking_listHomes -a place='Fuerteventura' -o Fuerteventura_booking.csv 2>&1 | tee Fuerteventura_booking.txt
-scrapy crawl booking_listHomes -a place='Lanzarote' -o Lanzarote_booking.csv 2>&1 | tee Lanzarote_booking.txt
-scrapy crawl booking_listHomes -a place='La Palma' -o LaPalma_booking.csv 2>&1 | tee LaPalma_booking.txt
-scrapy crawl booking_listHomes -a place='La Gomera' -o LaGomera_booking.csv 2>&1 | tee LaGomera_booking.txt
-scrapy crawl booking_listHomes -a place='El Hierro' -o ElHierro_booking.csv 2>&1 | tee ElHierro_booking.txt
-#scrapy crawl booking_listHomes -a place='Tenerife' -o Tenerife_booking.csv 2>&1 | tee Tenerife_booking.txt
+scrapy crawl homeway_listHomes -a place='Tenerife Sur' -o TenerifeSur_homeway.csv 2>&1 | tee TenerifeSur_homeway.txt
+scrapy crawl homeway_listHomes -a place='Tenerife Norte' -o TenerifeNorte_homeway.csv 2>&1 | tee TenerifeNorte_homeway.txt
+!
+scrapy crawl rentalia_listHomes -a place='Fuerteventura' -o Fuerteventura_rentalia.csv 2>&1 | tee Fuerteventura_rentalia.txt
+scrapy crawl rentalia_listHomes -a place='Gran Canaria' -o GranCanaria_rentalia.csv 2>&1 | tee GranCanaria_rentalia.txt
+scrapy crawl rentalia_listHomes -a place='Lanzarote' -o Lanzarote_rentalia.csv 2>&1 | tee Lanzarote_rentalia.txt
+scrapy crawl rentalia_listHomes -a place='La Palma' -o LaPalma_rentalia.csv 2>&1 | tee LaPalma_rentalia.txt
+scrapy crawl rentalia_listHomes -a place='La Gomera' -o LaGomera_rentalia.csv 2>&1 | tee LaGomera_rentalia.txt
+scrapy crawl rentalia_listHomes -a place='El Hierro' -o ElHierro_rentalia.csv 2>&1 | tee ElHierro_rentalia.txt
+scrapy crawl rentalia_listHomes -a place='Tenerife' -o Tenerife_rentalia.csv 2>&1 | tee Tenerife_rentalia.txt

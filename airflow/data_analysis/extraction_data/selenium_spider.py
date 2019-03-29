@@ -13,44 +13,36 @@ from selenium.webdriver.common.action_chains import ActionChains
 from scrapy.exceptions import CloseSpider
 # from selenium.webdriver.common.keys import Keys
 # from selenium.webdriver.chrome.options import Options
-
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 class SeleniumSpider():
 
     def __init__(self, width=False, height=False):
-        self.driver=webdriver.Chrome()
-        if width is not False and height is not False:
-            self.driver.set_window_size(width,height)
-
-    # def __del__(self):
-    #     try:
-    #         self.clear_cache(self.driver)
-    #     except:
-    #         pass
-    #     try:
-    #         self.driver.close()
-    #     except:
-    #         pass
+        chrome_options = Options()
+        #argument to switch off suid sandBox and no sandBox in Chrome
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-setuid-sandbox")
+        # chrome_options.add_argument('--disable-dev-shm-usage')
+        self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        self.width = width
+        self.height = height
+        if self.width is not False and self.height is not False:
+            self.driver.set_window_size(self.width, self.height)
 
     def reset_browser(self):
         try:
-            self.close_browser()
+            self.quit_browser()
         except:
             pass
 
         self.driver=webdriver.Chrome()
-        self.driver.get(self.url)
-        time.sleep(.5)
+        if self.width is not False and self.height is not False:
+            self.driver.set_window_size(self.width, self.height)
 
-    # def close_browser(self):
-    #     try:
-    #         self.clear_cache(self.driver)
-    #     except:
-    #         pass
-    #     try:
-    #         self.driver.close()
-    #     except:
-    #         pass
+        self.open_url()
 
     def close_browser(self):
         try:
@@ -62,28 +54,25 @@ class SeleniumSpider():
         except:
             pass
 
-    def close_and_kill_browser(self):
+    def quit_browser(self):
         try:
             self.clear_cache(self.driver)
         except:
             pass
         try:
-            self.driver.close()
+            self.driver.quit()
         except:
             pass
-
-        self.kill_chrome()
-        self.kill_chromedriver()
 
     def set_url(self, url):
         self.url=url
         self.open_url()
 
     def open_url(self):
-        # try:
-        self.driver.get(self.url)
-        # except:
-        #     self.reset_browser()
+        try:
+            self.driver.get(self.url)
+        except:
+            self.reset_browser()
 
     def kill_chromedriver(self):
         os.system("pkill -f chromedriver")
@@ -92,16 +81,23 @@ class SeleniumSpider():
         os.system("pkill -f chrome")
 
     def xpath(self, xpath, selenium_object=None, type='text', attribute=None, pos_array=None, stop_if_error=False,
-              number_of_attemps=3, time_sleep_if_error=False, **kwords):
+              number_of_attemps=3, time_sleep_if_error=False, wait_driver=False, **kwords):
 
         driver = selenium_object if selenium_object else self.driver
+        wait_driver = True if stop_if_error else wait_driver
 
         n=kwords['n'] if 'n' in kwords else 0
         m=kwords['m'] if 'm' in kwords else 0
         try:
+
             if xpath != './':
-                element = driver.find_element_by_xpath(xpath) if pos_array is None and type != 'object' else \
-                    driver.find_elements_by_xpath(xpath)
+                if wait_driver:
+                    wait = WebDriverWait(driver, 30)
+                    element = wait.until(EC.presence_of_element_located((By.XPATH, xpath))) if pos_array is None and type != 'object' else \
+                        wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
+                else:
+                    element = driver.find_element_by_xpath(xpath) if pos_array is None and type != 'object' else \
+                        driver.find_elements_by_xpath(xpath)
             else:
                 element = driver
 
@@ -112,23 +108,21 @@ class SeleniumSpider():
 
             element = element.text if type == 'text' else \
                 element.get_attribute(attribute) if type == 'attribute' else \
-                element
+                    element
 
+            #El elemento se encuentra pero está vacío
             if not element and time_sleep_if_error and m < 3:
-                time.sleep(.5)
+                time.sleep(.5*m)
                 return self.xpath(xpath, selenium_object, type, attribute, pos_array, stop_if_error, number_of_attemps,
-                                  time_sleep_if_error, m=m+1)
+                                  time_sleep_if_error, wait_driver, n=n, m=m+1)
+
             return element
 
         except Exception as error:
             print('Error en línea', ' --- ', error, 'al extraer', xpath, ', ', str(self.url), ': ', str(error))
-            if time_sleep_if_error and m < 3:
-                time.sleep(.5)
-                return self.xpath(xpath, selenium_object, type, attribute, pos_array, stop_if_error, number_of_attemps,
-                                  time_sleep_if_error, m=m+1)
 
             if  stop_if_error:
-                self.close_and_kill_browser()
+                self.quit_browser()
                 message = 'STOP obligatorio en caso de error selenium. Hay error en '+str(self.url)+'", '+xpath+' : '+\
                           str(error)
                 # self.send_email(message)
@@ -142,11 +136,13 @@ class SeleniumSpider():
                 return self.xpath(xpath, selenium_object, type, attribute, pos_array, stop_if_error, number_of_attemps,
                                   time_sleep_if_error, n=n+1)
 
+
+
     def get_coordinates_google_map(self, pos_above=False, english_page=False, **kwords):
         n=kwords['n'] if 'n' in kwords else 0
         print ''
         print ''
-        print 'INTENTO--->', n
+        print 'INTENTO COORDENADAS--->', n
         print ''
         print ''
         try:
@@ -157,19 +153,26 @@ class SeleniumSpider():
             title='Report errors in the road map or imagery to Google' if english_page \
                 else 'Informar a Google acerca de errores en las imágenes o en el mapa de carreteras'
 
-            script_coordinates=self.driver.find_element_by_xpath("//a[@title ='"+title+"']").get_attribute('href')
+            wait = WebDriverWait(self.driver, 30)
+            script_coordinates = wait.until(EC.presence_of_element_located((By.XPATH, "//a[@title ='"+title+"']"))).get_attribute('href')
             coordinates_string=script_coordinates[script_coordinates.find('@')+1:]
             lat=coordinates_string.split(',')[0]
             lng=coordinates_string.split(',')[1]
-            return (lat,lng)
+            return lat, lng
         except Exception as error:
-            print('Error en línea',format(sys.exc_info()[-1].tb_lineno), ' --- ', error)
+            print('Error en línea',format(sys.exc_info()[-1].tb_lineno), '. Se está extrayendo coordenadas --- ', error)
             if n >= 3:
                 return '',''
             else:
                 self.open_url()
-                time.sleep(.5)
                 return self.get_coordinates_google_map(pos_above, english_page, n=n+1)
+
+    def scroll_to_element(self, element):
+        if element == 'end':
+            element = 'document.body.scrollHeight'
+
+        self.driver.execute_script("window.scrollTo(0,"+element+");")
+
 
     def get_clear_browsing_button(self):
         """Find the "CLEAR BROWSING BUTTON" on the Chrome settings page."""
@@ -185,7 +188,7 @@ class SeleniumSpider():
         wait.until(self.get_clear_browsing_button)
 
         # click the button to clear the cache
-        self.get_clear_browsing_button(self.driver).click()
+        self.get_clear_browsing_button().click()
 
         # wait for the button to be gone before returning
         wait.until_not(self.get_clear_browsing_button)

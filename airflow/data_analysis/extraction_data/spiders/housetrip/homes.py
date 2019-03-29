@@ -39,21 +39,29 @@ class HousetripSpider(ScrapySpider):
             place = self.xpath(home,'.//p[@class="mobile shortBreadCrumb"]', type='text')
             lat = self.xpath(home,'.//div[@class="map-container"]', type='attribute', attribute='data-lat')
             lng = self.xpath(home,'.//div[@class="map-container"]', type='attribute', attribute='data-lng')
-            request = Request(url, callback=self.parse_home)
-            request.meta['id'] = id
-            request.meta['place'] = place.strip()
-            request.meta['lat'] = lat
-            request.meta['lng'] = lng
-
             print(' id=', id, ', url=', url, 'place=', place)
-            if self.first_searched:
-                yield request
-            elif not self.exist_item(ELASTICSEARCH_INDEX, url):
-                yield request
+
+            if url != 'https://www.housetrip.es' and url:
+                request = Request(url, callback=self.parse_home)
+                request.meta['id'] = id
+                request.meta['place'] = place.strip()
+                request.meta['lat'] = lat
+                request.meta['lng'] = lng
+
+                if self.first_searched:
+                    yield request
+                elif not self.exist_item(ELASTICSEARCH_INDEX, url):
+                    yield request
 
         total_of_apartments = self.xpath(response, "//span[@class='data-tracking-tree-NG']", type='attribute',
                                          attribute='data-tracking-tree').replace(',','')
-
+        print('')
+        print('')
+        print('')
+        print('current_page',current_page)
+        print('')
+        print('')
+        print('')
         if float(current_page) < (float(total_of_apartments) / 50):
             next_page_url = 'https://www.housetrip.es'+ \
                             self.xpath(response, '//a[@class="next hidden-xs"]', type='attribute', attribute='href')
@@ -66,7 +74,9 @@ class HousetripSpider(ScrapySpider):
         item = ListHousetripHomeItem()
 
         title = self.xpath(response, "//title", type='text')
-        title = title[:title.find('-')-1]
+        if not title:
+            title = self.xpath(response, "//span[contains(@class,'homeName')]", type='text')
+        title = title[:title.find('Alojamiento')-5]
         description = self.xpath(response, "//meta[@name='description']", type='attribute', attribute='content')
         price = self.xpath(response, "//div[@class='nonRap']/strong", type='text')[1:]
 

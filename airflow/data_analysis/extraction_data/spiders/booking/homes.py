@@ -20,6 +20,8 @@ from extraction_data.selenium_spider import SeleniumSpider
 ELASTICSEARCH_INDEX = 'booking_homes'
 ELASTICSEARCH_DOC_TYPE = 'unstructured'
 
+
+
 #TODO use loaders
 class BookingSpider(ScrapySpider):
     name = "booking_listHomes"
@@ -31,12 +33,18 @@ class BookingSpider(ScrapySpider):
 
     def parse(self, response):
         homes = self.xpath(response,'//a[@class="hotel_name_link url"]', type='object', stop_if_error=True)
-
+        if 'n_home' in response.meta:
+            n_home = response.meta['n_home']
+            n_page = response.meta['n_page']
+        else:
+            n_home = 0
+            n_page = 0
         for home in homes:
+            n_home += 1
             url = self.xpath(home,'./', type='attribute', attribute='href', stop_if_error=True)
             url = 'https://www.booking.com' + url[1:]
-            print('url=', url)
-
+            print('url=', url, ', n_home=', n_home, ', n_page', n_page, ', url buscada=', str(response.url))
+            print('')
             request = Request(url, self.parse_home)
             if self.first_searched:
                 yield request
@@ -44,10 +52,20 @@ class BookingSpider(ScrapySpider):
                 yield request
 
         next_page = self.xpath(response,'//a[contains(@class,"paging-next")]',type='attribute', attribute='href')
+        print('')
+        print('')
+        print('')
+        print('next_page',next_page)
+        print('')
+        print('')
+        print('')
         if next_page:
-            yield Request(
+            request =  Request(
                 next_page, callback=self.parse
             )
+            request.meta['n_home'] = n_home
+            request.meta['n_page'] = n_page
+            yield request
 
     def parse_home(self, response):
 
@@ -83,7 +101,7 @@ class BookingSpider(ScrapySpider):
         selenium = SeleniumSpider()
         selenium.set_url(response.url)
         stars = selenium.xpath('//span[@class="hp__hotel_ratings"]/span/i', type='text', number_of_attemps=0)
-        selenium.close_and_kill_browser()
+        selenium.quit_browser()
 
         cleanliness_rating = self.xpath(response, '//li[@data-question="hotel_clean"]/p[@class="review_score_value"]', type='text')
         comfort_rating = self.xpath(response, '//li[@data-question="hotel_comfort"]/p[@class="review_score_value"]', type='text')
@@ -116,9 +134,11 @@ class BookingSpider(ScrapySpider):
         item['location_rating'] = location_rating
         item['place_searched'] = self.place
 
-        self.check_item(item, ListBookingHomeRequiredFields())
-        self.update_database(item, ELASTICSEARCH_INDEX, ELASTICSEARCH_DOC_TYPE, self.first_searched)
-        if self.first_searched:
-            self.first_searched = False
+        if id:
+            self.check_item(item, ListBookingHomeRequiredFields())
+            self.update_database(item, ELASTICSEARCH_INDEX, ELASTICSEARCH_DOC_TYPE, self.first_searched)
+            if self.first_searched:
+                self.first_searched = False
 
-        return item
+            return item
+

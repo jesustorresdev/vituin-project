@@ -171,12 +171,12 @@ def List9FlatHomeRequiredFields():
 
 def ListAirbnbHomeRequiredFields():
     return {
-        'name': 'required',
+        'name': 'optional',
         'url': 'required',
         'id': 'required',
         'lng': 'required',
         'lat': 'required',
-        'description': 'required',
+        'description': 'optional',
         'capacity': 'optional',
         'bathrooms': 'optional',
         'beds': 'optional',
@@ -233,14 +233,15 @@ def ListHomewayHomeRequiredFields():
         'bathrooms': 'optional',
         'toilets': 'optional',
         'capacity': 'optional',
-        'type_residence': 'required',
+        'type_residence': 'optional',
         'number_reviews': 'optional',
         'main_bubbles': 'optional',
         'min_stay': 'optional',
         'lat': 'required',
         'lng': 'required',
         'm2': 'optional',
-        'tourist_license': 'optional'
+        'tourist_license': 'optional',
+        'place_searched': 'optional'
     }
 
 def ListNiumbaHomeRequiredFields():
@@ -251,7 +252,7 @@ def ListNiumbaHomeRequiredFields():
         'url': 'required',
         'price': 'required',
         'capacity': 'required',
-        'bathrooms': 'required',
+        'bathrooms': 'optional',
         'type_residence': 'required',
         'rooms': 'optional',
         'min_stay': 'required',
@@ -276,7 +277,7 @@ def ListFlipkeyHomeRequiredFields():
         'url': 'required',
         'price': 'required',
         'capacity': 'required',
-        'bathrooms': 'required',
+        'bathrooms': 'optional',
         'type_residence': 'required',
         'rooms': 'optional',
         'min_stay': 'required',
@@ -301,7 +302,7 @@ def ListHousetripHomeRequiredFields():
         'url': 'required',
         'price': 'required',
         'capacity': 'required',
-        'bathrooms': 'required',
+        'bathrooms': 'optional',
         'type_residence': 'required',
         'rooms': 'optional',
         'min_stay': 'required',
@@ -326,7 +327,7 @@ def ListHolidaylettingsHomeRequiredFields():
         'url': 'required',
         'price': 'required',
         'capacity': 'required',
-        'bathrooms': 'required',
+        'bathrooms': 'optional',
         'type_residence': 'required',
         'rooms': 'optional',
         'min_stay': 'required',
@@ -367,12 +368,12 @@ def ListRentaliaHomeRequiredFields():
     return {
         'id': 'required',
         'url': 'required',
-        'title': 'required',
+        'title': 'optional',
         'price': 'required',
         'rooms': 'optional',
         'bathrooms': 'optional',
         'beds': 'optional',
-        'capacity': 'required',
+        'capacity': 'optional',
         'place': 'required',
         'type_residence': 'required',
         'number_reviews': 'required',

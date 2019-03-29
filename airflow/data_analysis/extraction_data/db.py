@@ -24,6 +24,7 @@ _ES = elasticsearch.Elasticsearch(
     timeout = Config.ELASTICSEARCH_TIMEOUT
 )
 
+
 # _ES_CLIENT = elasticsearch.Elasticsearch(
 #     hosts = Config.ELASTICSEARCH_HOSTS,
 #     timeout = Config.ELASTICSEARCH_TIMEOUT

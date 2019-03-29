@@ -15,6 +15,7 @@ from extraction_data.items import ListRentaliaHomeItem
 from extraction_data.required_fields import ListRentaliaHomeRequiredFields
 from extraction_data.scrapy_spider import ScrapySpider
 from extraction_data.selenium_spider import SeleniumSpider
+from extraction_data.utils import split_try
 
 ELASTICSEARCH_INDEX = 'rentalia_homes'
 ELASTICSEARCH_DOC_TYPE = 'unstructured'
@@ -29,63 +30,67 @@ class RentaliaSpider(ScrapySpider):
         self.first_searched = self.get_if_first_searched(ELASTICSEARCH_INDEX, ELASTICSEARCH_DOC_TYPE)
 
     def parse(self, response):
-
-        current_page = self.xpath(response,"//li[@class='active waves-effect']/a", type='text')
-        selenium = SeleniumSpider(width=333, height=200)
+        n_home = 0
+        n_page = 0
+        selenium = SeleniumSpider()
         selenium.set_url(response.url)
-        import time
-        time.sleep(5)
-        from selenium.webdriver.common.action_chains import ActionChains
-        time.sleep(5)
-        element = selenium.xpath("//ul[@class='pagination']", type='object')
-        element = element[0]
-        print('')
-        print('element--> ',element)
-        print('')
-        ActionChains(selenium.driver).move_to_element(element).perform()
-        homes = selenium.xpath("//div[@class='listContainer col s12']/div", type='object', stop_if_error=True)
-        homes2 = self.xpath(response, "//div[@class='listContainer col s12']/div", type='object', stop_if_error=True)
-        #SOLO COGE 12
-        #
-        # for home in homes:
-        #
-        #     id = selenium.xpath("./", selenium_object=home, type='attribute', attribute='id')
-        #     url ='https://es.rentalia.com/'+id
-        #     place = selenium.xpath(".//div[contains(@class,'title')]/a/h4", selenium_object=home, type='text')
-        #     title = selenium.xpath(".//div[contains(@class,'title')]/a/h3", selenium_object=home, type='text')
-        #
-        #     request = Request(url, callback=self.parse_home)
-        #     request.meta['id'] = id
-        #     request.meta['place'] = place[1:-1]
-        #     request.meta['title'] = title
-        #     if place.find(self.place) != -1:
-        #         yield request
-        #     # if place.find(self.place) != -1:
-        #     #     yield request
-        #     if self.first_searched:
-        #         yield request
-        #     elif not self.exist_item(ELASTICSEARCH_INDEX, url):
-        #         yield request
-        selenium.close_browser()
+        last_home = selenium.xpath("//div[@class='title']/h1", type='text')
+        last_home = split_try(last_home,0)
+        more_pages = True
+        next_page_url = response.url
+        while more_pages:
+            n_page += 1
+            current_page = selenium.xpath("//li[@class='active waves-effect']/a", type='text')
+            selenium.scroll_to_element('end')
+            attemps = 0
+            homes = []
+            while attemps < 3:
+                homes = selenium.xpath("//div[@class='itemContent']/..", type='object', stop_if_error=True)
+                if len(homes) == 30:
+                    attemps = 3
+                else:
+                    attemps += 1
 
-        next_page_url = self.xpath(response,"//ul[@class='pagination']/li/a", type='attribute', attribute='href',
-                                   pos_extract=-1)
-        next_page = next_page_url[next_page_url.find('page')+5:-2]
-        next_page_url = str('https://es.rentalia.com'+next_page_url[1:-1])
-        print('')
-        print('')
-        print('homes',len(homes))
-        print('homes2',len(homes2))
-        print('next_page',next_page)
-        print('current_page',current_page)
-        print('')
-        print('')
-        # if int(next_page) > int(current_page):
-        #     yield Request(
-        #         next_page_url, callback=self.parse
-        #     )
-        #
+            for home in homes:
 
+                id = selenium.xpath("./", selenium_object=home, type='attribute', attribute='id', stop_if_error=True)
+                url ='https://es.rentalia.com/'+id
+                place = selenium.xpath(".//div[contains(@class,'title')]/a/h4", selenium_object=home, type='text')
+                title = selenium.xpath(".//div[contains(@class,'title')]/a/h3", selenium_object=home, type='text')
+                n_home += 1
+                print(n_home, ' id=', id, ', url=', url, ', pagina: ', current_page, 'numero de apartamentos total:', last_home, 'url busqueda general:', str(next_page_url))
+                print('')
+                request = Request(url, callback=self.parse_home)
+                request.meta['id'] = id
+                request.meta['place'] = place[1:-1]
+                request.meta['title'] = title
+                if self.first_searched:
+                    yield request
+                elif not self.exist_item(ELASTICSEARCH_INDEX, url):
+                    yield request
+
+            next_page_url = selenium.xpath("//div[contains(@class, 'pagCount')]/ul/li/a", type='attribute',
+                                           attribute='href', pos_array =-1)
+
+            next_page = next_page_url[next_page_url.find('page')+5:-1]
+            print('')
+            print('')
+            print('next_page',next_page)
+            print('next_page_url',next_page_url)
+            print('current_page',current_page)
+            print('')
+            print('')
+            if not next_page:
+                next_page = 1000
+            if not current_page:
+                current_page = 0
+            if int(next_page) > int(current_page):
+                selenium.set_url(next_page_url)
+            else:
+                more_pages = False
+                print 'Fin n_page=',n_page,':', str(response.url)
+
+        selenium.quit_browser()
 
     def parse_home(self, response):
         item = ListRentaliaHomeItem()

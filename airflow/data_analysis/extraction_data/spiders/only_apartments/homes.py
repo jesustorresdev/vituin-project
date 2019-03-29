@@ -14,6 +14,7 @@ from extraction_data.urls import OnlyApartmentsURLs
 from extraction_data.items import ListOnlyApartmentsHomeItem
 from extraction_data.required_fields import ListOnlyApartmentsHomeRequiredFields
 from extraction_data.scrapy_spider import ScrapySpider
+from extraction_data.utils import type_try
 
 ELASTICSEARCH_INDEX = 'only_apartments_homes'
 ELASTICSEARCH_DOC_TYPE = 'unstructured'
@@ -36,32 +37,44 @@ class OnlyApartmentsSpider(ScrapySpider):
         print(homes[0])
         print('')
         print('')
-        for home in homes:
-            url=self.xpath(home, './', type='attribute', attribute='href')
-            id=self.xpath(home, './', type='attribute', attribute='data-id')
-            place_and_type = self.xpath(home, ".//h6[@class='location ellipsis']/span",type='object')
-            if place_and_type:
-                type_residence = self.xpath(place_and_type[0],'./', type='text')
-                place = self.xpath(place_and_type[1], './', type='text')
-            else:
-                type_residence = ''
-                place = ''
-            print('url--->',url)
-            print('id--->',url)
-            request = Request(url, callback=self.parse_home)
-            request.meta['id'] = id
-            request.meta['type_residence'] = type_residence
-            request.meta['place'] = place
-            # request.meta['type_residence'] = type_residence
-            # if place.find(self.place) != -1:
-            #     yield request
-            if self.first_searched:
-                yield request
-            elif not self.exist_item(ELASTICSEARCH_INDEX, url):
-                yield request
+        # for home in homes:
+        #     url=self.xpath(home, './', type='attribute', attribute='href')
+        #     id=self.xpath(home, './', type='attribute', attribute='data-id')
+        #     place_and_type = self.xpath(home, ".//h6[@class='location ellipsis']/span",type='object')
+        #     if place_and_type:
+        #         type_residence = self.xpath(place_and_type[0],'./', type='text')
+        #         place = self.xpath(place_and_type[1], './', type='text')
+        #     else:
+        #         type_residence = ''
+        #         place = ''
+        #     print('url--->',url)
+        #     print('id--->',url)
+        #     request = Request(url, callback=self.parse_home)
+        #     request.meta['id'] = id
+        #     request.meta['type_residence'] = type_residence
+        #     request.meta['place'] = place
+        #     # request.meta['type_residence'] = type_residence
+        #     # if place.find(self.place) != -1:
+        #     #     yield request
+        #     if self.first_searched:
+        #         yield request
+        #     elif not self.exist_item(ELASTICSEARCH_INDEX, url):
+        #         yield request
 
         total_of_apartments = self.xpath(response,"//b[@id='header_total_ads']", type='text')
-        if float(current_page) < (float(total_of_apartments) / 15):
+        current_page = type_try(current_page, int) if current_page is not '' else 100
+        total_of_apartments = type_try(total_of_apartments, float) if total_of_apartments is not '' else 1
+
+        print('')
+        print('')
+        print('')
+        print 'Current',current_page, ', last', total_of_apartments
+        print 'Current',type(current_page), ', last', type(total_of_apartments)
+        print('')
+        print('')
+        print('')
+
+        if current_page < total_of_apartments / 15:
             next_page_url= self.xpath(response, "//ul[contains(@class,'pagination')]/li[last()]/button", type='attribute', attribute='data-href')
             yield Request(
                 next_page_url, callback=self.parse

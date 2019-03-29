@@ -76,7 +76,8 @@ class ScrapySpider(scrapy.Spider, DevelopmentConfig):
             return ''
 
     def get_attribute_description(self, element):
-        type = ['capacity','rooms','bathrooms','beds', 'min_stay', 'toilets']
+        type = ['capacity','rooms','bathrooms','beds', 'min_stay', 'toilets', 'food', 'service',
+                'value', 'atmosphere']
         attribute = {
             'capacidad':type[0],
             'huesped':type[0],
@@ -95,7 +96,11 @@ class ScrapySpider(scrapy.Spider, DevelopmentConfig):
             'cama':type[3],
             'camas':type[3],
             'estancia mín.'.decode('UTF-8'):type[4],
-            'aseos':type[5]
+            'aseos':type[5],
+            'food':type[6],
+            'service':type[7],
+            'value':type[8],
+            'atmosphere':type[9],
         }
         try:
             return attribute[element.lower()]

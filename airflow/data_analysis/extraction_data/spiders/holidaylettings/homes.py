@@ -33,39 +33,58 @@ class HolidaylettingsSpider(ScrapySpider):
         current_page = self.xpath(response,"//div[@class ='pagination listView']/span[@class='hidden-xs']", type='text')
         homes = self.xpath(response,"//div[@id='mainSrpResults']/div[contains(@class,'data-tracking-tree-N group')]", type='object',
                            stop_if_error=True)
+        if 'n_home' in response.meta:
+            n_home = response.meta['n_home']
+            n_page = response.meta['n_page']
+        else:
+            n_home = 0
+            n_page = 0
         for home in homes:
             url=self.xpath(home, './', type='attribute', attribute='data-rental-unit-url')
             id=self.xpath(home, './', type='attribute', attribute='id')[4:]
             place = self.xpath(home,'.//p[@class="mobile shortBreadCrumb"]', type='text')
             lat = self.xpath(home,'.//div[@class="map-container"]', type='attribute', attribute='data-lat')
             lng = self.xpath(home,'.//div[@class="map-container"]', type='attribute', attribute='data-lng')
-            request = Request(url, callback=self.parse_home)
-            request.meta['id'] = id
-            request.meta['place'] = place.strip()
-            request.meta['lat'] = lat
-            request.meta['lng'] = lng
 
-            print(' id=', id, ', url=', url, 'place=', place)
+            if url != 'https://www.holidaylettings.co.uk/' and url:
 
-            if self.first_searched:
-                yield request
-            elif not self.exist_item(ELASTICSEARCH_INDEX, url):
-                yield request
+                request = Request(url, callback=self.parse_home)
+                request.meta['id'] = id
+                request.meta['place'] = place.strip()
+                request.meta['lat'] = lat
+                request.meta['lng'] = lng
+
+                print(' id=', id, ', url=', url, 'place=', place,', n_home=', n_home, ', n_page=', n_page, ', n_homes=', str(len(homes)))
+
+                if self.first_searched:
+                    yield request
+                elif not self.exist_item(ELASTICSEARCH_INDEX, url):
+                    yield request
 
         total_of_apartments = self.xpath(response, "//span[@class='data-tracking-tree-NG']", type='attribute', attribute='data-tracking-tree').replace(',','')
+        print('')
+        print('')
+        print('')
+        print('current_page',current_page)
+        print('')
+        print('')
+        print('')
         if float(current_page) < (float(total_of_apartments) / 50):
             next_page_url = 'https://www.holidaylettings.co.uk'+ \
                             self.xpath(response, '//a[@class="next hidden-xs"]', type='attribute', attribute='href')
-            yield Request(
+            request =  Request(
                 next_page_url, callback=self.parse
             )
+            request.meta['n_home'] = n_home
+            request.meta['n_page'] = n_home
+            yield request
 
     def parse_home(self, response):
 
         item = ListHolidaylettingsHomeItem()
 
         title = self.xpath(response, "//meta[@property='og:title']", type='attribute', attribute='content')
-        title = title[:title.find('-')-1]
+        title = title[:title.find('Home')-5]
         description = self.xpath(response, "//meta[@name='description']", type='attribute', attribute='content')
         price = self.xpath(response, "//div[@class='nonRap']/strong", type='text')[1:]
 

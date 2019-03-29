@@ -34,15 +34,24 @@ class AtraveoSpider(ScrapySpider):
         selenium = SeleniumSpider()
         selenium.set_url(response.url)
         more_pages = True
+        url = ''
+
+        n_home = 0
+        n_page = 0
         while more_pages:
-            homes = selenium.xpath("//div[@id='searchResults']/ul/li", type='object', stop_if_error=True, time_sleep_if_error=True)
+            n_page += 1
+            last_url = url
+            homes = selenium.xpath("//div[@id='searchResults']/ul/li", type='object', stop_if_error=True, time_sleep_if_error=True, wait_driver=True)
             for home in homes:
+                n_home += 1
                 url = selenium.xpath( ".//div[@class='resultlinks']/a", selenium_object=home, type='attribute', attribute='href', stop_if_error=True)
                 id = selenium.xpath( "./", selenium_object=home, type='attribute', attribute='data-accommodation-id')
                 title = selenium.xpath( ".//h3[@class='resulthead']", selenium_object=home, type='text')
                 lat = selenium.xpath( "./", selenium_object=home, type='attribute', attribute='data-lat')
                 lng = selenium.xpath( "./", selenium_object=home, type='attribute', attribute='data-lng')
                 price = split_try(selenium.xpath(".//div[@class='price']/span", selenium_object=home, type='text'), -1)
+
+                print('url=', url, ', n_home=', n_home, ', n_page', n_page, ', url buscada=', str(response.url))
 
                 request = Request(url, callback=self.parse_home)
                 request.meta['id'] = id
@@ -57,13 +66,26 @@ class AtraveoSpider(ScrapySpider):
                     yield request
 
             next_page_url = selenium.xpath("//a[@class='forward']", type='attribute', attribute='href')
-
-            try:
+            print('')
+            print('')
+            print('next_page_url',next_page_url)
+            print('number', len(homes))
+            print('last_url',last_url)
+            print('url',url)
+            print('')
+            print('')
+            if next_page_url != 'javascript:void(0);' and last_url != url:
                 selenium.set_url(next_page_url)
-            except:
+            else:
                 more_pages = False
+                print('')
+                print('')
+                print('FIN')
+                print('number', len(homes))
+                print('')
+                print('')
 
-        selenium.close_and_kill_browser()
+        selenium.quit_browser()
 
 
     def parse_home(self, response):
@@ -84,7 +106,7 @@ class AtraveoSpider(ScrapySpider):
         title = response.meta['title']
         capacity = split_try(title, -2)
         type_residence = title[:title.find('para')-1]
-        attributes = split_try(selenium.xpath("//div[@class='featuresText']", type='text'), splitline=True)
+        attributes = split_try(selenium.xpath("//div[@class='featuresText']", type='text', number_of_attemps=0), splitline=True)
         list_attributes= {'rooms':'','bathrooms':''}
         m2 = split_try(attributes, 1, pos_aray=0)
         for i in range(1,3):
@@ -92,7 +114,7 @@ class AtraveoSpider(ScrapySpider):
             if name_element:
                 list_attributes.update({name_element:split_try(attributes[i], -0)})
 
-        selenium.close_browser()
+        selenium.quit_browser()
 
         item['id'] = response.meta['id']
         item['title'] = title
