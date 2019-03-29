@@ -128,6 +128,7 @@ RUN sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && pip install elasticsearch \
     && pip install elasticsearch-dsl \
     && pip install xlrd \
+    && pip install googlemaps \
     && apt-get remove --purge -yqq $buildDeps \
     && apt-get clean \
     && rm -rf \
