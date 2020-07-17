@@ -11,6 +11,8 @@ scrapy crawl atraveo_listHomes -a place='La Gomera' -o LaGomera_atraveo.csv 2>&1
 scrapy crawl atraveo_listHomes -a place='El Hierro' -o ElHierro_atraveo.csv 2>&1 | tee ElHierro_atraveo.txt
 scrapy crawl atraveo_listHomes -a place='Tenerife' -o Tenerife_atraveo.csv 2>&1 | tee Tenerife_atraveo.txt
 
+!
+:<<-!
 #Flipkey
 scrapy crawl flipkey_listHomes -a place='Gran Canaria' -o GranCanaria_flipkey.csv 2>&1 | tee GranCanaria_flipkey.txt
 scrapy crawl flipkey_listHomes -a place='Fuerteventura' -o Fuerteventura_flipkey.csv 2>&1 | tee Fuerteventura_flipkey.txt
@@ -19,7 +21,8 @@ scrapy crawl flipkey_listHomes -a place='La Palma' -o LaPalma_flipkey.csv 2>&1 |
 scrapy crawl flipkey_listHomes -a place='La Gomera' -o LaGomera_flipkey.csv 2>&1 | tee LaGomera_flipkey.txt
 scrapy crawl flipkey_listHomes -a place='El Hierro' -o ElHierro_flipkey.csv 2>&1 | tee ElHierro_flipkey.txt
 scrapy crawl flipkey_listHomes -a place='Tenerife' -o Tenerife_flipkey.csv 2>&1 | tee Tenerife_flipkey.txt
-
+!
+:<<-!
 #Holidaylettings
 scrapy crawl holidaylettings_listHomes -a place='Gran Canaria' -o GranCanaria_holidaylettings.csv 2>&1 | tee GranCanaria_holidaylettings.txt
 scrapy crawl holidaylettings_listHomes -a place='Fuerteventura' -o Fuerteventura_holidaylettings.csv 2>&1 | tee Fuerteventura_holidaylettings.txt
