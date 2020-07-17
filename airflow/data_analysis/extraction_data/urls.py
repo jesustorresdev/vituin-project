@@ -1133,7 +1133,7 @@ def FlipkeyURLs(place):
             "https://www.flipkey.com/book/la-palma/222284442/hom_sleeps_max.1/orderby.default/",
         ],
         'El Hierro' : [
-            "https://www.flipkey.com/book/pinar-el-v-hierro/222392850/hom_sleeps_max.1/orderby.default/",
+            "https://www.flipkey.com/book/el-hierro/222284448/hom_sleeps_max.1/orderby.default/",
         ],
         'La Gomera' : [
             "https://www.flipkey.com/book/la-gomera/222284445/hom_sleeps_max.1/orderby.default/",

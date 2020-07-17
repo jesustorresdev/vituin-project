@@ -40,6 +40,7 @@ class HolidaylettingsSpider(ScrapySpider):
             n_home = 0
             n_page = 0
         for home in homes:
+            n_home += 1
             url=self.xpath(home, './', type='attribute', attribute='data-rental-unit-url')
             id=self.xpath(home, './', type='attribute', attribute='id')[4:]
             place = self.xpath(home,'.//p[@class="mobile shortBreadCrumb"]', type='text')
@@ -70,6 +71,7 @@ class HolidaylettingsSpider(ScrapySpider):
         print('')
         print('')
         if float(current_page) < (float(total_of_apartments) / 50):
+            n_page += 1
             next_page_url = 'https://www.holidaylettings.co.uk'+ \
                             self.xpath(response, '//a[@class="next hidden-xs"]', type='attribute', attribute='href')
             request =  Request(

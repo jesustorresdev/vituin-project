@@ -27,6 +27,7 @@ class FlipkeySpider(ScrapySpider):
     def __init__(self, place=''):
         self.place = place
         self.start_urls = FlipkeyURLs(place)
+        # self.start_urls = ['https://www.flipkey.com/properties/7340259/']
         self.first_searched = self.get_if_first_searched(ELASTICSEARCH_INDEX, ELASTICSEARCH_DOC_TYPE)
 
     def parse(self, response):
@@ -34,14 +35,20 @@ class FlipkeySpider(ScrapySpider):
         homes = self.xpath(response,"//div[@id='mainSrpResults']/div[contains(@class,'data-tracking-tree-N group')]", type='object',
                            stop_if_error=True)
 
+        if 'n_home' in response.meta:
+            n_home = response.meta['n_home']
+            n_page = response.meta['n_page']
+        else:
+            n_home = 0
+            n_page = 0
         for home in homes:
+            n_home += 1
             id=self.xpath(home, './', type='attribute', attribute='id')[4:]
             url='https://www.flipkey.com/properties/'+id
             place = self.xpath(home,'.//p[@class="mobile shortBreadCrumb"]', type='text')
             type_residence = split_try(self.xpath(home,'.//div[@class="accomTypeDescription mobileHidden"]', type='text'),-1)
             lat = self.xpath(home,'.//div[@class="map-container"]', type='attribute', attribute='data-lat')
             lng = self.xpath(home,'.//div[@class="map-container"]', type='attribute', attribute='data-lng')
-            aa = self.xpath(home,".//ul[@class='accomType mobileHidden']", type='text')
             min_stay = self.xpath(home,".//p[@class='accomType mobile']/span", type='text')
 
             if min_stay:
@@ -50,14 +57,9 @@ class FlipkeySpider(ScrapySpider):
                 except:
                     min_stay = 'Varía'.decode('UTF-8')
 
-            print(' id=', id, ', url=', url, 'place=', place, 'lat=', lat, 'lng=', lng)
+            print('min_stay=',min_stay, 'type residence=', type_residence, 'id=', id, ', url=', url, 'place=', place, 'lat=', lat, 'lng=', lng,', n_home=', n_home, ', n_page=', n_page, ', n_homes=', str(len(homes)), 'url busqueda general:', str(response.url))
 
-            print('')
-            print('')
-            print('aaa->',aa)
-            print('')
-            print('')
-            if url != 'https://www.holidaylettings.co.uk/' and url:
+            if url != 'https://www.flipkey.com/' and url:
                 request = Request(url, callback=self.parse_home)
                 request.meta['id'] = id
                 request.meta['place'] = place.strip()
@@ -65,20 +67,25 @@ class FlipkeySpider(ScrapySpider):
                 request.meta['lng'] = lng
                 request.meta['type_residence'] = type_residence
                 request.meta['min_stay'] = min_stay
-                #
+
+
                 if self.first_searched:
                     yield request
                 elif not self.exist_item(ELASTICSEARCH_INDEX, url):
                     yield request
 
-        # total_of_apartments = self.xpath(response, "//span[@class='data-tracking-tree-NG']", type='attribute',
-        #                                  attribute='data-tracking-tree').replace(',','')
-        # if float(current_page) < (float(total_of_apartments) / 50):
-        #     next_page_url = 'https://www.flipkey.com'+ \
-        #                     self.xpath(response, '//a[@class="next hidden-xs"]', type='attribute', attribute='href')
-        #     yield Request(
-        #         next_page_url, callback=self.parse
-        #     )
+        total_of_apartments = self.xpath(response, "//span[@class='data-tracking-tree-NG']", type='attribute',
+                                         attribute='data-tracking-tree').replace(',','')
+        if float(current_page) < (float(total_of_apartments) / 50):
+            n_page += 1
+            next_page_url = 'https://www.flipkey.com'+ \
+                            self.xpath(response, '//a[@class="next hidden-xs"]', type='attribute', attribute='href')
+            request =  Request(
+                next_page_url, callback=self.parse
+            )
+            request.meta['n_home'] = n_home
+            request.meta['n_page'] = n_page
+            yield request
 
     def parse_home(self, response):
 
@@ -94,26 +101,8 @@ class FlipkeySpider(ScrapySpider):
             numberReviewsTripadvisor = split_try(numberReviewsTripadvisor, 0)
         mainBubblesTripadvisor = self.xpath(response, "//meta[@itemprop='ratingValue']", type='attribute', attribute='content')
 
-        selenium = SeleniumSpider(width=300,height=200)
-        selenium.set_url(response.url)
-
-        attributes = selenium.xpath("//div[@class='property-description-details mobile inlineBlock']/span", type='object')
-        list_attributes_description = {'rooms':'','bathrooms':'','capacity':''}
-        print('')
-        print('')
-        print('aquiiIIIIIIIIIIII')
-        print('aquiiIIIIIIIIIIII')
-        print('aquiiIIIIIIIIIIII')
-        print(attributes)
-        print('')
-        print('')
-        for i in range(0,len(attributes)-1):
-            element = selenium.xpath("./", selenium_object=attributes[i], type='text')
-            name_element = self.get_attribute_description(element[:element.find(':')].strip())
-            value_element = element[element.find(':')+1:]
-            list_attributes_description.update({name_element:value_element.strip()})
-
-        selenium.close_and_kill_browser()
+        capacity = self.xpath(response, "//i[@class='icon icon-sleeps']/../span", type='text')
+        rooms = self.xpath(response, "//i[@class='icon icon-bed']/../span", type='text')
 
         tourist_license = self.xpath(response, "//p[@class='touristLicence']", type='text',pos_extract=1).strip()
 
@@ -132,11 +121,10 @@ class FlipkeySpider(ScrapySpider):
         item['title'] = title
         item['description'] = description
         item['type_residence'] = response.meta['type_residence']
-        item['rooms'] = list_attributes_description['rooms']
+        item['rooms'] = rooms
         item['min_stay'] = response.meta['min_stay']
         item['price'] = price
-        item['capacity'] = list_attributes_description['capacity']
-        item['bathrooms'] =list_attributes_description['bathrooms']
+        item['capacity'] = capacity
         item['number_reviews_tripadvisor'] = numberReviewsTripadvisor
         item['main_bubbles_tripadvisor'] = mainBubblesTripadvisor
         item['tourist_license'] = tourist_license

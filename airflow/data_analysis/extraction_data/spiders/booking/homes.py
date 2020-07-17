@@ -60,6 +60,7 @@ class BookingSpider(ScrapySpider):
         print('')
         print('')
         if next_page:
+            n_page += 1
             request =  Request(
                 next_page, callback=self.parse
             )

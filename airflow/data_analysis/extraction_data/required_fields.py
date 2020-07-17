@@ -277,7 +277,7 @@ def ListFlipkeyHomeRequiredFields():
         'url': 'required',
         'price': 'required',
         'capacity': 'required',
-        'bathrooms': 'optional',
+        # 'bathrooms': 'optional',
         'type_residence': 'required',
         'rooms': 'optional',
         'min_stay': 'required',
